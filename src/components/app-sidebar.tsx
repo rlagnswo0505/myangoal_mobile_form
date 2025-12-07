@@ -52,6 +52,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           url: '/lg/story-transfer',
           isActive: location.pathname === '/lg/story-transfer',
         },
+        {
+          title: '인스 선불-명변',
+          url: '/lg/ins',
+          isActive: location.pathname === '/lg/ins',
+        },
       ],
     },
   ];
