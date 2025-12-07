@@ -3,6 +3,7 @@ import Layout from './components/Layout/Layout';
 import HomePage from './pages/HomePage';
 import KTAsiaPage from './pages/kt/KTAsiaPage';
 import LGStoryPage from './pages/lg/LGStoryPage';
+import LGStoryTransferPage from './pages/lg/LGStoryTransferPage';
 
 function App() {
   return (
@@ -12,6 +13,7 @@ function App() {
           <Route index element={<HomePage />} />
           <Route path="kt/asia" element={<KTAsiaPage />} />
           <Route path="lg/story" element={<LGStoryPage />} />
+          <Route path="lg/story-transfer" element={<LGStoryTransferPage />} />
         </Route>
       </Routes>
     </BrowserRouter>
