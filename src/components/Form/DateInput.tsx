@@ -1,4 +1,4 @@
-import { type ChangeEvent, type InputHTMLAttributes, useRef, useEffect } from 'react';
+import { type ChangeEvent, type InputHTMLAttributes, useRef } from 'react';
 import { Input } from '@/components/ui/input';
 
 interface DateInputProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'onChange'> {
