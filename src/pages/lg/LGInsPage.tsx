@@ -27,7 +27,7 @@ const PLAN_OPTIONS = [
 // 신청유형별 체크 위치 (좌표 확인 모드로 조정 필요)
 const TYPE_POSITIONS = {
   prepaid: { top: 12, left: 444 },
-  transfer: { top: 12, left: 504 },
+  transfer: { top: 12, left: 564 },
 };
 
 // A4 용지 크기 (96dpi 기준: 794 x 1123 px)
