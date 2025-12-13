@@ -24,8 +24,11 @@ const FIELD_POSITIONS: FieldPosition[] = [
   { id: 'usimInfo', page: 1, top: 343, left: 290, width: 145, height: 41, fontSize: 14 },
   // 3. 주소 (손글씨체, 기울임, 투명도 0.8)
   { id: 'address', page: 1, top: 194, left: 450, width: 82, height: 38, fontSize: 17, fontFamily: "'Caveat', 'Nanum Pen Script', cursive", fontStyle: 'italic', opacity: 0.8 },
-  // 4. 서명일자
-  { id: 'signDate', page: 1, top: 1035, left: 575, height: 39, fontSize: 14 },
+  // 4. 선호번호 (주소 아래 나란히)
+  { id: 'wishNumber1', page: 1, top: 232, left: 250, width: 80, height: 30, fontSize: 14 },
+  { id: 'wishNumber2', page: 1, top: 232, left: 340, width: 80, height: 30, fontSize: 14 },
+  // 5. 서명일자
+  { id: 'signDate', page: 1, top: 1036, left: 580, height: 39, fontSize: 14 },
 ];
 
 // 호수 순서 정의 (101~120, 201~220, 301~320, ..., 901~920)
@@ -49,6 +52,8 @@ interface FormData {
   passportNumber: string;
   usimModel: string;
   usimNumber: string;
+  wishNumber1: string;
+  wishNumber2: string;
   address: string;
   signDate: string;
 }
@@ -74,6 +79,8 @@ export default function LGStoryPage() {
     passportNumber: '',
     usimModel: '',
     usimNumber: '',
+    wishNumber1: '',
+    wishNumber2: '',
     address: `, ${getNextRoom()}`,
     signDate: todayFormatted,
   });
@@ -100,6 +107,8 @@ export default function LGStoryPage() {
       passportNumber: '',
       usimModel: '',
       usimNumber: '',
+      wishNumber1: '',
+      wishNumber2: '',
       address: `, ${ROOM_ORDER[nextIndex]}`,
       signDate: todayFormatted,
     });
@@ -110,7 +119,7 @@ export default function LGStoryPage() {
     const parts = date.split('.');
     if (parts.length === 3) {
       const nbsp = '\u00A0';
-      return `${parts[0]}${nbsp.repeat(7)}${parts[1]}${nbsp.repeat(7)}${parts[2]}`;
+      return `${parts[0]}${nbsp.repeat(12)}${parts[1]}${nbsp.repeat(14)}${parts[2]}`;
     }
     return date;
   };
@@ -122,6 +131,8 @@ export default function LGStoryPage() {
     passportNumber: formData.passportNumber,
     usimInfo: `${formData.usimModel}\n${formData.usimNumber}`,
     address: formData.address,
+    wishNumber1: formData.wishNumber1,
+    wishNumber2: formData.wishNumber2,
     signDate: formatSignDate(formData.signDate),
   };
 
@@ -133,7 +144,7 @@ export default function LGStoryPage() {
         {/* 메인 컨텐츠 */}
         <div className="flex-1 flex overflow-hidden">
           {/* 좌측: 입력 폼 */}
-          <div className="w-[480px] border-r bg-muted/30">
+          <div className="w-[500px] border-r bg-muted/30">
             <ScrollArea className="h-full">
               <div className="p-6">
                 <Card>
@@ -141,10 +152,9 @@ export default function LGStoryPage() {
                     <CardTitle className="text-base">신청서 정보 입력</CardTitle>
                     <CardDescription>필수 정보를 입력하세요</CardDescription>
                   </CardHeader>
-                  <CardContent className="space-y-6">
+                  <CardContent className="space-y-4">
                     {/* 가입고객정보 */}
                     <div className="space-y-4">
-                      <p className="text-sm font-medium text-muted-foreground">가입고객정보</p>
                       <div className="space-y-2">
                         <Label htmlFor="name">
                           이름 (법인명) <span className="text-destructive">*</span>
@@ -168,8 +178,7 @@ export default function LGStoryPage() {
                     <Separator />
 
                     {/* USIM 정보 */}
-                    <div className="space-y-4">
-                      <p className="text-sm font-medium text-muted-foreground">USIM 정보</p>
+                    <div className=" flex gap-4">
                       <div className="space-y-2">
                         <Label htmlFor="usimModel">
                           USIM 모델명 <span className="text-destructive">*</span>
@@ -186,9 +195,24 @@ export default function LGStoryPage() {
 
                     <Separator />
 
+                    {/* 선호번호 */}
+                    <div className="space-y-4">
+                      <div className="grid grid-cols-2 gap-4">
+                        <div className="space-y-2">
+                          <Label htmlFor="wishNumber1">선호번호 1</Label>
+                          <Input id="wishNumber1" name="wishNumber1" value={formData.wishNumber1} onChange={handleChange} placeholder="1234" maxLength={4} />
+                        </div>
+                        <div className="space-y-2">
+                          <Label htmlFor="wishNumber2">선호번호 2</Label>
+                          <Input id="wishNumber2" name="wishNumber2" value={formData.wishNumber2} onChange={handleChange} placeholder="5678" maxLength={4} />
+                        </div>
+                      </div>
+                    </div>
+
+                    <Separator />
+
                     {/* 주소 */}
                     <div className="space-y-4">
-                      <p className="text-sm font-medium text-muted-foreground">주소</p>
                       <div className="space-y-2">
                         <Label htmlFor="address">
                           호수 <span className="text-destructive">*</span>
@@ -201,10 +225,9 @@ export default function LGStoryPage() {
 
                     {/* 서명일자 */}
                     <div className="space-y-4">
-                      <p className="text-sm font-medium text-muted-foreground">서명일자</p>
                       <div className="space-y-2">
                         <Label htmlFor="signDate">
-                          날짜 <span className="text-destructive">*</span>
+                          서명일자 <span className="text-destructive">*</span>
                         </Label>
                         <DateInput id="signDate" value={formData.signDate} onChange={(value) => setFormData((prev) => ({ ...prev, signDate: value }))} />
                       </div>
@@ -218,14 +241,9 @@ export default function LGStoryPage() {
           {/* 우측: 서식지 미리보기 */}
           <div className="flex-1 bg-muted/50 overflow-hidden">
             <ScrollArea className="h-full">
-              <div className="p-6">
-                <Card className="overflow-hidden">
-                  <CardHeader className="pb-3 bg-muted/50">
-                    <CardTitle className="text-sm font-medium">미리보기</CardTitle>
-                    <CardDescription className="text-xs">{PAGE_IMAGES.length === 0 ? '이미지를 추가해주세요 (src/assets/templates/lg_story_img.jpg)' : debugMode && '이미지를 클릭하면 좌표가 표시됩니다'}</CardDescription>
-                  </CardHeader>
-                  <CardContent className="p-0">{PAGE_IMAGES.length > 0 ? <ImageViewer images={PAGE_IMAGES} fieldPositions={FIELD_POSITIONS} fieldValues={fieldValues} scale={0.6} debugMode={debugMode} /> : <div className="flex items-center justify-center h-[400px] text-muted-foreground">서식지 이미지를 추가해주세요</div>}</CardContent>
-                </Card>
+              <div className="">
+                {debugMode && <p className="text-xs text-muted-foreground mb-2">이미지를 클릭하면 좌표가 표시됩니다</p>}
+                <ImageViewer images={PAGE_IMAGES} fieldPositions={FIELD_POSITIONS} fieldValues={fieldValues} scale={0.9} debugMode={debugMode} />
               </div>
             </ScrollArea>
           </div>

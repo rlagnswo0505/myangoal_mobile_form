@@ -17,16 +17,19 @@ const PAGE_IMAGES = [asiaImage];
 // 필드 위치 설정 (A4 픽셀 좌표 기준)
 const FIELD_POSITIONS: FieldPosition[] = [
   // 1. 가입고객정보
-  { id: 'name', page: 1, top: 128, left: 208, width: 210, height: 45, fontSize: 14 },
+  { id: 'name', page: 1, top: 128, left: 208, width: 210, height: 45, fontSize: 18 },
   { id: 'birthAndPassport', page: 1, top: 128, left: 588, width: 190, height: 45, fontSize: 14 },
   // 2. USIM 정보
   { id: 'usimNumber', page: 1, top: 312, left: 208, width: 210, height: 45, fontSize: 14 },
-  // 3. 서명일자
+  // 3. 선호번호
+  { id: 'wishNumber1', page: 1, top: 280, left: 240, width: 70, height: 34, fontSize: 14 },
+  { id: 'wishNumber2', page: 1, top: 280, left: 340, width: 70, height: 34, fontSize: 14 },
+  // 4. 서명일자
   {
     id: 'signDate',
     page: 1,
-    top: 1054,
-    left: 592,
+    top: 1052,
+    left: 600,
     height: 30,
     fontSize: 14,
   },
@@ -37,6 +40,8 @@ interface FormData {
   birthDate: string;
   passportNumber: string;
   usimNumber: string;
+  wishNumber1: string;
+  wishNumber2: string;
   signDate: string;
 }
 
@@ -53,6 +58,8 @@ export default function KTAsiaPage() {
     birthDate: '',
     passportNumber: '',
     usimNumber: '',
+    wishNumber1: '',
+    wishNumber2: '',
     signDate: todayFormatted,
   });
 
@@ -71,6 +78,8 @@ export default function KTAsiaPage() {
       birthDate: '',
       passportNumber: '',
       usimNumber: '',
+      wishNumber1: '',
+      wishNumber2: '',
       signDate: todayFormatted,
     });
   };
@@ -80,7 +89,7 @@ export default function KTAsiaPage() {
     const parts = date.split('.');
     if (parts.length === 3) {
       const nbsp = '\u00A0';
-      return `${parts[0]}${nbsp.repeat(4)}${parts[1]}${nbsp.repeat(5)}${parts[2]}`;
+      return `${parts[0]}${nbsp.repeat(7)}${parts[1]}${nbsp.repeat(7)}${parts[2]}`;
     }
     return date;
   };
@@ -89,6 +98,8 @@ export default function KTAsiaPage() {
     name: formData.name,
     birthAndPassport: `${formData.birthDate}\n${formData.passportNumber}`,
     usimNumber: formData.usimNumber,
+    wishNumber1: formData.wishNumber1,
+    wishNumber2: formData.wishNumber2,
     signDate: formatSignDate(formData.signDate),
   };
 
@@ -100,7 +111,7 @@ export default function KTAsiaPage() {
         {/* 메인 컨텐츠 */}
         <div className="flex-1 flex overflow-hidden">
           {/* 좌측: 입력 폼 */}
-          <div className="w-[480px] border-r bg-muted/30">
+          <div className="w-[500px] border-r bg-muted/30">
             <ScrollArea className="h-full">
               <div className="p-6">
                 <Card>
@@ -108,7 +119,7 @@ export default function KTAsiaPage() {
                     <CardTitle className="text-base">신청서 정보 입력</CardTitle>
                     <CardDescription>필수 정보를 입력하세요</CardDescription>
                   </CardHeader>
-                  <CardContent className="space-y-6">
+                  <CardContent className="space-y-3">
                     {/* 가입고객정보 */}
                     <div className="space-y-4">
                       <p className="text-sm font-medium text-muted-foreground">가입고객정보</p>
@@ -116,7 +127,7 @@ export default function KTAsiaPage() {
                         <Label htmlFor="name">
                           이름 (법인명) <span className="text-destructive">*</span>
                         </Label>
-                        <Input id="name" name="name" value={formData.name} onChange={handleChange} placeholder="홍길동" />
+                        <Input id="name" name="name" value={formData.name} onChange={handleChange} placeholder="'웰'은 비우기 (손글씨)" />
                       </div>
                       <div className="grid grid-cols-2 gap-4">
                         <div className="space-y-2">
@@ -136,7 +147,6 @@ export default function KTAsiaPage() {
 
                     {/* USIM 정보 */}
                     <div className="space-y-4">
-                      <p className="text-sm font-medium text-muted-foreground">USIM 정보</p>
                       <div className="space-y-2">
                         <Label htmlFor="usimNumber">
                           USIM 일련번호 <span className="text-destructive">*</span>
@@ -147,9 +157,24 @@ export default function KTAsiaPage() {
 
                     <Separator />
 
+                    {/* 선호번호 */}
+                    <div className="space-y-4">
+                      <div className="grid grid-cols-2 gap-4">
+                        <div className="space-y-2">
+                          <Label htmlFor="wishNumber1">선호번호 1</Label>
+                          <Input id="wishNumber1" name="wishNumber1" value={formData.wishNumber1} onChange={handleChange} placeholder="1234" maxLength={4} />
+                        </div>
+                        <div className="space-y-2">
+                          <Label htmlFor="wishNumber2">선호번호 2</Label>
+                          <Input id="wishNumber2" name="wishNumber2" value={formData.wishNumber2} onChange={handleChange} placeholder="5678" maxLength={4} />
+                        </div>
+                      </div>
+                    </div>
+
+                    <Separator />
+
                     {/* 서명일자 */}
                     <div className="space-y-4">
-                      <p className="text-sm font-medium text-muted-foreground">서명일자</p>
                       <div className="space-y-2">
                         <Label htmlFor="signDate">
                           날짜 <span className="text-destructive">*</span>
@@ -166,16 +191,9 @@ export default function KTAsiaPage() {
           {/* 우측: 서식지 미리보기 */}
           <div className="flex-1 bg-muted/50 overflow-hidden">
             <ScrollArea className="h-full">
-              <div className="p-6">
-                <Card className="overflow-hidden">
-                  <CardHeader className="pb-3 bg-muted/50">
-                    <CardTitle className="text-sm font-medium">미리보기</CardTitle>
-                    <CardDescription className="text-xs">{debugMode && '이미지를 클릭하면 좌표가 표시됩니다'}</CardDescription>
-                  </CardHeader>
-                  <CardContent className="p-0">
-                    <ImageViewer images={PAGE_IMAGES} fieldPositions={FIELD_POSITIONS} fieldValues={fieldValues} scale={0.6} debugMode={debugMode} />
-                  </CardContent>
-                </Card>
+              <div className="">
+                {debugMode && <p className="text-xs text-muted-foreground mb-2">이미지를 클릭하면 좌표가 표시됩니다</p>}
+                <ImageViewer images={PAGE_IMAGES} fieldPositions={FIELD_POSITIONS} fieldValues={fieldValues} scale={0.9} debugMode={debugMode} />
               </div>
             </ScrollArea>
           </div>

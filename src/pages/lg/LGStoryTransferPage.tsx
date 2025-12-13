@@ -118,7 +118,7 @@ export default function LGStoryTransferPage() {
         {/* 메인 컨텐츠 */}
         <div className="flex-1 flex overflow-hidden">
           {/* 좌측: 입력 폼 */}
-          <div className="w-[480px] border-r bg-muted/30">
+          <div className="w-[500px] border-r bg-muted/30">
             <ScrollArea className="h-full">
               <div className="p-6">
                 <Card>
@@ -198,14 +198,9 @@ export default function LGStoryTransferPage() {
           {/* 우측: 서식지 미리보기 */}
           <div className="flex-1 bg-muted/50 overflow-hidden">
             <ScrollArea className="h-full">
-              <div className="p-6">
-                <Card className="overflow-hidden">
-                  <CardHeader className="pb-3 bg-muted/50">
-                    <CardTitle className="text-sm font-medium">미리보기</CardTitle>
-                    <CardDescription className="text-xs">{PAGE_IMAGES.length === 0 ? '이미지를 추가해주세요' : debugMode && '이미지를 클릭하면 좌표가 표시됩니다'}</CardDescription>
-                  </CardHeader>
-                  <CardContent className="p-0">{PAGE_IMAGES.length > 0 ? <ImageViewer images={PAGE_IMAGES} fieldPositions={fieldPositions} fieldValues={fieldValues} scale={0.6} debugMode={debugMode} /> : <div className="flex items-center justify-center h-[400px] text-muted-foreground">서식지 이미지를 추가해주세요</div>}</CardContent>
-                </Card>
+              <div className="">
+                {debugMode && <p className="text-xs text-muted-foreground mb-2">이미지를 클릭하면 좌표가 표시됩니다</p>}
+                <ImageViewer images={PAGE_IMAGES} fieldPositions={fieldPositions} fieldValues={fieldValues} scale={0.9} debugMode={debugMode} />
               </div>
             </ScrollArea>
           </div>

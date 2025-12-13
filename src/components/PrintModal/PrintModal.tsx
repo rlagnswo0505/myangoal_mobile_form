@@ -2,6 +2,7 @@ import { useRef, useEffect, useState } from 'react';
 import { X, Printer, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { type FieldPosition, type FieldValue } from '@/components/PDFPreview/ImageViewer';
+import fontUrl from '@/font/Kimjungchul_Font/KimjungchulScript-Regular.ttf';
 
 interface PrintModalProps {
   isOpen: boolean;
@@ -52,9 +53,9 @@ export default function PrintModal({ isOpen, onClose, images, fieldPositions, fi
               word-break: keep-all;
               line-height: 1.1;
               color: #000;
-              font-family: ${field.fontFamily || "'Malgun Gothic', 'Nanum Gothic', sans-serif"};
+              font-family: ${field.fontFamily || "'KimjungchulScript', 'Malgun Gothic', sans-serif"};
               font-style: ${field.fontStyle || 'normal'};
-              font-weight: 500;
+              font-weight: normal;
               opacity: ${field.opacity ?? 1};
               ${widthMm ? `width: ${widthMm}mm;` : ''}
               ${heightMm ? `height: ${heightMm}mm; display: flex; align-items: center;` : ''}
@@ -98,6 +99,12 @@ export default function PrintModal({ isOpen, onClose, images, fieldPositions, fi
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;500;600&family=Nanum+Pen+Script&display=swap" rel="stylesheet">
         <style>
+          @font-face {
+            font-family: 'KimjungchulScript';
+            src: url('${fontUrl}') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+          }
           * {
             margin: 0;
             padding: 0;
@@ -165,9 +172,15 @@ export default function PrintModal({ isOpen, onClose, images, fieldPositions, fi
 
   if (!isOpen) return null;
 
+  const handleBackdropClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (e.target === e.currentTarget) {
+      onClose();
+    }
+  };
+
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-      <div className="bg-white rounded-lg shadow-xl w-[90vw] h-[90vh] flex flex-col">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50" onClick={handleBackdropClick}>
+      <div className="bg-white rounded-lg shadow-xl w-[74vw] h-[90vh] flex flex-col">
         {/* 헤더 */}
         <div className="flex items-center justify-between px-4 py-3 border-b">
           <h2 className="text-lg font-semibold">인쇄 미리보기</h2>

@@ -270,7 +270,7 @@ export default function ImageViewer({ images, fieldPositions, fieldValues, scale
                   style={{
                     top: `${field.top * scale}px`,
                     left: `${field.left * scale}px`,
-                    fontSize: `${(field.fontSize || 12) * scale}px`,
+                    fontSize: `${(field.fontSize || 18) * scale}px`,
                     width: field.width ? `${field.width * scale}px` : 'auto',
                     height: field.height ? `${field.height * scale}px` : 'auto',
                     letterSpacing: field.letterSpacing ? `${field.letterSpacing}px` : 'normal',
@@ -279,10 +279,10 @@ export default function ImageViewer({ images, fieldPositions, fieldValues, scale
                     wordBreak: 'keep-all',
                     lineHeight: 1.1,
                     color: '#000',
-                    fontFamily: field.fontFamily || "'Malgun Gothic', 'Nanum Gothic', sans-serif",
+                    fontFamily: field.fontFamily || "'KimjungchulScript', 'Malgun Gothic', sans-serif",
                     fontStyle: field.fontStyle || 'normal',
-                    fontWeight: 500,
-                    opacity: field.opacity ?? 1,
+                    fontWeight: 'normal',
+                    opacity: field.opacity ?? 0.8,
                   }}
                 >
                   <span style={{ width: '100%', textAlign: field.textAlign || 'left' }}>{value}</span>
@@ -380,7 +380,7 @@ export function ImagePrintView({
                   position: 'absolute',
                   top: `${field.top * scaleY}px`,
                   left: `${field.left * scaleX}px`,
-                  fontSize: `${(field.fontSize || 12) * Math.min(scaleX, scaleY)}pt`,
+                  fontSize: `${(field.fontSize || 16) * Math.min(scaleX, scaleY)}pt`,
                   width: field.width ? `${field.width * scaleX}px` : 'auto',
                   letterSpacing: field.letterSpacing ? `${field.letterSpacing * scaleX}px` : 'normal',
                   textAlign: field.textAlign || 'left',

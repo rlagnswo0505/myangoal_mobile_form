@@ -1,5 +1,13 @@
 @import "tailwindcss";
 
+/* 커스텀 폰트 */
+@font-face {
+  font-family: 'KimjungchulScript';
+  src: url('./font/Kimjungchul_Font/KimjungchulScript-Regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
