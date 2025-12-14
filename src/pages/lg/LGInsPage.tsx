@@ -10,7 +10,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import DateInput from '@/components/Form/DateInput';
-import PhoneInput, { formatPhoneForDisplay } from '@/components/Form/PhoneInput';
+import PhoneInput, { formatPhoneForDisplay, formatPhoneWithDash } from '@/components/Form/PhoneInput';
 import insImage from '@/assets/templates/인스 선불-명변.jpg';
 
 // PDF를 이미지로 변환한 파일
@@ -29,6 +29,16 @@ const TYPE_POSITIONS = {
   prepaid: { top: 12, left: 444 },
   transfer: { top: 12, left: 564 },
 };
+
+// 명의변경 시 추가 필드 위치 (좌표 확인 모드로 조정 필요)
+const TRANSFER_ADDITIONAL_POSITIONS: FieldPosition[] = [
+  // 양도인 개통번호
+  { id: 'phoneNumber2', page: 1, top: 728, left: 150, width: 260, height: 26, fontSize: 16 },
+  // 양수인 개통번호
+  { id: 'phoneNumber3', page: 1, top: 756, left: 150, width: 260, height: 26, fontSize: 16 },
+  // 양도인 생년월일
+  { id: 'birthDate2', page: 1, top: 728, left: 500, width: 177, height: 26, fontSize: 16 },
+];
 
 // A4 용지 크기 (96dpi 기준: 794 x 1123 px)
 // 필드 위치 설정 (A4 픽셀 좌표 기준) - 좌표 확인 모드로 조정 필요
@@ -132,6 +142,8 @@ export default function LGInsPage() {
     // 신청유형 체크 표시 (✓)
     { id: 'typeCheck', page: 1, top: typePos.top, left: typePos.left, fontSize: 14 },
     ...BASE_FIELD_POSITIONS,
+    // 명의변경 시 추가 필드
+    ...(formData.applicationType === 'transfer' ? TRANSFER_ADDITIONAL_POSITIONS : []),
   ];
 
   // 요금제 라벨 찾기
@@ -140,8 +152,11 @@ export default function LGInsPage() {
   const fieldValues: FieldValue = {
     typeCheck: '✓',
     phoneNumber: formatPhoneForDisplay(formData.phoneNumber),
+    phoneNumber2: formatPhoneWithDash(formData.phoneNumber),
+    phoneNumber3: formatPhoneWithDash(formData.phoneNumber),
     name: formData.name,
     birthDate: formData.birthDate,
+    birthDate2: formData.birthDate,
     foreignerNumber: formData.foreignerNumber,
     plan: selectedPlan?.name || '',
     usimModel: formData.usimModel,

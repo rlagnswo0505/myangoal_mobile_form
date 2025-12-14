@@ -52,3 +52,16 @@ export function formatPhoneForDisplay(phone: string): string {
   const nbsp = '\u00A0';
   return `${remaining.slice(0, 4)}${nbsp.repeat(4)}${remaining.slice(4)}`;
 }
+
+/**
+ * 휴대폰번호를 010-0000-0000 형식으로 변환
+ */
+export function formatPhoneWithDash(phone: string): string {
+  const numbers = phone.replace(/[^0-9]/g, '');
+  if (numbers.length <= 3) {
+    return numbers;
+  } else if (numbers.length <= 7) {
+    return `${numbers.slice(0, 3)}-${numbers.slice(3)}`;
+  }
+  return `${numbers.slice(0, 3)}-${numbers.slice(3, 7)}-${numbers.slice(7)}`;
+}
