@@ -28,6 +28,11 @@ export const menuConfig: MenuItem[] = [
     id: 'lg',
     label: 'LG U+',
     icon: '📱',
-    submenus: [],
+    submenus: [
+      { id: 'lg-story', label: '이야기 선불', path: '/lg/story' },
+      { id: 'lg-story-transfer', label: '이야기 명의변경', path: '/lg/story-transfer' },
+      { id: 'lg-ins', label: '인스 선불-명변', path: '/lg/ins' },
+      { id: 'lg-ins-postpaid', label: '인스 후불', path: '/lg/ins-postpaid' },
+    ],
   },
 ];

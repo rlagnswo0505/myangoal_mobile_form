@@ -57,6 +57,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           url: '/lg/ins',
           isActive: location.pathname === '/lg/ins',
         },
+        {
+          title: '인스 후불',
+          url: '/lg/ins-postpaid',
+          isActive: location.pathname === '/lg/ins-postpaid',
+        },
       ],
     },
   ];
