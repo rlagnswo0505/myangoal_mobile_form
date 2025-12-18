@@ -144,7 +144,7 @@ export default function LGStoryPage() {
         {/* 메인 컨텐츠 */}
         <div className="flex-1 flex overflow-hidden">
           {/* 좌측: 입력 폼 */}
-          <div className="w-[500px] border-r bg-muted/30">
+          <div className="flex-1 border-r bg-muted/30">
             <ScrollArea className="h-full">
               <div className="p-6">
                 <Card>

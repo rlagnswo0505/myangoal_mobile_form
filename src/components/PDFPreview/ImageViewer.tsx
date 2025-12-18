@@ -219,8 +219,8 @@ export default function ImageViewer({ images, fieldPositions, fieldValues, scale
             key={pageNumber}
             className={`pdf-page relative bg-white shadow-xl rounded-sm border ${debugMode ? 'cursor-crosshair select-none' : ''}`}
             style={{
-              width: A4_WIDTH * scale,
-              height: A4_HEIGHT * scale,
+              width: '100%',
+              height: 'auto',
             }}
             onMouseDown={(e) => handleMouseDown(e, pageNumber)}
             onMouseMove={(e) => handleMouseMove(e, pageNumber)}
