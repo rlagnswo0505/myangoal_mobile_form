@@ -34,7 +34,7 @@ const BASE_FIELD_POSITIONS: FieldPosition[] = [
   // 4. 휴대폰번호
   { id: 'phoneNumber', page: 1, top: 69, left: 590, width: 208, height: 43, fontSize: 14 },
   // 5. 신청날짜
-  { id: 'signDate', page: 1, top: 1037, left: 578, height: 30, fontSize: 15 },
+  { id: 'signDate', page: 1, top: 1040, left: 578, height: 30, fontSize: 15 },
 ];
 
 interface FormData {
@@ -88,7 +88,7 @@ export default function LGStoryTransferPage() {
     const parts = date.split('.');
     if (parts.length === 3) {
       const nbsp = '\u00A0';
-      return `${parts[0]}${nbsp.repeat(7)}${parts[1]}${nbsp.repeat(7)}${parts[2]}`;
+      return `${parts[0]}${nbsp.repeat(12)}${parts[1]}${nbsp.repeat(12)}${parts[2]}`;
     }
     return date;
   };

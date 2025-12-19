@@ -186,25 +186,14 @@ export default function ImageViewer({ images, fieldPositions, fieldValues, scale
 
       {/* 디버그 모드 좌표 표시 - 드래그 영역 */}
       {debugMode && dragArea && (
-        <div className="fixed top-4 right-4 z-50 bg-black text-white px-4 py-3 rounded-lg shadow-lg text-sm font-mono">
+        <div className="fixed bottom-4 left-4 z-50 bg-black text-white px-4 py-3 rounded-lg shadow-lg text-sm font-mono">
           <div className="flex items-center gap-2 mb-2">
             <MousePointer2 className="w-4 h-4" />
             <span className="font-semibold">드래그 영역 (Page {dragArea.page})</span>
           </div>
           <div className="space-y-1">
-            <div>
-              top: <span className="text-green-400">{dragArea.startY}</span>
-            </div>
-            <div>
-              left: <span className="text-green-400">{dragArea.startX}</span>
-            </div>
-            <div className="border-t border-white/30 pt-1 mt-1">
-              <div>
-                width: <span className="text-yellow-400">{dragArea.endX - dragArea.startX}</span>
-              </div>
-              <div>
-                height: <span className="text-yellow-400">{dragArea.endY - dragArea.startY}</span>
-              </div>
+            <div className="text-green-400 select-all cursor-pointer" title="클릭해서 복사">
+              top: {dragArea.startY}, left: {dragArea.startX}, width: {dragArea.endX - dragArea.startX}, height: {dragArea.endY - dragArea.startY}
             </div>
           </div>
         </div>

@@ -34,33 +34,33 @@ const CARRIER_OPTIONS = [
 
 // 신청유형별 체크 위치 (좌표 확인 모드로 조정 필요)
 const TYPE_POSITIONS = {
-  new: { top: 20, left: 372 },
-  transfer: { top: 20, left: 436 },
+  new: { top: 20, left: 342 },
+  transfer: { top: 20, left: 462 },
 };
 
 // 명의변경 시 추가 필드 위치 (좌표 확인 모드로 조정 필요)
 const TRANSFER_ADDITIONAL_POSITIONS: FieldPosition[] = [
   // 양도인 개통번호
-  { id: 'phoneNumber2', page: 1, top: 1058, left: 600, width: 202, height: 30, fontSize: 16 },
+  { id: 'phoneNumber2', page: 1, top: 974, left: 540, width: 204, height: 29, fontSize: 16 },
   // 양수인 개통번호
-  { id: 'phoneNumber3', page: 1, top: 264, left: 148, width: 294, height: 30, fontSize: 16 },
+  { id: 'phoneNumber3', page: 1, top: 242, left: 135, width: 273, height: 25, fontSize: 16 },
 ];
 
 // 변경전 통신사 체크 위치 (명의변경 시만 표시)
 const CARRIER_CHECK_POSITIONS = {
-  skt: { top: 270, left: 544 },
-  kt: { top: 270, left: 592 },
-  lg: { top: 270, left: 634 },
-  mvno: { top: 270, left: 686 },
+  skt: { top: 246, left: 501 },
+  kt: { top: 246, left: 546 },
+  lg: { top: 246, left: 584 },
+  mvno: { top: 246, left: 632 },
 };
 
 // 알뜰폰 상세 입력 위치 (명의변경 시만 표시)
-const MVNO_DETAIL_POSITION: FieldPosition = { id: 'mvnoDetail', page: 1, top: 266, left: 730, width: 86, height: 27, fontSize: 14 };
+const MVNO_DETAIL_POSITION: FieldPosition = { id: 'mvnoDetail', page: 1, top: 246, left: 672, width: 87, height: 23, fontSize: 12 };
 
 // 신규가입 시 희망번호 필드 위치 (좌표 확인 모드로 조정 필요)
 const NEW_WISH_NUMBER_POSITIONS: FieldPosition[] = [
-  { id: 'wishNumber1', page: 1, top: 202, left: 180, width: 110, height: 29, fontSize: 14 },
-  { id: 'wishNumber2', page: 1, top: 232, left: 180, width: 110, height: 29, fontSize: 14 },
+  { id: 'wishNumber1', page: 1, top: 186, left: 180, width: 110, height: 29, fontSize: 14 },
+  { id: 'wishNumber2', page: 1, top: 212, left: 180, width: 110, height: 29, fontSize: 14 },
 ];
 
 // 필드 위치 설정 (A4 픽셀 좌표 기준) - 좌표 확인 모드로 조정 필요
@@ -69,36 +69,36 @@ const BASE_FIELD_POSITIONS: FieldPosition[] = [
   {
     id: 'phoneNumber',
     page: 1,
-    top: 54,
-    left: 526,
-    width: 294,
-    height: 30,
+    top: 50,
+    left: 490,
+    width: 270,
+    height: 28,
     fontSize: 16,
   },
   // 2. 이름
-  { id: 'name', page: 1, top: 54, left: 148, width: 294, height: 30, fontSize: 16 },
+  { id: 'name', page: 1, top: 50, left: 136, width: 270, height: 28, fontSize: 16 },
   // 3. 생년월일
-  { id: 'birthDate', page: 1, top: 83, left: 148, width: 294, height: 30, fontSize: 16 },
+  { id: 'birthDate', page: 1, top: 76, left: 136, width: 270, height: 28, fontSize: 16 },
   // 4. 외국인등록번호
-  { id: 'foreignerNumber', page: 1, top: 83, left: 526, width: 294, height: 30, fontSize: 16 },
+  { id: 'foreignerNumber', page: 1, top: 76, left: 490, width: 270, height: 28, fontSize: 16 },
   // 5. 주소
-  { id: 'address', page: 1, top: 141, left: 148, width: 672, height: 30, fontSize: 14 },
+  { id: 'address', page: 1, top: 130, left: 136, width: 620, height: 27, fontSize: 14 },
   // 6. 요금제
-  { id: 'plan', page: 1, top: 172, left: 148, width: 295, height: 30, fontSize: 14 },
+  { id: 'plan', page: 1, top: 160, left: 136, width: 272, height: 24, fontSize: 14 },
   // 7. 유심모델
-  { id: 'usimModel', page: 1, top: 174, left: 573, width: 98, height: 27, fontSize: 16 },
+  { id: 'usimModel', page: 1, top: 160, left: 534, width: 85, height: 27, fontSize: 16 },
   // 8. 유심번호
-  { id: 'usimNumber', page: 1, top: 174, left: 712, width: 106, height: 27, fontSize: 14 },
+  { id: 'usimNumber', page: 1, top: 160, left: 660, width: 89, height: 24, fontSize: 14 },
   // 9. 예금주
-  { id: 'accountHolder', page: 1, top: 342, left: 148, width: 212, height: 30, fontSize: 16 },
+  { id: 'accountHolder', page: 1, top: 314, left: 136, width: 180, height: 28, fontSize: 16 },
   // 10. 예금주 생년월일
-  { id: 'accountBirthDate', page: 1, top: 340, left: 526, width: 155, height: 30, fontSize: 16 },
+  { id: 'accountBirthDate', page: 1, top: 314, left: 484, width: 146, height: 28, fontSize: 16 },
   // 11. 은행
-  { id: 'bank', page: 1, top: 372, left: 148, width: 127, height: 29, fontSize: 14 },
+  { id: 'bank', page: 1, top: 340, left: 136, width: 115, height: 30, fontSize: 14 },
   // 12. 계좌번호
-  { id: 'accountNumber', page: 1, top: 370, left: 356, width: 324, height: 30, fontSize: 16 },
+  { id: 'accountNumber', page: 1, top: 340, left: 328, width: 300, height: 29, fontSize: 16 },
   // 13. 신청날짜
-  { id: 'signDate', page: 1, top: 1128, left: 150, width: 289, height: 41, fontSize: 16 },
+  { id: 'signDate', page: 1, top: 1039, left: 130, width: 280, height: 38, fontSize: 16 },
 ];
 
 interface FormData {

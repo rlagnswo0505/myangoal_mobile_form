@@ -6,6 +6,7 @@ import LGStoryPage from './pages/lg/LGStoryPage';
 import LGStoryTransferPage from './pages/lg/LGStoryTransferPage';
 import LGInsPage from './pages/lg/LGInsPage';
 import LGInsPostpaidPage from './pages/lg/LGInsPostpaidPage';
+import LGHanpassPage from './pages/lg/LGHanpassPage';
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
           <Route path="lg/story-transfer" element={<LGStoryTransferPage />} />
           <Route path="lg/ins" element={<LGInsPage />} />
           <Route path="lg/ins-postpaid" element={<LGInsPostpaidPage />} />
+          <Route path="lg/hanpass" element={<LGHanpassPage />} />
         </Route>
       </Routes>
     </BrowserRouter>

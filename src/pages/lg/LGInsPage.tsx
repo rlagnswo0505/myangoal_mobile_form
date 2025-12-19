@@ -32,6 +32,8 @@ const TYPE_POSITIONS = {
 
 // 명의변경 시 추가 필드 위치 (좌표 확인 모드로 조정 필요)
 const TRANSFER_ADDITIONAL_POSITIONS: FieldPosition[] = [
+  // 개통번호 (명의변경 시만)
+  { id: 'phoneNumber', page: 1, top: 66, left: 180, width: 210, height: 36, fontSize: 16 },
   // 양도인 개통번호
   { id: 'phoneNumber2', page: 1, top: 728, left: 150, width: 260, height: 26, fontSize: 16 },
   // 양수인 개통번호
@@ -43,25 +45,23 @@ const TRANSFER_ADDITIONAL_POSITIONS: FieldPosition[] = [
 // A4 용지 크기 (96dpi 기준: 794 x 1123 px)
 // 필드 위치 설정 (A4 픽셀 좌표 기준) - 좌표 확인 모드로 조정 필요
 const BASE_FIELD_POSITIONS: FieldPosition[] = [
-  // 1. 개통번호
-  { id: 'phoneNumber', page: 1, top: 66, left: 180, width: 210, height: 36, fontSize: 16 },
-  // 2. 이름
+  // 1. 이름
   { id: 'name', page: 1, top: 114, left: 145, width: 259, height: 30, fontSize: 16 },
-  // 3. 생년월일
+  // 2. 생년월일
   { id: 'birthDate', page: 1, top: 114, left: 500, width: 155, height: 26, fontSize: 16 },
-  // 4. 외국인등록번호
+  // 3. 외국인등록번호
   { id: 'foreignerNumber', page: 1, top: 140, left: 500, width: 200, height: 30, fontSize: 16 },
-  // 5. 요금제
+  // 4. 요금제
   { id: 'plan', page: 1, top: 295, left: 147, width: 255, height: 30, fontSize: 14 },
-  // 6. 유심모델
+  // 5. 유심모델
   { id: 'usimModel', page: 1, top: 296, left: 539, width: 85, height: 26, fontSize: 16 },
-  // 7. 유심번호
+  // 6. 유심번호
   { id: 'usimNumber', page: 1, top: 296, left: 660, width: 85, height: 26, fontSize: 14 },
-  // 8. 희망번호 뒷자리-1
+  // 7. 희망번호 뒷자리-1
   { id: 'wishNumber1', page: 1, top: 325, left: 189, width: 100, height: 25, fontSize: 14 },
-  // 9. 희망번호 뒷자리-2
+  // 8. 희망번호 뒷자리-2
   { id: 'wishNumber2', page: 1, top: 350, left: 189, width: 100, height: 25, fontSize: 14 },
-  // 10. 신청날짜
+  // 9. 신청날짜
   { id: 'signDate', page: 1, top: 1037, left: 140, width: 274, height: 38, fontSize: 16 },
 ];
 
@@ -203,13 +203,16 @@ export default function LGInsPage() {
                     {/* 고객정보 */}
                     <div className="space-y-4">
                       <p className="text-sm font-medium text-muted-foreground">고객정보</p>
-                      <div className="grid grid-cols-2 gap-4">
+                      {/* 명의변경 시에만 개통번호 표시 */}
+                      {formData.applicationType === 'transfer' && (
                         <div className="space-y-2">
                           <Label htmlFor="phoneNumber">
                             개통번호 <span className="text-destructive">*</span>
                           </Label>
                           <PhoneInput id="phoneNumber" value={formData.phoneNumber} onChange={(value) => setFormData((prev) => ({ ...prev, phoneNumber: value }))} />
                         </div>
+                      )}
+                      <div className="grid grid-cols-2 gap-4">
                         <div className="space-y-2">
                           <Label htmlFor="name">
                             이름 <span className="text-destructive">*</span>

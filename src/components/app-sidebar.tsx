@@ -62,6 +62,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           url: '/lg/ins-postpaid',
           isActive: location.pathname === '/lg/ins-postpaid',
         },
+        {
+          title: '한패스 선불-명변',
+          url: '/lg/hanpass',
+          isActive: location.pathname === '/lg/hanpass',
+        },
       ],
     },
   ];

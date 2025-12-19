@@ -18,7 +18,7 @@ export default function PrintModal({ isOpen, onClose, images, fieldPositions, fi
 
   useEffect(() => {
     if (!isOpen || !iframeRef.current) {
-      setLoading(true); // 모달이 닫히면 로딩 상태 초기화
+      setLoading(true);
       return;
     }
 
@@ -26,9 +26,9 @@ export default function PrintModal({ isOpen, onClose, images, fieldPositions, fi
     const doc = iframe.contentDocument || iframe.contentWindow?.document;
     if (!doc) return;
 
-    // 각 페이지의 HTML 생성
-    // A4 크기 기준 (96dpi: 794 x 1123 px -> 210 x 297 mm)
-    const pxToMm = (px: number) => (px / 794) * 210;
+    // A4 기준 (794px -> 210mm)
+    const A4_WIDTH = 794;
+    const pxToMm = (px: number) => (px / A4_WIDTH) * 210;
 
     const pagesHTML = images
       .map((imgUrl, index) => {
