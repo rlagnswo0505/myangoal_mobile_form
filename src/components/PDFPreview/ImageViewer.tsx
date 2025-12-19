@@ -29,8 +29,8 @@ interface ImageViewerProps {
 }
 
 // A4 크기 (96dpi 기준)
-// const A4_WIDTH = 794;
-// const A4_HEIGHT = 1123;
+const A4_WIDTH = 794;
+const A4_HEIGHT = 1123;
 
 interface DragArea {
   startX: number;
@@ -186,14 +186,25 @@ export default function ImageViewer({ images, fieldPositions, fieldValues, scale
 
       {/* 디버그 모드 좌표 표시 - 드래그 영역 */}
       {debugMode && dragArea && (
-        <div className="fixed bottom-4 right-4 z-50 bg-black text-white px-4 py-3 rounded-lg shadow-lg text-sm font-mono">
+        <div className="fixed top-4 right-4 z-50 bg-black text-white px-4 py-3 rounded-lg shadow-lg text-sm font-mono">
           <div className="flex items-center gap-2 mb-2">
             <MousePointer2 className="w-4 h-4" />
             <span className="font-semibold">드래그 영역 (Page {dragArea.page})</span>
           </div>
           <div className="space-y-1">
             <div>
-              top: <span className="text-green-400">{dragArea.startY}</span>, left: <span className="text-green-400">{dragArea.startX}</span>, width: <span className="text-yellow-400">{dragArea.endX - dragArea.startX}</span>, height: <span className="text-yellow-400">{dragArea.endY - dragArea.startY}</span>
+              top: <span className="text-green-400">{dragArea.startY}</span>
+            </div>
+            <div>
+              left: <span className="text-green-400">{dragArea.startX}</span>
+            </div>
+            <div className="border-t border-white/30 pt-1 mt-1">
+              <div>
+                width: <span className="text-yellow-400">{dragArea.endX - dragArea.startX}</span>
+              </div>
+              <div>
+                height: <span className="text-yellow-400">{dragArea.endY - dragArea.startY}</span>
+              </div>
             </div>
           </div>
         </div>
@@ -208,8 +219,8 @@ export default function ImageViewer({ images, fieldPositions, fieldValues, scale
             key={pageNumber}
             className={`pdf-page relative bg-white shadow-xl rounded-sm border ${debugMode ? 'cursor-crosshair select-none' : ''}`}
             style={{
-              width: '100%',
-              height: 'auto',
+              width: A4_WIDTH * scale,
+              height: A4_HEIGHT * scale,
             }}
             onMouseDown={(e) => handleMouseDown(e, pageNumber)}
             onMouseMove={(e) => handleMouseMove(e, pageNumber)}
