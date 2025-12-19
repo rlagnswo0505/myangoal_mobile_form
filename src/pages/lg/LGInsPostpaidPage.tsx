@@ -91,7 +91,7 @@ const BASE_FIELD_POSITIONS: FieldPosition[] = [
   { id: 'usimNumber', page: 1, top: 160, left: 660, width: 89, height: 24, fontSize: 14 },
   // 9. 예금주
   { id: 'accountHolder', page: 1, top: 314, left: 136, width: 180, height: 28, fontSize: 16 },
-  // 10. 예금주 생년월일
+  // 10. 생년월일
   { id: 'accountBirthDate', page: 1, top: 314, left: 484, width: 146, height: 28, fontSize: 16 },
   // 11. 은행
   { id: 'bank', page: 1, top: 340, left: 136, width: 115, height: 30, fontSize: 14 },
@@ -419,7 +419,7 @@ export default function LGInsPostpaidPage() {
                         </div>
                         <div className="space-y-2">
                           <Label htmlFor="accountBirthDate">
-                            예금주 생년월일 (6자리) <span className="text-destructive">*</span>
+                            생년월일 (6자리) <span className="text-destructive">*</span>
                           </Label>
                           <DateInput id="accountBirthDate" format="6" value={formData.accountBirthDate} onChange={(value) => setFormData((prev) => ({ ...prev, accountBirthDate: value }))} />
                         </div>
@@ -459,7 +459,7 @@ export default function LGInsPostpaidPage() {
           </div>
 
           {/* 우측: 서식지 미리보기 */}
-          <div className="flex-1 bg-muted/50 overflow-hidden">
+          <div className="flex-0.7 border-r bg-muted/30 min-w-[770px]">
             <ScrollArea className="h-full">
               <div className="">
                 {debugMode && <p className="text-xs text-muted-foreground mb-2">이미지를 클릭하면 좌표가 표시됩니다</p>}
