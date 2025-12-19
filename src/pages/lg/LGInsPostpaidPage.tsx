@@ -463,7 +463,7 @@ export default function LGInsPostpaidPage() {
             <ScrollArea className="h-full">
               <div className="">
                 {debugMode && <p className="text-xs text-muted-foreground mb-2">이미지를 클릭하면 좌표가 표시됩니다</p>}
-                <ImageViewer images={PAGE_IMAGES} fieldPositions={fieldPositions} fieldValues={fieldValues} scale={0.9} debugMode={debugMode} />
+                <ImageViewer images={PAGE_IMAGES} fieldPositions={fieldPositions} fieldValues={fieldValues} scale={1} debugMode={debugMode} />
               </div>
             </ScrollArea>
           </div>
