@@ -459,7 +459,7 @@ export default function LGInsPostpaidPage() {
           </div>
 
           {/* 우측: 서식지 미리보기 */}
-          <div className="flex-0.7 border-r bg-muted/30 min-w-[770px]">
+          <div className="flex-1 border-r bg-muted/30 min-w-[770px]">
             <ScrollArea className="h-full">
               <div className="">
                 {debugMode && <p className="text-xs text-muted-foreground mb-2">이미지를 클릭하면 좌표가 표시됩니다</p>}
