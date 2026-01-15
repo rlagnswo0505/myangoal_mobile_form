@@ -22,9 +22,7 @@ export const menuConfig: MenuItem[] = [
     id: 'skt',
     label: 'SKT',
     icon: '📱',
-    submenus: [
-      { id: 'joytel-prepaid', label: '조이텔 선불-명변', path: '/skt/joytel-prepaid' },
-    ],
+    submenus: [{ id: 'joytel-prepaid', label: '조이텔 선불-명변', path: '/skt/joytel-prepaid' }],
   },
   {
     id: 'lg',

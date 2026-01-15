@@ -94,7 +94,7 @@ export default function JoytelPrepaidPage() {
     birthDate: '',
     passportNumber: '',
     signDate: todayFormatted,
-    plan: 'band 안심 데이터',
+    plan: 'band 안심 데이터 (300MB)',
     wishNumber1: '',
     wishNumber2: '',
     usimModel: '',
