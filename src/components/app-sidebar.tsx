@@ -29,10 +29,12 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       title: 'SKT',
       url: '#',
       icon: Smartphone,
+      isActive: location.pathname.startsWith('/skt'),
       items: [
         {
-          title: '준비중',
-          url: '#',
+          title: '조이텔 선불-명변',
+          url: '/skt/joytel-prepaid',
+          isActive: location.pathname === '/skt/joytel-prepaid',
         },
       ],
     },

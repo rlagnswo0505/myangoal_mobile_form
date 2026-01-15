@@ -168,25 +168,20 @@ export default function ImageViewer({ images, fieldPositions, fieldValues, scale
     <div className="flex flex-col items-center gap-6 p-6">
       {/* 디버그 모드 좌표 표시 - 클릭 */}
       {debugMode && clickedPos && (
-        <div className="fixed top-4 right-4 z-50 bg-black text-white px-4 py-3 rounded-lg shadow-lg text-sm font-mono">
+        <div className="fixed bottom-4 left-4 z-50 bg-black text-white px-4 py-3 rounded-lg shadow-lg text-sm font-mono">
           <div className="flex items-center gap-2 mb-2">
             <MousePointer2 className="w-4 h-4" />
             <span className="font-semibold">클릭 좌표 (Page {clickedPos.page})</span>
           </div>
-          <div className="space-y-1">
-            <div>
-              top: <span className="text-green-400">{clickedPos.y}</span>
-            </div>
-            <div>
-              left: <span className="text-green-400">{clickedPos.x}</span>
-            </div>
+          <div className="text-green-400 select-all cursor-pointer" title="클릭해서 복사">
+            top: {clickedPos.y}, left: {clickedPos.x}
           </div>
         </div>
       )}
 
       {/* 디버그 모드 좌표 표시 - 드래그 영역 */}
       {debugMode && dragArea && (
-        <div className="fixed bottom-4 left-4 z-50 bg-black text-white px-4 py-3 rounded-lg shadow-lg text-sm font-mono">
+        <div className="fixed bottom-4 right-4 z-50 bg-black text-white px-4 py-3 rounded-lg shadow-lg text-sm font-mono">
           <div className="flex items-center gap-2 mb-2">
             <MousePointer2 className="w-4 h-4" />
             <span className="font-semibold">드래그 영역 (Page {dragArea.page})</span>
