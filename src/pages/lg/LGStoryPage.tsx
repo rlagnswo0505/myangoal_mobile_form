@@ -1,5 +1,6 @@
-import { useState, type ChangeEvent } from 'react';
+import { useState, useRef, type ChangeEvent } from 'react';
 import ImageViewer, { type FieldPosition, type FieldValue } from '@/components/PDFPreview/ImageViewer';
+import { usePreviewScale } from '@/hooks/use-preview-scale';
 import PrintModal from '@/components/PrintModal/PrintModal';
 import PageHeader from '@/components/Layout/PageHeader';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -69,6 +70,9 @@ export default function LGStoryPage() {
     const currentIndex = savedIndex ? parseInt(savedIndex, 10) : 0;
     return ROOM_ORDER[currentIndex % ROOM_ORDER.length];
   };
+
+  const previewRef = useRef<HTMLDivElement>(null);
+  const scale = usePreviewScale(previewRef);
 
   const [debugMode, setDebugMode] = useState(false);
   const [showPrintModal, setShowPrintModal] = useState(false);
@@ -239,11 +243,11 @@ export default function LGStoryPage() {
           </div>
 
           {/* 우측: 서식지 미리보기 */}
-          <div className="flex-1 border-r bg-muted/30 min-w-[770px]">
+          <div ref={previewRef} className="flex-1 border-r bg-muted/30">
             <ScrollArea className="h-full">
               <div className="">
                 {debugMode && <p className="text-xs text-muted-foreground mb-2">이미지를 클릭하면 좌표가 표시됩니다</p>}
-                <ImageViewer images={PAGE_IMAGES} fieldPositions={FIELD_POSITIONS} fieldValues={fieldValues} scale={1} debugMode={debugMode} />
+                <ImageViewer images={PAGE_IMAGES} fieldPositions={FIELD_POSITIONS} fieldValues={fieldValues} scale={scale} debugMode={debugMode} />
               </div>
             </ScrollArea>
           </div>
