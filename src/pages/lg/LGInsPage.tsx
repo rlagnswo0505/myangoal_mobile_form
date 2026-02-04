@@ -17,12 +17,10 @@ import insImage from '@/assets/templates/인스 선불-명변.jpg';
 // PDF를 이미지로 변환한 파일
 const PAGE_IMAGES: string[] = [insImage];
 
-// 요금제 옵션
+// 요금제 옵션 (선불 시에만 표시)
 const PLAN_OPTIONS = [
-  { value: '19800', label: '19,800 인스 유심 올프리 7GB+', name: '인스 유심 올프리 7GB+' },
-  { value: '29600', label: '29,600 인스 유심 스트롱 15GB+', name: '인스 유심 스트롱 15GB+' },
-  { value: '39000', label: '39,000 인스 유심 스트롱 11GB+', name: '인스 유심 스트롱 11GB+' },
-  { value: '45900', label: '45,900 인스 유심 스트롱 100GB+', name: '인스 유심 스트롱 100GB+' },
+  { value: '1month', label: '인스 선불 363 1개월', name: '인스 선불 363 1개월' },
+  { value: '2month', label: '인스 선불 363 2개월', name: '인스 선불 363 2개월' },
 ];
 
 // 신청유형별 체크 위치 (좌표 확인 모드로 조정 필요)
@@ -30,6 +28,11 @@ const TYPE_POSITIONS = {
   prepaid: { top: 12, left: 444 },
   transfer: { top: 12, left: 564 },
 };
+
+// 선불 시 추가 필드 위치 (요금제)
+const PREPAID_ADDITIONAL_POSITIONS: FieldPosition[] = [
+  { id: 'plan', page: 1, top: 295, left: 147, width: 255, height: 30, fontSize: 14 },
+];
 
 // 명의변경 시 추가 필드 위치 (좌표 확인 모드로 조정 필요)
 const TRANSFER_ADDITIONAL_POSITIONS: FieldPosition[] = [
@@ -52,9 +55,7 @@ const BASE_FIELD_POSITIONS: FieldPosition[] = [
   { id: 'birthDate', page: 1, top: 114, left: 500, width: 155, height: 26, fontSize: 16 },
   // 3. 외국인등록번호
   { id: 'foreignerNumber', page: 1, top: 140, left: 500, width: 200, height: 30, fontSize: 16 },
-  // 4. 요금제
-  { id: 'plan', page: 1, top: 295, left: 147, width: 255, height: 30, fontSize: 14 },
-  // 5. 유심모델
+  // 4. 유심모델
   { id: 'usimModel', page: 1, top: 296, left: 539, width: 85, height: 26, fontSize: 16 },
   // 6. 유심번호
   { id: 'usimNumber', page: 1, top: 296, left: 660, width: 85, height: 26, fontSize: 14 },
@@ -97,7 +98,7 @@ export default function LGInsPage() {
     name: '',
     birthDate: '',
     foreignerNumber: '',
-    plan: '',
+    plan: '2month',
     usimModel: '',
     usimNumber: '',
     wishNumber1: '',
@@ -121,7 +122,7 @@ export default function LGInsPage() {
       name: '',
       birthDate: '',
       foreignerNumber: '',
-      plan: '',
+      plan: '2month',
       usimModel: '',
       usimNumber: '',
       wishNumber1: '',
@@ -146,6 +147,8 @@ export default function LGInsPage() {
     // 신청유형 체크 표시 (✓)
     { id: 'typeCheck', page: 1, top: typePos.top, left: typePos.left, fontSize: 14 },
     ...BASE_FIELD_POSITIONS,
+    // 선불 시 요금제 필드 추가
+    ...(formData.applicationType === 'prepaid' ? PREPAID_ADDITIONAL_POSITIONS : []),
     // 명의변경 시 추가 필드
     ...(formData.applicationType === 'transfer' ? TRANSFER_ADDITIONAL_POSITIONS : []),
   ];
@@ -242,29 +245,33 @@ export default function LGInsPage() {
 
                     <Separator />
 
-                    {/* 요금제 */}
-                    <div className="space-y-4 ">
-                      <p className="text-sm font-medium text-muted-foreground">요금제</p>
-                      <div className="space-y-2">
-                        <Label htmlFor="plan">
-                          요금제 선택 <span className="text-destructive">*</span>
-                        </Label>
-                        <Select value={formData.plan} onValueChange={(value) => setFormData((prev) => ({ ...prev, plan: value }))}>
-                          <SelectTrigger>
-                            <SelectValue placeholder="요금제를 선택하세요" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {PLAN_OPTIONS.map((option) => (
-                              <SelectItem key={option.value} value={option.value}>
-                                {option.label}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                      </div>
-                    </div>
+                    {/* 요금제 (선불 시에만 표시) */}
+                    {formData.applicationType === 'prepaid' && (
+                      <>
+                        <div className="space-y-4 ">
+                          <p className="text-sm font-medium text-muted-foreground">요금제</p>
+                          <div className="space-y-2">
+                            <Label htmlFor="plan">
+                              요금제 선택 <span className="text-destructive">*</span>
+                            </Label>
+                            <Select value={formData.plan} onValueChange={(value) => setFormData((prev) => ({ ...prev, plan: value }))}>
+                              <SelectTrigger>
+                                <SelectValue placeholder="요금제를 선택하세요" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                {PLAN_OPTIONS.map((option) => (
+                                  <SelectItem key={option.value} value={option.value}>
+                                    {option.label}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                          </div>
+                        </div>
 
-                    <Separator />
+                        <Separator />
+                      </>
+                    )}
 
                     {/* USIM 정보 */}
                     <div className=" space-y-4">
