@@ -16,7 +16,7 @@ interface UsePreviewScaleOptions {
  * @returns 계산된 스케일 값
  */
 export function usePreviewScale(
-  containerRef: RefObject<HTMLElement>,
+  containerRef: RefObject<HTMLElement | null>,
   options: UsePreviewScaleOptions = {}
 ) {
   const { minScale = 0.5, maxScale = 1, padding = 32 } = options;

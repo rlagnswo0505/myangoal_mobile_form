@@ -16,7 +16,10 @@ export const menuConfig: MenuItem[] = [
     id: 'kt',
     label: 'KT',
     icon: '📱',
-    submenus: [{ id: 'kt-asia', label: '선불 KT 아시아', path: '/kt/asia' }],
+    submenus: [
+      { id: 'kt-asia', label: '선불 KT 아시아', path: '/kt/asia' },
+      { id: 'kt-asia-transfer', label: 'KT아시아 명변', path: '/kt/asia-transfer' },
+    ],
   },
   {
     id: 'skt',

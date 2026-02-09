@@ -23,6 +23,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           url: '/kt/asia',
           isActive: location.pathname === '/kt/asia',
         },
+        {
+          title: 'KT아시아 명변',
+          url: '/kt/asia-transfer',
+          isActive: location.pathname === '/kt/asia-transfer',
+        },
       ],
     },
     {
