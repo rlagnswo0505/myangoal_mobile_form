@@ -28,6 +28,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           url: '/kt/asia-transfer',
           isActive: location.pathname === '/kt/asia-transfer',
         },
+        {
+          title: 'KT 더원 신규',
+          url: '/kt/theone',
+          isActive: location.pathname === '/kt/theone',
+        },
       ],
     },
     {

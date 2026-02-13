@@ -30,9 +30,7 @@ const TYPE_POSITIONS = {
 };
 
 // 선불 시 추가 필드 위치 (요금제)
-const PREPAID_ADDITIONAL_POSITIONS: FieldPosition[] = [
-  { id: 'plan', page: 1, top: 295, left: 147, width: 255, height: 30, fontSize: 14 },
-];
+const PREPAID_ADDITIONAL_POSITIONS: FieldPosition[] = [{ id: 'plan', page: 1, top: 295, left: 147, width: 255, height: 30, fontSize: 14 }];
 
 // 명의변경 시 추가 필드 위치 (좌표 확인 모드로 조정 필요)
 const TRANSFER_ADDITIONAL_POSITIONS: FieldPosition[] = [

@@ -104,7 +104,7 @@ export default function KTAsiaTransferPage() {
       birthDate: '',
       gender: 'male',
       phoneNumber: '',
-      address: '',
+      address: '인천광역시 부평구 광장로 16 1층 10호 미얀골',
       signDate: todayFormatted,
     });
   };

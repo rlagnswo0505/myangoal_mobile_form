@@ -19,6 +19,7 @@ export const menuConfig: MenuItem[] = [
     submenus: [
       { id: 'kt-asia', label: '선불 KT 아시아', path: '/kt/asia' },
       { id: 'kt-asia-transfer', label: 'KT아시아 명변', path: '/kt/asia-transfer' },
+      { id: 'kt-theone', label: 'KT 더원 신규', path: '/kt/theone' },
     ],
   },
   {
