@@ -30,34 +30,34 @@ const FIELD_POSITIONS: FieldPosition[] = [
   {
     id: 'name1',
     page: 1,
-    top: 184,
-    left: 196,
-    width: 226,
-    height: 25,
+    top: 154,
+    left: 183,
+    width: 237,
+    height: 28,
     fontSize: 16,
   },
   // 2. 고객명 (위치 2)
-  { id: 'name2', page: 1, top: 323, left: 558, width: 139, height: 28, fontSize: 16 },
+  { id: 'name2', page: 1, top: 293, left: 258, width: 179, height: 27, fontSize: 16 },
   // 3. 생년월일 (위치 1)
-  { id: 'birthDate1', page: 1, top: 185, left: 580, width: 191, height: 26, fontSize: 14 },
+  { id: 'birthDate1', page: 1, top: 154, left: 575, width: 188, height: 28, fontSize: 14 },
   // 4. 생년월일 (위치 2)
-  { id: 'birthDate2', page: 1, top: 350, left: 560, width: 209, height: 29, fontSize: 14 },
+  { id: 'birthDate2', page: 1, top: 293, left: 566, width: 197, height: 28, fontSize: 14 },
   // 5. 요금제
-  { id: 'plan', page: 1, top: 268, left: 196, width: 224, height: 28, fontSize: 14 },
+  { id: 'plan', page: 1, top: 182, left: 180, width: 239, height: 28, fontSize: 14 },
   // 6. 주소
-  { id: 'address', page: 1, top: 239, left: 196, width: 321, height: 27, fontSize: 12 },
+  { id: 'address', page: 1, top: 208, left: 182, width: 289, height: 30, fontSize: 12 },
   // 7. 유심번호
-  { id: 'usimNumber', page: 1, top: 295, left: 196, width: 224, height: 29, fontSize: 14 },
+  { id: 'usimNumber', page: 1, top: 236, left: 183, width: 235, height: 29, fontSize: 14 },
   // 8. 은행명
-  { id: 'bank', page: 1, top: 378, left: 179, width: 166, height: 28, fontSize: 14 },
+  { id: 'bank', page: 1, top: 320, left: 264, width: 162, height: 28, fontSize: 14 },
   // 9. 계좌번호
-  { id: 'accountNumber', page: 1, top: 378, left: 449, width: 229, height: 28, fontSize: 14 },
+  { id: 'accountNumber', page: 1, top: 321, left: 528, width: 180, height: 28, fontSize: 14 },
   // 10. 신청일자
-  { id: 'signDate', page: 1, top: 1018, left: 332, width: 139, height: 18, fontSize: 14 },
+  { id: 'signDate', page: 1, top: 1022, left: 350, width: 139, height: 18, fontSize: 12 },
   // 11. 선호번호1
-  { id: 'wishNumber1', page: 1, top: 268, left: 579, width: 79, height: 27, fontSize: 14 },
+  { id: 'wishNumber1', page: 1, top: 264, left: 216, width: 86, height: 28, fontSize: 14 },
   // 12. 선호번호2
-  { id: 'wishNumber2', page: 1, top: 268, left: 690, width: 78, height: 27, fontSize: 14 },
+  { id: 'wishNumber2', page: 1, top: 264, left: 320, width: 98, height: 28, fontSize: 14 },
 ];
 
 interface FormData {
