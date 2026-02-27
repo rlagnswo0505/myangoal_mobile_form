@@ -37,6 +37,7 @@ export const menuConfig: MenuItem[] = [
       { id: 'lg-story-transfer', label: '이야기 명의변경', path: '/lg/story-transfer' },
       { id: 'lg-ins', label: '인스 선불-명변', path: '/lg/ins' },
       { id: 'lg-ins-postpaid', label: '인스 후불', path: '/lg/ins-postpaid' },
+      { id: 'lg-smartel-prepaid', label: 'LG 스마텔 선불', path: '/lg/smartel-prepaid' },
     ],
   },
 ];
