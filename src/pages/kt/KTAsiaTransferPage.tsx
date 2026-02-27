@@ -147,7 +147,7 @@ export default function KTAsiaTransferPage() {
   return (
     <>
       <div className="no-print flex flex-col h-full">
-        <PageHeader title="KT아시아 명의변경" subtitle="이동전화 서비스 명의변경 신청서" debugMode={debugMode} onDebugToggle={() => setDebugMode(!debugMode)} onPrint={handlePrint} />
+        <PageHeader title="KT아시아 명의변경" subtitle="이동전화 서비스 명의변경 신청서" debugMode={debugMode} onDebugToggle={() => setDebugMode(!debugMode)} onPrint={handlePrint} onReset={resetForm} />
 
         {/* 메인 컨텐츠 */}
         <div className="flex-1 flex overflow-hidden">
@@ -236,10 +236,7 @@ export default function KTAsiaTransferPage() {
       {/* 인쇄 모달 */}
       <PrintModal
         isOpen={showPrintModal}
-        onClose={() => {
-          setShowPrintModal(false);
-          resetForm();
-        }}
+        onClose={() => setShowPrintModal(false)}
         images={PAGE_IMAGES}
         fieldPositions={fieldPositions}
         fieldValues={fieldValues}

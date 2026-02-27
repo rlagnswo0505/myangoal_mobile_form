@@ -246,7 +246,7 @@ export default function JoytelPrepaidPage() {
   return (
     <>
       <div className="no-print flex flex-col h-full">
-        <PageHeader title="조이텔 선불-명변" subtitle="조이텔 선불 가입신청서 / 명의변경" debugMode={debugMode} onDebugToggle={() => setDebugMode(!debugMode)} onPrint={handlePrint} />
+        <PageHeader title="조이텔 선불-명변" subtitle="조이텔 선불 가입신청서 / 명의변경" debugMode={debugMode} onDebugToggle={() => setDebugMode(!debugMode)} onPrint={handlePrint} onReset={resetForm} />
 
         {/* 메인 컨텐츠 */}
         <div className="flex-1 flex overflow-hidden">
@@ -382,10 +382,7 @@ export default function JoytelPrepaidPage() {
       {/* 인쇄 모달 */}
       <PrintModal
         isOpen={showPrintModal}
-        onClose={() => {
-          setShowPrintModal(false);
-          resetForm();
-        }}
+        onClose={() => setShowPrintModal(false)}
         images={displayImages}
         fieldPositions={fieldPositions}
         fieldValues={fieldValues}

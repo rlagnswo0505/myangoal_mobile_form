@@ -1,6 +1,6 @@
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { FileText, Printer, MousePointer2 } from 'lucide-react';
+import { FileText, Printer, MousePointer2, RotateCcw } from 'lucide-react';
 
 interface PageHeaderProps {
   title: string;
@@ -8,9 +8,10 @@ interface PageHeaderProps {
   debugMode: boolean;
   onDebugToggle: () => void;
   onPrint: () => void;
+  onReset?: () => void;
 }
 
-export default function PageHeader({ title, subtitle, debugMode, onDebugToggle, onPrint }: PageHeaderProps) {
+export default function PageHeader({ title, subtitle, debugMode, onDebugToggle, onPrint, onReset }: PageHeaderProps) {
   return (
     <div className="sticky top-0 z-10 bg-background px-6 py-4 border-b">
       <Card className="flex items-center justify-between px-4 py-2">
@@ -28,6 +29,12 @@ export default function PageHeader({ title, subtitle, debugMode, onDebugToggle, 
             <MousePointer2 className="w-4 h-4 mr-2" />
             {debugMode ? '좌표 모드 OFF' : '좌표 확인'}
           </Button>
+          {onReset && (
+            <Button variant="outline" onClick={onReset}>
+              <RotateCcw className="w-4 h-4 mr-2" />
+              초기화
+            </Button>
+          )}
           <Button onClick={onPrint}>
             <Printer className="w-4 h-4 mr-2" />
             출력하기
