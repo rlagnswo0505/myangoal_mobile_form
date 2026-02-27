@@ -67,7 +67,7 @@ export default function LGSmartelPrepaidPage() {
   const [formData, setFormData] = useState<FormData>({
     name: '',
     birthDate: '',
-    address: '',
+    address: '인천광역시 부평구 광장로 16 1층 10호 미얀골',
     passportNumber: '',
     period: '2month',
     wishNumber1: '',
