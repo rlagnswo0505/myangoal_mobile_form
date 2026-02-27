@@ -255,13 +255,7 @@ export default function LGStoryPage() {
       </div>
 
       {/* 인쇄 모달 */}
-      <PrintModal
-        isOpen={showPrintModal}
-        onClose={() => setShowPrintModal(false)}
-        images={PAGE_IMAGES}
-        fieldPositions={FIELD_POSITIONS}
-        fieldValues={fieldValues}
-      />
+      <PrintModal isOpen={showPrintModal} onClose={() => setShowPrintModal(false)} images={PAGE_IMAGES} fieldPositions={FIELD_POSITIONS} fieldValues={fieldValues} />
     </>
   );
 }

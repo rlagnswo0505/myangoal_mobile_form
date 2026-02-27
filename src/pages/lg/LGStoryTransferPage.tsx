@@ -212,13 +212,7 @@ export default function LGStoryTransferPage() {
       </div>
 
       {/* 인쇄 모달 */}
-      <PrintModal
-        isOpen={showPrintModal}
-        onClose={() => setShowPrintModal(false)}
-        images={PAGE_IMAGES}
-        fieldPositions={fieldPositions}
-        fieldValues={fieldValues}
-      />
+      <PrintModal isOpen={showPrintModal} onClose={() => setShowPrintModal(false)} images={PAGE_IMAGES} fieldPositions={fieldPositions} fieldValues={fieldValues} />
     </>
   );
 }

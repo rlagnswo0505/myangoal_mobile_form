@@ -380,13 +380,7 @@ export default function JoytelPrepaidPage() {
       </div>
 
       {/* 인쇄 모달 */}
-      <PrintModal
-        isOpen={showPrintModal}
-        onClose={() => setShowPrintModal(false)}
-        images={displayImages}
-        fieldPositions={fieldPositions}
-        fieldValues={fieldValues}
-      />
+      <PrintModal isOpen={showPrintModal} onClose={() => setShowPrintModal(false)} images={displayImages} fieldPositions={fieldPositions} fieldValues={fieldValues} />
     </>
   );
 }
