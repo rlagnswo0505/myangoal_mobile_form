@@ -56,6 +56,7 @@ export default function KTAsiaPage() {
 
   const [debugMode, setDebugMode] = useState(false);
   const [showPrintModal, setShowPrintModal] = useState(false);
+  const [hideNameOnPrint, setHideNameOnPrint] = useState(false);
 
   const [formData, setFormData] = useState<FormData>({
     name: '',
@@ -99,7 +100,7 @@ export default function KTAsiaPage() {
   };
 
   const fieldValues: FieldValue = {
-    name: formData.name,
+    name: hideNameOnPrint ? '' : formData.name,
     birthAndPassport: `${formData.birthDate}\n${formData.passportNumber}`,
     usimNumber: formData.usimNumber,
     wishNumber1: formData.wishNumber1,
@@ -128,9 +129,20 @@ export default function KTAsiaPage() {
                     <div className="space-y-4">
                       <p className="text-sm font-medium text-muted-foreground">가입고객정보</p>
                       <div className="space-y-2">
-                        <Label htmlFor="name">
-                          이름 (법인명) <span className="text-destructive">*</span>
-                        </Label>
+                        <div className="flex items-center justify-between">
+                          <Label htmlFor="name">
+                            이름 (법인명) <span className="text-destructive">*</span>
+                          </Label>
+                          <label className="flex items-center gap-2 text-sm cursor-pointer">
+                            <input
+                              type="checkbox"
+                              checked={hideNameOnPrint}
+                              onChange={(e) => setHideNameOnPrint(e.target.checked)}
+                              className="h-4 w-4 rounded border-gray-300"
+                            />
+                            <span className="text-muted-foreground">출력 제외</span>
+                          </label>
+                        </div>
                         <Input id="name" name="name" value={formData.name} onChange={handleChange} placeholder="'웰'은 비우기 (손글씨)" />
                       </div>
                       <div className="grid grid-cols-2 gap-4">
