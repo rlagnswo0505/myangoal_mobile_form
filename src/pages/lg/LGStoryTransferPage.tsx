@@ -28,13 +28,17 @@ const NETWORK_POSITIONS = {
 const BASE_FIELD_POSITIONS: FieldPosition[] = [
   // 1. 고객명
   { id: 'name', page: 1, top: 127, left: 227, width: 218, height: 32, fontSize: 14 },
-  // 2. 생년월일
+  // 2. 고객명 (추가)
+  { id: 'name2', page: 1, top: 692, left: 234, width: 209, height: 26, fontSize: 14 },
+  // 3. 생년월일
   { id: 'birthDate', page: 1, top: 128, left: 575, width: 182, height: 32, fontSize: 16 },
-  // 3. 외국인등록번호
+  // 4. 생년월일 (추가)
+  { id: 'birthDate2', page: 1, top: 690, left: 562, width: 110, height: 26, fontSize: 16 },
+  // 5. 외국인등록번호
   { id: 'foreignerNumber', page: 1, top: 162, left: 575, width: 182, height: 32, fontSize: 16 },
-  // 4. 휴대폰번호
+  // 6. 휴대폰번호
   { id: 'phoneNumber', page: 1, top: 69, left: 590, width: 208, height: 43, fontSize: 14 },
-  // 5. 신청날짜
+  // 7. 신청날짜
   { id: 'signDate', page: 1, top: 1040, left: 578, height: 30, fontSize: 15 },
 ];
 
@@ -108,7 +112,9 @@ export default function LGStoryTransferPage() {
   const fieldValues: FieldValue = {
     networkCheck: '✓',
     name: formData.name,
+    name2: formData.name,
     birthDate: formData.birthDate,
+    birthDate2: formData.birthDate,
     foreignerNumber: formData.foreignerNumber,
     phoneNumber: formatPhoneForDisplay(formData.phoneNumber),
     signDate: formatSignDate(formData.signDate),
