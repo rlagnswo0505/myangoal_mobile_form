@@ -84,6 +84,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           url: '/lg/smartel-prepaid',
           isActive: location.pathname === '/lg/smartel-prepaid',
         },
+        {
+          title: '유모바일 납부변경',
+          url: '/lg/umobile-payment-change',
+          isActive: location.pathname === '/lg/umobile-payment-change',
+        },
       ],
     },
   ];
