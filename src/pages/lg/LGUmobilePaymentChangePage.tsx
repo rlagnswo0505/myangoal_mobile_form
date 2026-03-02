@@ -10,7 +10,7 @@ import { Separator } from '@/components/ui/separator';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import DateInput from '@/components/Form/DateInput';
-import PhoneInput, { formatPhoneForDisplay } from '@/components/Form/PhoneInput';
+import PhoneInput, { formatPhoneWithDash } from '@/components/Form/PhoneInput';
 import umobilePaymentChangeImage from '@/assets/templates/유모바일 납부변경.jpg';
 
 // PDF를 이미지로 변환한 파일
@@ -130,7 +130,7 @@ export default function LGUmobilePaymentChangePage() {
     customerName2: formData.customerName,
     birthDate1: formData.birthDate,
     birthDate2: formData.birthDate,
-    phoneNumber: formatPhoneForDisplay(formData.phoneNumber),
+    phoneNumber: formatPhoneWithDash(formData.phoneNumber),
     checkAccount: formData.paymentMethod === '계좌' ? '✓' : '',
     checkCard: formData.paymentMethod === '카드' ? '✓' : '',
     bankOrCard: formData.bankOrCard,
