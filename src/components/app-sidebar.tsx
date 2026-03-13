@@ -38,6 +38,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           url: '/kt/mmobile-payment-change',
           isActive: location.pathname === '/kt/mmobile-payment-change',
         },
+        {
+          title: '스카이라이프 납부변경',
+          url: '/kt/skylife-payment-change',
+          isActive: location.pathname === '/kt/skylife-payment-change',
+        },
       ],
     },
     {
