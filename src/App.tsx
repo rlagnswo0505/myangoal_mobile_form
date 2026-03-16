@@ -14,6 +14,7 @@ import LGHanpassPage from './pages/lg/LGHanpassPage';
 import LGSmartelPrepaidPage from './pages/lg/LGSmartelPrepaidPage';
 import LGUmobilePaymentChangePage from './pages/lg/LGUmobilePaymentChangePage';
 import JoytelPrepaidPage from './pages/skt/JoytelPrepaidPage';
+import SKTSevenMobilePaymentChangePage from './pages/skt/SKTSevenMobilePaymentChangePage';
 
 function App() {
   return (
@@ -27,6 +28,7 @@ function App() {
           <Route path="kt/mmobile-payment-change" element={<KTMmobilePaymentChangePage />} />
           <Route path="kt/skylife-payment-change" element={<KTSkyLifePaymentChangePage />} />
           <Route path="skt/joytel-prepaid" element={<JoytelPrepaidPage />} />
+          <Route path="skt/seven-mobile-payment-change" element={<SKTSevenMobilePaymentChangePage />} />
           <Route path="lg/story" element={<LGStoryPage />} />
           <Route path="lg/story-transfer" element={<LGStoryTransferPage />} />
           <Route path="lg/ins" element={<LGInsPage />} />
