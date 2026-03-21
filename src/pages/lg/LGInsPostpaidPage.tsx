@@ -12,6 +12,7 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import DateInput from '@/components/Form/DateInput';
 import PhoneInput, { formatPhoneForDisplay, formatPhoneWithDash } from '@/components/Form/PhoneInput';
+import AddressInput from '@/components/Form/AddressInput';
 import insPostpaidImage from '@/assets/templates/인스 후불.jpg';
 
 // PDF를 이미지로 변환한 파일
@@ -312,7 +313,7 @@ export default function LGInsPostpaidPage() {
                         <Label htmlFor="address">
                           주소 <span className="text-destructive">*</span>
                         </Label>
-                        <Input id="address" name="address" value={formData.address} onChange={handleChange} placeholder="서울시 강남구 테헤란로 123" />
+                        <AddressInput id="address" value={formData.address} onChange={(value) => setFormData((prev) => ({ ...prev, address: value }))} />
                       </div>
                     </div>
 

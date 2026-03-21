@@ -10,6 +10,7 @@ import { Separator } from '@/components/ui/separator';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import DateInput from '@/components/Form/DateInput';
+import AddressInput from '@/components/Form/AddressInput';
 import theoneImage from '@/assets/templates/더원-신규.jpg';
 
 // PDF를 이미지로 변환한 파일
@@ -227,7 +228,7 @@ export default function KTTheOnePage() {
                       <p className="text-sm font-medium text-muted-foreground">추가 정보</p>
                       <div className="space-y-2">
                         <Label htmlFor="address">주소</Label>
-                        <Input id="address" name="address" value={formData.address} onChange={handleChange} placeholder="주소 입력" />
+                        <AddressInput id="address" value={formData.address} onChange={(value) => setFormData((prev) => ({ ...prev, address: value }))} />
                       </div>
                       <div className="space-y-2">
                         <Label htmlFor="usimNumber">유심번호</Label>
