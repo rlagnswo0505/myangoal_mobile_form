@@ -109,6 +109,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           url: '/lg/ins-payment-change',
           isActive: location.pathname === '/lg/ins-payment-change',
         },
+        {
+          title: '헬로 납부변경',
+          url: '/lg/hello-payment-change',
+          isActive: location.pathname === '/lg/hello-payment-change',
+        },
       ],
     },
   ];

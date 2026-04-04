@@ -14,6 +14,7 @@ import LGHanpassPage from './pages/lg/LGHanpassPage';
 import LGSmartelPrepaidPage from './pages/lg/LGSmartelPrepaidPage';
 import LGUmobilePaymentChangePage from './pages/lg/LGUmobilePaymentChangePage';
 import LGInsPaymentChangePage from './pages/lg/LGInsPaymentChangePage';
+import LGHelloPaymentChangePage from './pages/lg/LGHelloPaymentChangePage';
 import JoytelPrepaidPage from './pages/skt/JoytelPrepaidPage';
 import SKTSevenMobilePaymentChangePage from './pages/skt/SKTSevenMobilePaymentChangePage';
 
@@ -38,6 +39,7 @@ function App() {
           <Route path="lg/smartel-prepaid" element={<LGSmartelPrepaidPage />} />
           <Route path="lg/umobile-payment-change" element={<LGUmobilePaymentChangePage />} />
           <Route path="lg/ins-payment-change" element={<LGInsPaymentChangePage />} />
+          <Route path="lg/hello-payment-change" element={<LGHelloPaymentChangePage />} />
         </Route>
       </Routes>
     </BrowserRouter>
