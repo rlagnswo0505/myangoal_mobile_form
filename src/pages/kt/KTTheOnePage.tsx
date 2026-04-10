@@ -18,11 +18,11 @@ const PAGE_IMAGES: string[] = [theoneImage];
 
 // 요금제 옵션
 const PLAN_OPTIONS = [
-  { value: '19800', label: '19,800 TOP 7GB 기본(밀리의서재)', name: 'TOP 7GB 기본(밀리의서재)' },
-  { value: '24200', label: '24,200 TOP 10GB 기본(밀리의서재)', name: 'TOP 10GB 기본(밀리의서재)' },
-  { value: '26400', label: '26,400 TOP 15GB 기본(밀리의서재)', name: 'TOP 15GB 기본(밀리의서재)' },
-  { value: '29700', label: '29,700 TOP 15GB 100분(밀리의서재)', name: 'TOP 15GB 100분(밀리의서재)' },
-  { value: '38500', label: '38,500 TOP 11GB 기본(밀리의서재)', name: 'TOP 11GB 기본(밀리의서재)' },
+  { value: '22000', label: '22,000 TOP 7GB 기본(밀리의서재)', name: 'TOP 7GB 기본(밀리의서재)' },
+  { value: '26400', label: '26,400 TOP 10GB 기본(밀리의서재)', name: 'TOP 10GB 기본(밀리의서재)' },
+  { value: '29700', label: '29,700 TOP 15GB 기본(밀리의서재)', name: 'TOP 15GB 기본(밀리의서재)' },
+  { value: '31900', label: '31,900 TOP 15GB 100분(밀리의서재)', name: 'TOP 15GB 100분(밀리의서재)' },
+  { value: '39600', label: '39,600 TOP 11GB 기본(밀리의서재)', name: 'TOP 11GB 기본(밀리의서재)' },
 ];
 
 // 필드 위치 설정 (A4 픽셀 좌표 기준) - 좌표 확인 모드로 조정 필요
