@@ -116,6 +116,19 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         },
       ],
     },
+    {
+      title: '기타서식',
+      url: '#',
+      icon: FileText,
+      isActive: location.pathname.startsWith('/etc'),
+      items: [
+        {
+          title: '제한기간내 번호이동',
+          url: '/etc/limited-transfer-within-period',
+          isActive: location.pathname === '/etc/limited-transfer-within-period',
+        },
+      ],
+    },
   ];
 
   return (

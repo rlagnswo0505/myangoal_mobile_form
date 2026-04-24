@@ -17,6 +17,7 @@ import LGInsPaymentChangePage from './pages/lg/LGInsPaymentChangePage';
 import LGHelloPaymentChangePage from './pages/lg/LGHelloPaymentChangePage';
 import JoytelPrepaidPage from './pages/skt/JoytelPrepaidPage';
 import SKTSevenMobilePaymentChangePage from './pages/skt/SKTSevenMobilePaymentChangePage';
+import LimitedTransferWithinPeriodPage from './pages/etc/LimitedTransferWithinPeriodPage';
 
 function App() {
   return (
@@ -40,6 +41,7 @@ function App() {
           <Route path="lg/umobile-payment-change" element={<LGUmobilePaymentChangePage />} />
           <Route path="lg/ins-payment-change" element={<LGInsPaymentChangePage />} />
           <Route path="lg/hello-payment-change" element={<LGHelloPaymentChangePage />} />
+          <Route path="etc/limited-transfer-within-period" element={<LimitedTransferWithinPeriodPage />} />
         </Route>
       </Routes>
     </BrowserRouter>
