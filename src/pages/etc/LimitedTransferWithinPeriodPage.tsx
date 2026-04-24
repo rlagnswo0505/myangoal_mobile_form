@@ -35,9 +35,9 @@ const FIELD_POSITIONS: FieldPosition[] = [
   { id: 'customerName', page: 1, top: 458, left: 358, width: 270, height: 30, fontSize: 14 },
   { id: 'birthDate', page: 1, top: 487, left: 360, width: 270, height: 30, fontSize: 14 },
 
-  { id: 'dateYY', page: 1, top: 733, left: 339, width: 14, height: 15, fontSize: 14 },
-  { id: 'dateMM', page: 1, top: 734, left: 378, width: 20, height: 15, fontSize: 14 },
-  { id: 'dateDD', page: 1, top: 734, left: 428, width: 20, height: 15, fontSize: 14 },
+  { id: 'dateYY', page: 1, top: 735, left: 339, width: 14, height: 15, fontSize: 14 },
+  { id: 'dateMM', page: 1, top: 735, left: 380, width: 20, height: 15, fontSize: 14 },
+  { id: 'dateDD', page: 1, top: 735, left: 430, width: 20, height: 15, fontSize: 14 },
 ];
 
 interface FormData {
