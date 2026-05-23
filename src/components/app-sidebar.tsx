@@ -95,6 +95,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           isActive: location.pathname === '/lg/hanpass',
         },
         {
+          title: '선불 LG 아시아',
+          url: '/lg/asia',
+          isActive: location.pathname === '/lg/asia',
+        },
+        {
           title: 'LG 스마텔 선불',
           url: '/lg/smartel-prepaid',
           isActive: location.pathname === '/lg/smartel-prepaid',
