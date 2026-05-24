@@ -4,6 +4,7 @@ import { usePreviewScale } from '@/hooks/use-preview-scale';
 import PrintModal from '@/components/PrintModal/PrintModal';
 import PageHeader from '@/components/Layout/PageHeader';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
@@ -46,6 +47,12 @@ interface FormData {
   signDate: string;
 }
 
+interface BulkRecord {
+  usimNumber: string;
+  birthDate: string;
+  passportNumber: string;
+}
+
 export default function KTAsiaPage() {
   // 오늘 날짜 (YYYY.MM.DD 형식)
   const now = new Date();
@@ -57,6 +64,10 @@ export default function KTAsiaPage() {
   const [debugMode, setDebugMode] = useState(false);
   const [showPrintModal, setShowPrintModal] = useState(false);
   const [hideNameOnPrint, setHideNameOnPrint] = useState(false);
+  const [bulkInput, setBulkInput] = useState('');
+  const [bulkRecords, setBulkRecords] = useState<BulkRecord[]>([]);
+  const [bulkError, setBulkError] = useState('');
+  const [useBatchPreview, setUseBatchPreview] = useState(false);
 
   const [formData, setFormData] = useState<FormData>({
     name: '',
@@ -75,6 +86,73 @@ export default function KTAsiaPage() {
   };
 
   const handlePrint = () => {
+    setUseBatchPreview(false);
+    setShowPrintModal(true);
+  };
+
+  const parseBulkInput = () => {
+    const lines = bulkInput
+      .split(/\r?\n/)
+      .map((line) => line.trim())
+      .filter((line) => line.length > 0);
+
+    if (lines.length === 0) {
+      setBulkRecords([]);
+      setBulkError('대량 출력용 데이터를 먼저 붙여넣어 주세요.');
+      return;
+    }
+
+    const records: BulkRecord[] = [];
+
+    for (let i = 0; i < lines.length; i += 1) {
+      const line = lines[i];
+      const match = line.match(/^(.*)\s+(\d{6})\s+([A-Za-z0-9]+)$/);
+
+      if (!match) {
+        setBulkError(`${i + 1}번째 줄 형식이 올바르지 않습니다. (유심 생년월일 여권번호)`);
+        setBulkRecords([]);
+        return;
+      }
+
+      const usimNumber = match[1].trim().toUpperCase();
+      const birthDate = match[2];
+      const passportNumber = match[3].toUpperCase();
+
+      const usimDigitsLength = usimNumber.replace(/\s+/g, '').length;
+      if (usimDigitsLength < 10) {
+        setBulkError(`${i + 1}번째 줄 유심번호가 너무 짧습니다.`);
+        setBulkRecords([]);
+        return;
+      }
+
+      records.push({ usimNumber, birthDate, passportNumber });
+    }
+
+    setBulkError('');
+    setBulkRecords(records);
+  };
+
+  const loadFirstBulkRecord = () => {
+    if (bulkRecords.length === 0) {
+      return;
+    }
+
+    const first = bulkRecords[0];
+    setFormData((prev) => ({
+      ...prev,
+      usimNumber: first.usimNumber,
+      birthDate: first.birthDate,
+      passportNumber: first.passportNumber,
+    }));
+  };
+
+  const handleBatchPrint = () => {
+    if (bulkRecords.length === 0) {
+      setBulkError('대량 출력할 데이터가 없습니다. 먼저 분석 버튼을 눌러 주세요.');
+      return;
+    }
+
+    setUseBatchPreview(true);
     setShowPrintModal(true);
   };
 
@@ -108,6 +186,15 @@ export default function KTAsiaPage() {
     wishNumber2: formData.wishNumber2,
     signDate: formatSignDate(formData.signDate),
   };
+
+  const batchFieldValues: FieldValue[] = bulkRecords.map((record) => ({
+    name: hideNameOnPrint ? '' : formData.name,
+    birthAndPassport: `${record.birthDate}\n${record.passportNumber}`,
+    usimNumber: record.usimNumber,
+    wishNumber1: formData.wishNumber1,
+    wishNumber2: formData.wishNumber2,
+    signDate: formatSignDate(formData.signDate),
+  }));
 
   return (
     <>
@@ -185,6 +272,35 @@ export default function KTAsiaPage() {
 
                     <Separator />
 
+                    {/* 대량 출력 */}
+                    <div className="space-y-3">
+                      <div className="flex items-center justify-between">
+                        <p className="text-sm font-medium text-muted-foreground">대량 출력</p>
+                        <span className="text-xs text-muted-foreground">형식: 유심번호 생년월일(6자리) 여권번호</span>
+                      </div>
+                      <textarea
+                        value={bulkInput}
+                        onChange={(e) => setBulkInput(e.target.value)}
+                        placeholder="예) 8982 3004 2500 9466 415F 070420 MK572633"
+                        className="w-full min-h-36 rounded-md border border-input bg-background px-3 py-2 text-sm"
+                      />
+                      <div className="flex flex-wrap gap-2">
+                        <Button type="button" variant="secondary" onClick={parseBulkInput}>
+                          붙여넣기 분석
+                        </Button>
+                        <Button type="button" variant="outline" onClick={loadFirstBulkRecord} disabled={bulkRecords.length === 0}>
+                          1건 폼에 반영
+                        </Button>
+                        <Button type="button" onClick={handleBatchPrint} disabled={bulkRecords.length === 0}>
+                          대량 출력 미리보기
+                        </Button>
+                      </div>
+                      {bulkError && <p className="text-xs text-destructive">{bulkError}</p>}
+                      {!bulkError && bulkRecords.length > 0 && <p className="text-xs text-muted-foreground">총 {bulkRecords.length}건 준비됨 (인쇄 버튼 1회로 전체 출력)</p>}
+                    </div>
+
+                    <Separator />
+
                     {/* 서명일자 */}
                     <div className="space-y-4">
                       <div className="space-y-2">
@@ -213,7 +329,14 @@ export default function KTAsiaPage() {
       </div>
 
       {/* 인쇄 모달 */}
-      <PrintModal isOpen={showPrintModal} onClose={() => setShowPrintModal(false)} images={PAGE_IMAGES} fieldPositions={FIELD_POSITIONS} fieldValues={fieldValues} />
+      <PrintModal
+        isOpen={showPrintModal}
+        onClose={() => setShowPrintModal(false)}
+        images={PAGE_IMAGES}
+        fieldPositions={FIELD_POSITIONS}
+        fieldValues={fieldValues}
+        batchFieldValues={useBatchPreview ? batchFieldValues : undefined}
+      />
     </>
   );
 }

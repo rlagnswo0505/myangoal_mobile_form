@@ -10,9 +10,10 @@ interface PrintModalProps {
   images: string[];
   fieldPositions: FieldPosition[];
   fieldValues: FieldValue;
+  batchFieldValues?: FieldValue[];
 }
 
-export default function PrintModal({ isOpen, onClose, images, fieldPositions, fieldValues }: PrintModalProps) {
+export default function PrintModal({ isOpen, onClose, images, fieldPositions, fieldValues, batchFieldValues }: PrintModalProps) {
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const [loading, setLoading] = useState(true);
 
@@ -30,20 +31,24 @@ export default function PrintModal({ isOpen, onClose, images, fieldPositions, fi
     const A4_WIDTH = 794;
     const pxToMm = (px: number) => (px / A4_WIDTH) * 210;
 
-    const pagesHTML = images
-      .map((imgUrl, index) => {
-        const pageNumber = index + 1;
-        const pageFields = fieldPositions.filter((f) => f.page === pageNumber);
+    const jobs = batchFieldValues && batchFieldValues.length > 0 ? batchFieldValues : [fieldValues];
 
-        const fieldsHTML = pageFields
-          .map((field) => {
-            const value = fieldValues[field.id] || '';
-            const topMm = pxToMm(field.top);
-            const leftMm = pxToMm(field.left);
-            const fontSizeMm = pxToMm(field.fontSize || 12);
-            const widthMm = field.width ? pxToMm(field.width) : null;
-            const heightMm = field.height ? pxToMm(field.height) : null;
-            return `
+    const pagesHTML = jobs
+      .map((jobFieldValues) =>
+        images
+          .map((imgUrl, index) => {
+            const pageNumber = index + 1;
+            const pageFields = fieldPositions.filter((f) => f.page === pageNumber);
+
+            const fieldsHTML = pageFields
+              .map((field) => {
+                const value = jobFieldValues[field.id] || '';
+                const topMm = pxToMm(field.top);
+                const leftMm = pxToMm(field.left);
+                const fontSizeMm = pxToMm(field.fontSize || 12);
+                const widthMm = field.width ? pxToMm(field.width) : null;
+                const heightMm = field.height ? pxToMm(field.height) : null;
+                return `
             <div style="
               position: absolute;
               top: ${topMm}mm;
@@ -63,10 +68,10 @@ export default function PrintModal({ isOpen, onClose, images, fieldPositions, fi
               ${field.textAlign ? `text-align: ${field.textAlign};` : ''}
             "><span style="width: 100%; ${field.textAlign ? `text-align: ${field.textAlign};` : ''}">${value}</span></div>
           `;
-          })
-          .join('');
+              })
+              .join('');
 
-        return `
+            return `
         <div class="page" style="
           width: 210mm;
           height: 297mm;
@@ -86,7 +91,9 @@ export default function PrintModal({ isOpen, onClose, images, fieldPositions, fi
           ${fieldsHTML}
         </div>
       `;
-      })
+          })
+          .join('')
+      )
       .join('');
 
     const html = `
@@ -162,7 +169,7 @@ export default function PrintModal({ isOpen, onClose, images, fieldPositions, fi
 
     // 약간의 딜레이 후 체크
     setTimeout(checkImagesLoaded, 100);
-  }, [isOpen, images, fieldPositions, fieldValues]);
+  }, [isOpen, images, fieldPositions, fieldValues, batchFieldValues]);
 
   const handlePrint = () => {
     if (iframeRef.current?.contentWindow) {
