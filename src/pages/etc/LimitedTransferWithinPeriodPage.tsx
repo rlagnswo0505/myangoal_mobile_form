@@ -222,7 +222,7 @@ export default function LimitedTransferWithinPeriodPage() {
                         <Label htmlFor="customerName">
                           고객명 <span className="text-destructive">*</span>
                         </Label>
-                        <Input id="customerName" value={formData.customerName} onChange={(e) => setFormData((prev) => ({ ...prev, customerName: e.target.value }))} placeholder="고객명 입력" />
+                        <Input id="customerName" value={formData.customerName} onChange={(e) => setFormData((prev) => ({ ...prev, customerName: e.target.value.toUpperCase() }))} placeholder="고객명 입력" />
                       </div>
 
                       <div className="space-y-2">

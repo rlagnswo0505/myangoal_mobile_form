@@ -74,7 +74,8 @@ export default function LGUmobilePaymentChangePage() {
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    const nextValue = name === 'customerName' ? value.toUpperCase() : value;
+    setFormData((prev) => ({ ...prev, [name]: nextValue }));
   };
 
   const handlePaymentMethodChange = (value: '계좌' | '카드') => {

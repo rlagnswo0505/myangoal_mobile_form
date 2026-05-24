@@ -87,7 +87,8 @@ export default function LGHanpassPage() {
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    const nextValue = name === 'name' || name === 'passportNumber' ? value.toUpperCase() : value;
+    setFormData((prev) => ({ ...prev, [name]: nextValue }));
   };
 
   const handlePrint = () => {

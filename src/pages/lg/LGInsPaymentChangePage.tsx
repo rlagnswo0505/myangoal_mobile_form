@@ -74,7 +74,8 @@ export default function LGInsPaymentChangePage() {
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    const nextValue = name === 'customerName' ? value.toUpperCase() : value;
+    setFormData((prev) => ({ ...prev, [name]: nextValue }));
   };
 
   const handlePaymentMethodChange = (value: '자동이체' | '카드이체') => {
