@@ -63,7 +63,12 @@ export default function KTMainApplicationPage() {
 
   const [debugMode, setDebugMode] = useState(false);
   const [showPrintModal, setShowPrintModal] = useState(false);
+  const [showSignatureModal, setShowSignatureModal] = useState(false);
   const [rememberSignature, setRememberSignature] = useState(false);
+  const [isDrawing, setIsDrawing] = useState(false);
+  const [signatureHistory, setSignatureHistory] = useState<string[]>([]);
+  const [signatureHistoryIndex, setSignatureHistoryIndex] = useState(0);
+  const signatureCanvasRef = useRef<HTMLCanvasElement>(null);
 
   const [formData, setFormData] = useState<FormData>({
     customerName: '',
@@ -87,11 +92,157 @@ export default function KTMainApplicationPage() {
     }
   }, []);
 
+  const drawSignatureToCanvas = (dataUrl: string) => {
+    const canvas = signatureCanvasRef.current;
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    if (!dataUrl) {
+      return;
+    }
+
+    const img = new Image();
+    img.onload = () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+    };
+    img.src = dataUrl;
+  };
+
+  useEffect(() => {
+    if (!showSignatureModal) {
+      return;
+    }
+
+    const initialSignature = formData.signature || '';
+    setSignatureHistory([initialSignature]);
+    setSignatureHistoryIndex(0);
+
+    setTimeout(() => {
+      drawSignatureToCanvas(initialSignature);
+    }, 0);
+  }, [formData.signature, showSignatureModal]);
+
   useEffect(() => {
     if (rememberSignature && formData.signature) {
       localStorage.setItem(SIGNATURE_STORAGE_KEY, formData.signature);
     }
   }, [formData.signature, rememberSignature]);
+
+  const getCanvasPoint = (e: React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>) => {
+    const canvas = signatureCanvasRef.current;
+    if (!canvas) return { x: 0, y: 0 };
+
+    const rect = canvas.getBoundingClientRect();
+    const clientX = 'touches' in e ? e.touches[0]?.clientX ?? 0 : e.clientX;
+    const clientY = 'touches' in e ? e.touches[0]?.clientY ?? 0 : e.clientY;
+
+    return {
+      x: ((clientX - rect.left) * canvas.width) / rect.width,
+      y: ((clientY - rect.top) * canvas.height) / rect.height,
+    };
+  };
+
+  const startDrawing = (e: React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>) => {
+    e.preventDefault();
+    const canvas = signatureCanvasRef.current;
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    const point = getCanvasPoint(e);
+    ctx.beginPath();
+    ctx.moveTo(point.x, point.y);
+    setIsDrawing(true);
+  };
+
+  const draw = (e: React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>) => {
+    if (!isDrawing) return;
+    e.preventDefault();
+
+    const canvas = signatureCanvasRef.current;
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    const point = getCanvasPoint(e);
+    ctx.lineTo(point.x, point.y);
+    ctx.strokeStyle = '#111111';
+    ctx.lineWidth = 2;
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+    ctx.stroke();
+  };
+
+  const stopDrawing = () => {
+    if (!isDrawing) return;
+
+    setIsDrawing(false);
+    const canvas = signatureCanvasRef.current;
+    if (!canvas) return;
+
+    const snapshot = canvas.toDataURL('image/png');
+    setSignatureHistory((prev) => [...prev.slice(0, signatureHistoryIndex + 1), snapshot]);
+    setSignatureHistoryIndex((prev) => prev + 1);
+  };
+
+  const undoSignature = () => {
+    if (signatureHistoryIndex <= 0) {
+      return;
+    }
+
+    const nextIndex = signatureHistoryIndex - 1;
+    const targetSnapshot = signatureHistory[nextIndex] || '';
+    setSignatureHistoryIndex(nextIndex);
+    drawSignatureToCanvas(targetSnapshot);
+  };
+
+  const clearSignature = () => {
+    const canvas = signatureCanvasRef.current;
+    if (canvas) {
+      const ctx = canvas.getContext('2d');
+      if (ctx) {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+      }
+    }
+
+    setFormData((prev) => ({ ...prev, signature: '' }));
+    localStorage.removeItem(SIGNATURE_STORAGE_KEY);
+  };
+
+  const saveSignatureFromCanvas = () => {
+    const canvas = signatureCanvasRef.current;
+    if (!canvas) return;
+
+    const dataUrl = canvas.toDataURL('image/png');
+    setFormData((prev) => ({ ...prev, signature: dataUrl }));
+
+    if (rememberSignature) {
+      localStorage.setItem(SIGNATURE_STORAGE_KEY, dataUrl);
+    }
+
+    setShowSignatureModal(false);
+    setIsDrawing(false);
+  };
+
+  const handleRememberSignatureChange = (checked: boolean) => {
+    setRememberSignature(checked);
+
+    if (!checked) {
+      localStorage.removeItem(SIGNATURE_STORAGE_KEY);
+      return;
+    }
+
+    if (formData.signature) {
+      localStorage.setItem(SIGNATURE_STORAGE_KEY, formData.signature);
+    }
+  };
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -232,11 +383,21 @@ export default function KTMainApplicationPage() {
                     <div className="space-y-4">
                       <p className="text-sm font-medium text-muted-foreground">고객 서명</p>
                       <div className="space-y-2">
-                        <Label htmlFor="signature">사인 저장 후 계속 사용</Label>
-                        <Input id="signature" name="signature" value={formData.signature} onChange={handleChange} placeholder="고객 서명 또는 이름 입력" />
+                        <Label>서명 미리보기</Label>
+                        <div className="rounded-md border bg-white p-2 min-h-[110px] flex items-center justify-center">
+                          {formData.signature ? <img src={formData.signature} alt="서명 미리보기" className="max-h-[90px] w-auto object-contain" /> : <p className="text-xs text-muted-foreground">저장된 서명이 없습니다.</p>}
+                        </div>
+                        <div className="flex gap-2">
+                          <Button type="button" variant="secondary" size="sm" onClick={() => setShowSignatureModal(true)}>
+                            서명 작성
+                          </Button>
+                          <Button type="button" variant="outline" size="sm" onClick={clearSignature}>
+                            서명 지우기
+                          </Button>
+                        </div>
                       </div>
                       <label className="flex items-center gap-2 text-sm cursor-pointer">
-                        <input type="checkbox" checked={rememberSignature} onChange={(e) => setRememberSignature(e.target.checked)} className="h-4 w-4 rounded border-gray-300" />
+                        <input type="checkbox" checked={rememberSignature} onChange={(e) => handleRememberSignatureChange(e.target.checked)} className="h-4 w-4 rounded border-gray-300" />
                         <span className="text-muted-foreground">서명 저장 후 계속 사용</span>
                       </label>
                       <p className="text-xs text-muted-foreground">저장된 서명은 다음에 이 페이지를 열어도 자동으로 불러옵니다.</p>
@@ -259,6 +420,53 @@ export default function KTMainApplicationPage() {
       </div>
 
       <PrintModal isOpen={showPrintModal} onClose={() => setShowPrintModal(false)} images={PAGE_IMAGES} fieldPositions={FIELD_POSITIONS} fieldValues={fieldValues} />
+
+      {showSignatureModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50" onClick={(e) => e.target === e.currentTarget && setShowSignatureModal(false)}>
+          <div className="bg-white rounded-lg shadow-xl w-[860px] max-w-[95vw] p-4">
+            <div className="flex items-center justify-between mb-3">
+              <h2 className="text-lg font-semibold">서명 작성</h2>
+              <Button type="button" variant="ghost" size="sm" onClick={() => setShowSignatureModal(false)}>
+                닫기
+              </Button>
+            </div>
+            <p className="text-sm text-muted-foreground mb-2">마우스 또는 손가락으로 서명을 입력한 뒤 저장하세요.</p>
+            <div className="rounded-md border bg-white p-2">
+              <div className="relative">
+                {formData.customerName && (
+                  <div className="absolute inset-0 z-0 flex items-center justify-center pointer-events-none select-none">
+                    <span className="text-5xl font-semibold text-gray-300/50 tracking-wide">{formData.customerName}</span>
+                  </div>
+                )}
+                <canvas
+                  ref={signatureCanvasRef}
+                  width={800}
+                  height={260}
+                  className="relative z-10 w-full h-[260px] cursor-crosshair touch-none"
+                  onMouseDown={startDrawing}
+                  onMouseMove={draw}
+                  onMouseUp={stopDrawing}
+                  onMouseLeave={stopDrawing}
+                  onTouchStart={startDrawing}
+                  onTouchMove={draw}
+                  onTouchEnd={stopDrawing}
+                />
+              </div>
+            </div>
+            <div className="mt-3 flex justify-end gap-2">
+              <Button type="button" variant="outline" onClick={undoSignature} disabled={signatureHistoryIndex <= 0}>
+                되돌리기
+              </Button>
+              <Button type="button" variant="outline" onClick={clearSignature}>
+                전체 지우기
+              </Button>
+              <Button type="button" onClick={saveSignatureFromCanvas}>
+                서명 저장
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 }

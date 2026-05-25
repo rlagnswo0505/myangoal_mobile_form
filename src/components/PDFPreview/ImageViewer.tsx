@@ -247,6 +247,7 @@ export default function ImageViewer({ images, fieldPositions, fieldValues, scale
             {/* 오버레이 필드 */}
             {pageFields.map((field) => {
               const value = fieldValues[field.id] || '';
+              const isImageValue = value.startsWith('data:image/');
               return (
                 <div
                   key={field.id}
@@ -269,7 +270,7 @@ export default function ImageViewer({ images, fieldPositions, fieldValues, scale
                     opacity: field.opacity ?? 0.8,
                   }}
                 >
-                  <span style={{ width: '100%', textAlign: field.textAlign || 'left' }}>{value}</span>
+                  {isImageValue ? <img src={value} alt={field.id} className="w-full h-full object-contain" /> : <span style={{ width: '100%', textAlign: field.textAlign || 'left' }}>{value}</span>}
                 </div>
               );
             })}

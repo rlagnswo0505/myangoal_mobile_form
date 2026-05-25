@@ -43,6 +43,7 @@ export default function PrintModal({ isOpen, onClose, images, fieldPositions, fi
             const fieldsHTML = pageFields
               .map((field) => {
                 const value = jobFieldValues[field.id] || '';
+                const isImageValue = value.startsWith('data:image/');
                 const topMm = pxToMm(field.top);
                 const leftMm = pxToMm(field.left);
                 const fontSizeMm = pxToMm(field.fontSize || 12);
@@ -66,7 +67,7 @@ export default function PrintModal({ isOpen, onClose, images, fieldPositions, fi
               ${heightMm ? `height: ${heightMm}mm; display: flex; align-items: center;` : ''}
               ${field.letterSpacing ? `letter-spacing: ${field.letterSpacing}px;` : ''}
               ${field.textAlign ? `text-align: ${field.textAlign};` : ''}
-            "><span style="width: 100%; ${field.textAlign ? `text-align: ${field.textAlign};` : ''}">${value}</span></div>
+            ">${isImageValue ? `<img src="${value}" alt="${field.id}" style="width: 100%; height: 100%; object-fit: contain;" />` : `<span style="width: 100%; ${field.textAlign ? `text-align: ${field.textAlign};` : ''}">${value}</span>`}</div>
           `;
               })
               .join('');
