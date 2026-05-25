@@ -93,7 +93,7 @@ export default function PrintModal({ isOpen, onClose, images, fieldPositions, fi
         </div>
       `;
           })
-          .join('')
+          .join(''),
       )
       .join('');
 

@@ -138,8 +138,8 @@ export default function KTMainApplicationPage() {
     if (!canvas) return { x: 0, y: 0 };
 
     const rect = canvas.getBoundingClientRect();
-    const clientX = 'touches' in e ? e.touches[0]?.clientX ?? 0 : e.clientX;
-    const clientY = 'touches' in e ? e.touches[0]?.clientY ?? 0 : e.clientY;
+    const clientX = 'touches' in e ? (e.touches[0]?.clientX ?? 0) : e.clientX;
+    const clientY = 'touches' in e ? (e.touches[0]?.clientY ?? 0) : e.clientY;
 
     return {
       x: ((clientX - rect.left) * canvas.width) / rect.width,
@@ -384,9 +384,7 @@ export default function KTMainApplicationPage() {
                       <p className="text-sm font-medium text-muted-foreground">고객 서명</p>
                       <div className="space-y-2">
                         <Label>서명 미리보기</Label>
-                        <div className="rounded-md border bg-white p-2 min-h-[110px] flex items-center justify-center">
-                          {formData.signature ? <img src={formData.signature} alt="서명 미리보기" className="max-h-[90px] w-auto object-contain" /> : <p className="text-xs text-muted-foreground">저장된 서명이 없습니다.</p>}
-                        </div>
+                        <div className="rounded-md border bg-white p-2 min-h-[110px] flex items-center justify-center">{formData.signature ? <img src={formData.signature} alt="서명 미리보기" className="max-h-[90px] w-auto object-contain" /> : <p className="text-xs text-muted-foreground">저장된 서명이 없습니다.</p>}</div>
                         <div className="flex gap-2">
                           <Button type="button" variant="secondary" size="sm" onClick={() => setShowSignatureModal(true)}>
                             서명 작성
@@ -438,19 +436,7 @@ export default function KTMainApplicationPage() {
                     <span className="text-5xl font-semibold text-gray-300/50 tracking-wide">{formData.customerName}</span>
                   </div>
                 )}
-                <canvas
-                  ref={signatureCanvasRef}
-                  width={800}
-                  height={260}
-                  className="relative z-10 w-full h-[260px] cursor-crosshair touch-none"
-                  onMouseDown={startDrawing}
-                  onMouseMove={draw}
-                  onMouseUp={stopDrawing}
-                  onMouseLeave={stopDrawing}
-                  onTouchStart={startDrawing}
-                  onTouchMove={draw}
-                  onTouchEnd={stopDrawing}
-                />
+                <canvas ref={signatureCanvasRef} width={800} height={260} className="relative z-10 w-full h-[260px] cursor-crosshair touch-none" onMouseDown={startDrawing} onMouseMove={draw} onMouseUp={stopDrawing} onMouseLeave={stopDrawing} onTouchStart={startDrawing} onTouchMove={draw} onTouchEnd={stopDrawing} />
               </div>
             </div>
             <div className="mt-3 flex justify-end gap-2">

@@ -67,7 +67,7 @@ export default function ImageViewer({ images, fieldPositions, fieldValues, scale
               };
               img.src = url;
             });
-          })
+          }),
         );
 
         setLoadedImages(loaded);
