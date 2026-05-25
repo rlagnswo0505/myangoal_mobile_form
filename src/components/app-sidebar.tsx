@@ -34,6 +34,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           isActive: location.pathname === '/kt/theone',
         },
         {
+          title: '메인 KT 신청',
+          url: '/kt/main-application',
+          isActive: location.pathname === '/kt/main-application',
+        },
+        {
           title: 'M모바일 납부변경',
           url: '/kt/mmobile-payment-change',
           isActive: location.pathname === '/kt/mmobile-payment-change',

@@ -4,6 +4,7 @@ import HomePage from './pages/HomePage';
 import KTAsiaPage from './pages/kt/KTAsiaPage';
 import KTAsiaTransferPage from './pages/kt/KTAsiaTransferPage';
 import KTTheOnePage from './pages/kt/KTTheOnePage';
+import KTMainApplicationPage from './pages/kt/KTMainApplicationPage';
 import KTMmobilePaymentChangePage from './pages/kt/KTMmobilePaymentChangePage';
 import KTSkyLifePaymentChangePage from './pages/kt/KTSkyLifePaymentChangePage';
 import LGStoryPage from './pages/lg/LGStoryPage';
@@ -29,6 +30,7 @@ function App() {
           <Route path="kt/asia" element={<KTAsiaPage />} />
           <Route path="kt/asia-transfer" element={<KTAsiaTransferPage />} />
           <Route path="kt/theone" element={<KTTheOnePage />} />
+          <Route path="kt/main-application" element={<KTMainApplicationPage />} />
           <Route path="kt/mmobile-payment-change" element={<KTMmobilePaymentChangePage />} />
           <Route path="kt/skylife-payment-change" element={<KTSkyLifePaymentChangePage />} />
           <Route path="skt/joytel-prepaid" element={<JoytelPrepaidPage />} />
