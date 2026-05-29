@@ -278,12 +278,7 @@ export default function KTAsiaPage() {
                         <p className="text-sm font-medium text-muted-foreground">대량 출력</p>
                         <span className="text-xs text-muted-foreground">형식: 유심번호 생년월일(6자리) 여권번호</span>
                       </div>
-                      <textarea
-                        value={bulkInput}
-                        onChange={(e) => setBulkInput(e.target.value)}
-                        placeholder="예) 8982 3004 2500 9466 415F 070420 MK572633"
-                        className="w-full min-h-36 rounded-md border border-input bg-background px-3 py-2 text-sm"
-                      />
+                      <textarea value={bulkInput} onChange={(e) => setBulkInput(e.target.value)} placeholder="예) 8982 3004 2500 9466 415F 070420 MK572633" className="w-full min-h-36 rounded-md border border-input bg-background px-3 py-2 text-sm" />
                       <div className="flex flex-wrap gap-2">
                         <Button type="button" variant="secondary" onClick={parseBulkInput}>
                           붙여넣기 분석
@@ -329,14 +324,7 @@ export default function KTAsiaPage() {
       </div>
 
       {/* 인쇄 모달 */}
-      <PrintModal
-        isOpen={showPrintModal}
-        onClose={() => setShowPrintModal(false)}
-        images={PAGE_IMAGES}
-        fieldPositions={FIELD_POSITIONS}
-        fieldValues={fieldValues}
-        batchFieldValues={useBatchPreview ? batchFieldValues : undefined}
-      />
+      <PrintModal isOpen={showPrintModal} onClose={() => setShowPrintModal(false)} images={PAGE_IMAGES} fieldPositions={FIELD_POSITIONS} fieldValues={fieldValues} batchFieldValues={useBatchPreview ? batchFieldValues : undefined} />
     </>
   );
 }
