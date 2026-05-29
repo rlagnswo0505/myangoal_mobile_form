@@ -19,7 +19,7 @@ const PAGE_IMAGES = [asiaImage];
 // 필드 위치 설정 (A4 픽셀 좌표 기준)
 const FIELD_POSITIONS: FieldPosition[] = [
   // 1. 가입고객정보
-  { id: 'name', page: 1, top: 128, left: 208, width: 210, height: 45, fontSize: 18 },
+  { id: 'name', page: 1, top: 128, left: 208, width: 210, height: 45, fontSize: 18, opacity: 0.25 },
   { id: 'birthAndPassport', page: 1, top: 128, left: 588, width: 190, height: 45, fontSize: 14 },
   // 2. USIM 정보
   { id: 'usimNumber', page: 1, top: 312, left: 208, width: 210, height: 45, fontSize: 14 },

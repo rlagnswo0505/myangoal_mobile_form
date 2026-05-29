@@ -371,6 +371,7 @@ export function ImagePrintView({
                   textAlign: field.textAlign || 'left',
                   whiteSpace: 'nowrap',
                   color: '#000',
+                  opacity: field.opacity ?? 1,
                   fontFamily: "'Malgun Gothic', 'Nanum Gothic', sans-serif",
                 }}
               >
