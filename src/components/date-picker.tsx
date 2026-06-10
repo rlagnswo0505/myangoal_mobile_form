@@ -1,4 +1,3 @@
-import * as React from 'react'
 import { format } from 'date-fns'
 import { ko } from 'date-fns/locale'
 import { CalendarIcon } from 'lucide-react'
@@ -40,8 +39,8 @@ export function DatePicker({ selected, onSelect, placeholder = '날짜를 선택
           onSelect={onSelect}
           locale={ko}
           captionLayout="dropdown"
-          fromYear={2000}
-          toYear={currentYear + 10}
+          startMonth={new Date(2000, 0)}
+          endMonth={new Date(currentYear + 10, 11)}
           formatters={{
             formatMonthDropdown: (date) =>
               date.toLocaleString('ko-KR', { month: 'long' }),
