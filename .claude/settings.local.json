@@ -1,7 +1,12 @@
 {
   "permissions": {
     "allow": [
-      "Bash(npm install:*)"
+      "Bash(npm install:*)",
+      "Bash(npx tsc *)",
+      "Bash(npm list *)",
+      "Bash(npx shadcn@latest add calendar)",
+      "Bash(rm \"src/components/ui/calendar.tsx\")",
+      "Bash(npx shadcn@latest add calendar --overwrite)"
     ]
   }
 }
