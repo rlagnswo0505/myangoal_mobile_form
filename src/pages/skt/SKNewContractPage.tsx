@@ -33,6 +33,9 @@ const PLAN_OPTIONS = [
 
 const formatWon = (amount: number) => amount.toLocaleString('ko-KR');
 
+// 주소 기본값
+const BASE_ADDRESS = '인천광역시 부평구 광장로 16 부평민자역사 1층 10~12호';
+
 // 전통신사 옵션 (신규계약 전 사용하던 통신사)
 const CARRIER_OPTIONS = [
   { value: 'kt', label: 'KT' },
@@ -40,12 +43,12 @@ const CARRIER_OPTIONS = [
   { value: 'mvno', label: '알뜰폰' },
 ];
 
-// 전통신사별 체크 위치 (○ KT ○ LG U+ ○ MVNO - 임시 좌표, debugMode로 조정 필요)
-const CARRIER_CHECK_POSITIONS: Record<string, { top: number; left: number }> = {
-  kt: { top: 833, left: 499 },
-  lg: { top: 833, left: 549 },
-  mvno: { top: 833, left: 599 },
-};
+// 전통신사별 체크 위치 (○ KT ○ LG U+ ○ MVNO - SK는 우선 신규만 고려, 아직 미사용)
+// const CARRIER_CHECK_POSITIONS: Record<string, { top: number; left: number }> = {
+//   kt: { top: 833, left: 499 },
+//   lg: { top: 833, left: 549 },
+//   mvno: { top: 833, left: 599 },
+// };
 
 // 판매점 정보 (고정)
 const DEALER_INFO = { storeName: '미얀골', sellerName: '김재윤', sellerPhone: '010-4427-7675' };
@@ -58,7 +61,8 @@ const BASE_FIELD_POSITIONS: FieldPosition[] = [
   { id: 'phoneNumber', page: 1, top: 428, left: 583, width: 165, height: 25, fontSize: 14 },
   { id: 'address', page: 1, top: 428, left: 168, width: 369, height: 25, fontSize: 12 },
   { id: 'usimNumber', page: 1, top: 645, left: 166, width: 184, height: 25, fontSize: 14 },
-  { id: 'mvnoDetail', page: 1, top: 828, left: 651, width: 93, height: 25, fontSize: 12 },
+  // 알뜰폰 상세 - SK는 우선 신규만 고려, 아직 미사용
+  // { id: 'mvnoDetail', page: 1, top: 828, left: 651, width: 93, height: 25, fontSize: 12 },
   // 요금제 정보 - 월정액 1곳, 할인액/월납부액은 서식지 내 2곳에 표시
   { id: 'planName', page: 1, top: 224, left: 137, width: 136, height: 28, fontSize: 14 },
   { id: 'monthlyFee', page: 1, top: 249, left: 207, width: 110, height: 26, fontSize: 14 },
@@ -102,7 +106,7 @@ interface FormData {
   usimNumber: string;
   plan: string;
   prevCarrier: string;
-  mvnoDetail: string;
+  // mvnoDetail: string; // SK는 우선 신규만 고려, 아직 미사용
   paymentMethod: '계좌' | '카드';
   bankOrCard: string;
   accountOrCardNumber: string;
@@ -125,11 +129,11 @@ export default function SKNewContractPage() {
     birthDate: '',
     foreignerNumber: '',
     phoneNumber: '',
-    address: '',
+    address: BASE_ADDRESS,
     usimNumber: '',
     plan: '',
     prevCarrier: '',
-    mvnoDetail: '',
+    // mvnoDetail: '',
     paymentMethod: '계좌',
     bankOrCard: '',
     accountOrCardNumber: '',
@@ -161,11 +165,11 @@ export default function SKNewContractPage() {
       birthDate: '',
       foreignerNumber: '',
       phoneNumber: '',
-      address: '',
+      address: BASE_ADDRESS,
       usimNumber: '',
       plan: '',
       prevCarrier: '',
-      mvnoDetail: '',
+      // mvnoDetail: '',
       paymentMethod: '계좌',
       bankOrCard: '',
       accountOrCardNumber: '',
@@ -196,12 +200,12 @@ export default function SKNewContractPage() {
   };
 
   const selectedPlan = PLAN_OPTIONS.find((p) => p.value === formData.plan);
-  const carrierCheckLabel = CARRIER_OPTIONS.find((c) => c.value === formData.prevCarrier)?.label;
-
+  // carrierCheck - SK는 우선 신규만 고려, 아직 미사용
+  // const carrierCheckLabel = CARRIER_OPTIONS.find((c) => c.value === formData.prevCarrier)?.label;
   // 선택된 전통신사에 따라 체크 위치를 동적으로 생성
-  const carrierCheckPos = formData.prevCarrier ? CARRIER_CHECK_POSITIONS[formData.prevCarrier] : null;
+  // const carrierCheckPos = formData.prevCarrier ? CARRIER_CHECK_POSITIONS[formData.prevCarrier] : null;
 
-  const fieldPositions: FieldPosition[] = [...BASE_FIELD_POSITIONS, ...(carrierCheckPos ? [{ id: 'carrierCheck', page: 1, top: carrierCheckPos.top, left: carrierCheckPos.left, fontSize: 14 }] : [])];
+  const fieldPositions: FieldPosition[] = [...BASE_FIELD_POSITIONS];
 
   const fieldValues: FieldValue = {
     customerName: formData.customerName,
@@ -217,8 +221,8 @@ export default function SKNewContractPage() {
     discount2: selectedPlan ? `-${formatWon(selectedPlan.discount)}` : '',
     monthlyPayment1: selectedPlan ? formatWon(selectedPlan.monthlyPayment) : '',
     monthlyPayment2: selectedPlan ? formatWon(selectedPlan.monthlyPayment) : '',
-    carrierCheck: carrierCheckLabel ? '✓' : '',
-    mvnoDetail: formData.prevCarrier === 'mvno' ? formData.mvnoDetail : '',
+    // carrierCheck: carrierCheckLabel ? '✓' : '',
+    // mvnoDetail: formData.prevCarrier === 'mvno' ? formData.mvnoDetail : '',
     bankOrCard: formData.bankOrCard,
     accountOrCardNumber: formData.accountOrCardNumber,
     cardExpiry: formData.paymentMethod === '카드' ? formatCardExpiry(formData.cardExpiry) : '',
@@ -313,6 +317,7 @@ export default function SKNewContractPage() {
                             </div>
                           ))}
                         </RadioGroup>
+                        {/* 알뜰폰 상세 - SK는 우선 신규만 고려, 아직 미사용
                         {formData.prevCarrier === 'mvno' && (
                           <div className="space-y-2 pt-2">
                             <Label htmlFor="mvnoDetail">
@@ -321,6 +326,7 @@ export default function SKNewContractPage() {
                             <Input id="mvnoDetail" name="mvnoDetail" value={formData.mvnoDetail} onChange={handleChange} placeholder="알뜰폰 통신사명 입력" />
                           </div>
                         )}
+                        */}
                       </div>
                     </div>
 

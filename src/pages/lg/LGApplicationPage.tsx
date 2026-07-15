@@ -52,6 +52,9 @@ const parseResidenceRegion = (address: string) => {
   return { sido, sigungu, dong };
 };
 
+// 주소 기본값
+const BASE_ADDRESS = '인천광역시 부평구 광장로 16 부평민자역사 1층 10~12호';
+
 // 전통신사 옵션 (신청 전 사용하던 통신사)
 const CARRIER_OPTIONS = [
   { value: 'skt', label: 'SKT' },
@@ -166,7 +169,7 @@ export default function LGApplicationPage() {
     birthDate: '',
     // foreignerNumber: '',
     phoneNumber: '',
-    address: '',
+    address: BASE_ADDRESS,
     jibunAddress: '',
     usimModel: '',
     usimNumber: '',
@@ -206,7 +209,7 @@ export default function LGApplicationPage() {
       birthDate: '',
       // foreignerNumber: '',
       phoneNumber: '',
-      address: '',
+      address: BASE_ADDRESS,
       jibunAddress: '',
       usimModel: '',
       usimNumber: '',
