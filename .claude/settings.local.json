@@ -6,7 +6,15 @@
       "Bash(npm list *)",
       "Bash(npx shadcn@latest add calendar)",
       "Bash(rm \"src/components/ui/calendar.tsx\")",
-      "Bash(npx shadcn@latest add calendar --overwrite)"
+      "Bash(npx shadcn@latest add calendar --overwrite)",
+      "Bash(magick -version)",
+      "Bash(grep -iE \"^sharp$|^jimp$\")",
+      "Bash(node -e \"console.log\\(require\\('fs'\\).existsSync\\('node_modules/sharp'\\)\\)\")",
+      "Bash(node -e ' *)",
+      "Bash(git commit -m ' *)",
+      "Bash(git push *)",
+      "Bash(grep -v \"^\\\\s*//\")",
+      "Bash(grep -v \"// \")"
     ]
   }
 }

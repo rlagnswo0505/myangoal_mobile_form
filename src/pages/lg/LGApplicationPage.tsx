@@ -55,19 +55,19 @@ const parseResidenceRegion = (address: string) => {
 // 주소 기본값
 const BASE_ADDRESS = '인천광역시 부평구 광장로 16 부평민자역사 1층 10~12호';
 
-// 전통신사 옵션 (신청 전 사용하던 통신사)
-const CARRIER_OPTIONS = [
-  { value: 'skt', label: 'SKT' },
-  { value: 'kt', label: 'KT' },
-  { value: 'mvno', label: '알뜰폰' },
-];
+// 전통신사 옵션 (신청 전 사용하던 통신사) - 우선 신규만 고려, 아직 미사용
+// const CARRIER_OPTIONS = [
+//   { value: 'skt', label: 'SKT' },
+//   { value: 'kt', label: 'KT' },
+//   { value: 'mvno', label: '알뜰폰' },
+// ];
 
 // 전통신사별 체크 위치 (○ SKT ○ KT ○ MVNO - 임시 좌표, debugMode로 조정 필요)
-const CARRIER_CHECK_POSITIONS: Record<string, { top: number; left: number }> = {
-  skt: { top: 756, left: 509 },
-  kt: { top: 756, left: 548 },
-  mvno: { top: 756, left: 584 },
-};
+// const CARRIER_CHECK_POSITIONS: Record<string, { top: number; left: number }> = {
+//   skt: { top: 756, left: 509 },
+//   kt: { top: 756, left: 548 },
+//   mvno: { top: 756, left: 584 },
+// };
 
 // 판매업체 옵션 (판매점 상호 / 판매자 / 판매자전화 / 판매자주소)
 const VENDOR_OPTIONS = [
@@ -85,7 +85,7 @@ const BASE_FIELD_POSITIONS: FieldPosition[] = [
   { id: 'address', page: 1, top: 489, left: 135, width: 274, height: 21, fontSize: 12 },
   { id: 'usimModel', page: 1, top: 667, left: 205, width: 146, height: 18, fontSize: 14 },
   { id: 'usimNumber', page: 1, top: 679, left: 205, width: 186, height: 18, fontSize: 14 },
-  { id: 'mvnoDetail', page: 1, top: 754, left: 608, width: 48, height: 21, fontSize: 12 },
+  // { id: 'mvnoDetail', page: 1, top: 754, left: 608, width: 48, height: 21, fontSize: 12 },
   // 요금제 정보 - 월정액 1곳, 할인액은 "선택약정할인 00000" 형태로 1곳만 표시, 월납부액은 서식지 내 2곳에 표시
   { id: 'planName', page: 1, top: 221, left: 146, width: 103, height: 24, fontSize: 14 },
   { id: 'monthlyFee', page: 1, top: 283, left: 145, width: 113, height: 20, fontSize: 14 },
@@ -143,8 +143,8 @@ interface FormData {
   usimModel: string;
   usimNumber: string;
   plan: string;
-  prevCarrier: string;
-  mvnoDetail: string;
+  // prevCarrier: string; // 전통신사 - 우선 신규만 고려, 아직 미사용
+  // mvnoDetail: string;
   paymentMethod: '계좌' | '카드';
   bankOrCard: string;
   accountOrCardNumber: string;
@@ -174,8 +174,8 @@ export default function LGApplicationPage() {
     usimModel: '',
     usimNumber: '',
     plan: '',
-    prevCarrier: '',
-    mvnoDetail: '',
+    // prevCarrier: '',
+    // mvnoDetail: '',
     paymentMethod: '계좌',
     bankOrCard: '',
     accountOrCardNumber: '',
@@ -214,8 +214,8 @@ export default function LGApplicationPage() {
       usimModel: '',
       usimNumber: '',
       plan: '',
-      prevCarrier: '',
-      mvnoDetail: '',
+      // prevCarrier: '',
+      // mvnoDetail: '',
       paymentMethod: '계좌',
       bankOrCard: '',
       accountOrCardNumber: '',
@@ -251,7 +251,8 @@ export default function LGApplicationPage() {
   };
 
   const selectedPlan = PLAN_OPTIONS.find((p) => p.value === formData.plan);
-  const carrierCheckLabel = CARRIER_OPTIONS.find((c) => c.value === formData.prevCarrier)?.label;
+  // 전통신사 - 우선 신규만 고려, 아직 미사용
+  // const carrierCheckLabel = CARRIER_OPTIONS.find((c) => c.value === formData.prevCarrier)?.label;
   const selectedVendor = VENDOR_OPTIONS.find((v) => v.value === formData.vendor) || VENDOR_OPTIONS[0];
 
   // 예금주 생년월일 미입력 시 가입자 생년월일을 기본값으로 사용
@@ -261,9 +262,9 @@ export default function LGApplicationPage() {
   const residenceRegion = parseResidenceRegion(formData.jibunAddress || formData.address);
 
   // 선택된 전통신사에 따라 체크 위치를 동적으로 생성
-  const carrierCheckPos = formData.prevCarrier ? CARRIER_CHECK_POSITIONS[formData.prevCarrier] : null;
+  // const carrierCheckPos = formData.prevCarrier ? CARRIER_CHECK_POSITIONS[formData.prevCarrier] : null;
 
-  const fieldPositions: FieldPosition[] = [...BASE_FIELD_POSITIONS, ...(carrierCheckPos ? [{ id: 'carrierCheck', page: 1, top: carrierCheckPos.top, left: carrierCheckPos.left, fontSize: 14 }] : [])];
+  const fieldPositions: FieldPosition[] = [...BASE_FIELD_POSITIONS];
 
   const fieldValues: FieldValue = {
     customerName: formData.customerName,
@@ -286,8 +287,8 @@ export default function LGApplicationPage() {
     monthlyPayment2: selectedPlan ? formatWon(selectedPlan.monthlyPayment) : '',
     monthlyPayment3: selectedPlan ? formatWon(selectedPlan.monthlyPayment) : '',
     monthlyPayment4: selectedPlan ? formatWon(selectedPlan.monthlyPayment) : '',
-    carrierCheck: carrierCheckLabel ? '✓' : '',
-    mvnoDetail: formData.prevCarrier === 'mvno' ? formData.mvnoDetail : '',
+    // carrierCheck: carrierCheckLabel ? '✓' : '',
+    // mvnoDetail: formData.prevCarrier === 'mvno' ? formData.mvnoDetail : '',
     bankOrCard: formData.bankOrCard,
     accountOrCardNumber: formData.accountOrCardNumber,
     cardExpiry: formData.paymentMethod === '카드' ? formatCardExpiry(formData.cardExpiry) : '',
@@ -377,9 +378,8 @@ export default function LGApplicationPage() {
                       </div>
                     </div>
 
+                    {/* 전통신사 - 우선 신규만 고려, 아직 미사용
                     <Separator />
-
-                    {/* 전통신사 */}
                     <div className="space-y-4">
                       <p className="text-sm font-medium text-muted-foreground">전통신사</p>
                       <div className="space-y-2">
@@ -403,6 +403,7 @@ export default function LGApplicationPage() {
                         )}
                       </div>
                     </div>
+                    */}
 
                     <Separator />
 
