@@ -10,34 +10,40 @@ import { Separator } from '@/components/ui/separator';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import DateInput from '@/components/Form/DateInput';
-import PhoneInput, { formatPhoneForDisplay } from '@/components/Form/PhoneInput';
-import transferImage from '@/assets/templates/이야기 명의변경.jpg';
+import PhoneInput, { formatPhoneForDisplay, formatPhoneWithDash } from '@/components/Form/PhoneInput';
+import transferImage from '@/assets/templates/이야기 최신.jpg';
 
 // PDF를 이미지로 변환한 파일
 const PAGE_IMAGES: string[] = [transferImage];
 
 // 통신망별 체크 위치 (좌표 확인 모드로 조정 필요)
 const NETWORK_POSITIONS = {
-  SKT: { top: 58, left: 118 },
-  LG: { top: 58, left: 174 },
-  KT: { top: 58, left: 236 },
+  SKT: { top: 95, left: 118 },
+  LG: { top: 95, left: 174 },
+  KT: { top: 95, left: 236 },
 };
+
+const BASE_ADDRESS = '인천 부평구 광장로 16';
 
 // A4 용지 크기 (96dpi 기준: 794 x 1123 px)
 // 필드 위치 설정 (A4 픽셀 좌표 기준) - 좌표 확인 모드로 조정 필요
 const BASE_FIELD_POSITIONS: FieldPosition[] = [
   // 1. 고객명
-  { id: 'name', page: 1, top: 127, left: 227, width: 218, height: 32, fontSize: 14 },
+  { id: 'name', page: 1, top: 275, left: 232, width: 211, height: 30, fontSize: 14 },
   // 2. 고객명 (추가)
-  { id: 'name2', page: 1, top: 692, left: 234, width: 209, height: 26, fontSize: 14 },
+  { id: 'name2', page: 1, top: 335, left: 226, width: 217, height: 35, fontSize: 14 },
   // 3. 생년월일
-  { id: 'birthDate', page: 1, top: 128, left: 575, width: 182, height: 32, fontSize: 16 },
+  { id: 'birthDate', page: 1, top: 275, left: 560, width: 113, height: 27, fontSize: 16 },
   // 4. 생년월일 (추가)
-  { id: 'birthDate2', page: 1, top: 690, left: 562, width: 110, height: 26, fontSize: 16 },
+  { id: 'birthDate2', page: 1, top: 335, left: 577, width: 180, height: 34, fontSize: 16 },
   // 5. 외국인등록번호
-  { id: 'foreignerNumber', page: 1, top: 162, left: 575, width: 182, height: 32, fontSize: 16 },
+  { id: 'foreignerNumber', page: 1, top: 368, left: 578, width: 179, height: 32, fontSize: 16 },
   // 6. 휴대폰번호
-  { id: 'phoneNumber', page: 1, top: 69, left: 590, width: 208, height: 43, fontSize: 14 },
+  { id: 'phoneNumber', page: 1, top: 86, left: 588, width: 170, height: 29, fontSize: 14 },
+  // 6-1. 휴대폰번호 (010-1234-1234 형식 - 임시 좌표, debugMode로 조정 필요)
+  { id: 'phoneNumber2', page: 1, top: 369, left: 227, width: 215, height: 32, fontSize: 14 },
+  // 6-2. 주소 (임시 좌표, debugMode로 조정 필요)
+  { id: 'address', page: 1, top: 400, left: 227, width: 400, height: 30, fontSize: 12 },
   // 7. 신청날짜
   { id: 'signDate', page: 1, top: 1040, left: 578, height: 30, fontSize: 15 },
 ];
@@ -48,6 +54,7 @@ interface FormData {
   birthDate: string;
   foreignerNumber: string;
   phoneNumber: string;
+  address: string;
   signDate: string;
 }
 
@@ -68,6 +75,7 @@ export default function LGStoryTransferPage() {
     birthDate: '',
     foreignerNumber: '',
     phoneNumber: '',
+    address: BASE_ADDRESS,
     signDate: todayFormatted,
   });
 
@@ -88,6 +96,7 @@ export default function LGStoryTransferPage() {
       birthDate: '',
       foreignerNumber: '',
       phoneNumber: '',
+      address: BASE_ADDRESS,
       signDate: todayFormatted,
     });
   };
@@ -118,6 +127,8 @@ export default function LGStoryTransferPage() {
     birthDate2: formData.birthDate,
     foreignerNumber: formData.foreignerNumber,
     phoneNumber: formatPhoneForDisplay(formData.phoneNumber),
+    phoneNumber2: formatPhoneWithDash(formData.phoneNumber),
+    address: formData.address,
     signDate: formatSignDate(formData.signDate),
   };
 
@@ -185,6 +196,12 @@ export default function LGStoryTransferPage() {
                           외국인등록번호 <span className="text-destructive">*</span>
                         </Label>
                         <Input id="foreignerNumber" name="foreignerNumber" value={formData.foreignerNumber} onChange={handleChange} placeholder="1234567890123" />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="address">
+                          주소 <span className="text-destructive">*</span>
+                        </Label>
+                        <Input id="address" name="address" value={formData.address} onChange={handleChange} placeholder={BASE_ADDRESS} />
                       </div>
                     </div>
 

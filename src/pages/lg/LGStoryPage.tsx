@@ -8,26 +8,36 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import DateInput from '@/components/Form/DateInput';
-import storyImage from '@/assets/templates/LG 선불 이야기.jpg';
+import storyImage from '@/assets/templates/이야기 최신.jpg';
 
 // PDF를 이미지로 변환한 파일
 const PAGE_IMAGES: string[] = [storyImage];
 
+// 통신망별 체크 위치 (좌표 확인 모드로 조정 필요)
+const NETWORK_POSITIONS = {
+  SKT: { top: 95, left: 118 },
+  LG: { top: 95, left: 174 },
+  KT: { top: 95, left: 236 },
+};
+
 // A4 용지 크기 (96dpi 기준: 794 x 1123 px)
 // 필드 위치 설정 (A4 픽셀 좌표 기준) - 좌표 확인 모드로 조정 필요
-const FIELD_POSITIONS: FieldPosition[] = [
+const BASE_FIELD_POSITIONS: FieldPosition[] = [
   // 1. 가입고객정보
-  { id: 'name', page: 1, top: 128, left: 225, width: 218, height: 36, fontSize: 14 },
-  { id: 'birthDate', page: 1, top: 128, left: 580, width: 182, height: 34, fontSize: 14 },
-  { id: 'passportNumber', page: 1, top: 160, left: 580, width: 182, height: 34, fontSize: 14 },
+  { id: 'name', page: 1, top: 336, left: 226, width: 215, height: 32, fontSize: 14 },
+  { id: 'birthDate', page: 1, top: 336, left: 575, width: 181, height: 34, fontSize: 14 },
+  { id: 'passportNumber', page: 1, top: 369, left: 575, width: 179, height: 32, fontSize: 14 },
   // 2. USIM 정보 (모델명 + 일련번호 2줄)
-  { id: 'usimInfo', page: 1, top: 343, left: 290, width: 145, height: 41, fontSize: 14 },
+  { id: 'usimInfo', page: 1, top: 523, left: 284, width: 141, height: 37, fontSize: 14 },
   // 3. 주소 (손글씨체, 기울임, 투명도 0.8)
-  { id: 'address', page: 1, top: 194, left: 450, width: 82, height: 38, fontSize: 17, fontFamily: "'Caveat', 'Nanum Pen Script', cursive", fontStyle: 'italic', opacity: 0.8 },
-  // 4. 선호번호 (주소 아래 나란히)
-  { id: 'wishNumber1', page: 1, top: 232, left: 250, width: 80, height: 30, fontSize: 14 },
-  { id: 'wishNumber2', page: 1, top: 232, left: 340, width: 80, height: 30, fontSize: 14 },
+  { id: 'address', page: 1, top: 400, left: 227, width: 529, height: 35, fontSize: 17, fontFamily: "'Caveat', 'Nanum Pen Script', cursive", fontStyle: 'italic', opacity: 0.8 },
+  // 4. 선호번호 (주소 아래 나란히, 랜덤 선택 시 체크 표시 - 임시 좌표, debugMode로 조정 필요)
+  { id: 'randomCheck', page: 1, top: 128, left: 236, width: 20, height: 20, fontSize: 14 },
+  { id: 'wishNumber1', page: 1, top: 127, left: 470, width: 75, height: 25, fontSize: 14 },
+  { id: 'wishNumber2', page: 1, top: 127, left: 560, width: 75, height: 25, fontSize: 14 },
+  { id: 'wishNumber3', page: 1, top: 127, left: 660, width: 75, height: 25, fontSize: 14 },
   // 5. 서명일자
   { id: 'signDate', page: 1, top: 1036, left: 580, height: 39, fontSize: 14 },
 ];
@@ -46,15 +56,19 @@ const ROOM_ORDER = [
 ];
 
 const STORAGE_KEY = 'lg_story_room_index';
+const BASE_ADDRESS = '인천 부평구 경원대로 1344번길 34';
 
 interface FormData {
+  networkType: 'SKT' | 'LG' | 'KT';
   name: string;
   birthDate: string;
   passportNumber: string;
   usimModel: string;
   usimNumber: string;
+  wishType: 'random' | 'manual';
   wishNumber1: string;
   wishNumber2: string;
+  wishNumber3: string;
   address: string;
   signDate: string;
 }
@@ -78,14 +92,17 @@ export default function LGStoryPage() {
   const [showPrintModal, setShowPrintModal] = useState(false);
 
   const [formData, setFormData] = useState<FormData>({
+    networkType: 'LG',
     name: '',
     birthDate: '',
     passportNumber: '',
     usimModel: '',
     usimNumber: '',
+    wishType: 'random',
     wishNumber1: '',
     wishNumber2: '',
-    address: `, ${getNextRoom()}`,
+    wishNumber3: '',
+    address: `${BASE_ADDRESS}, ${getNextRoom()}`,
     signDate: todayFormatted,
   });
 
@@ -107,14 +124,17 @@ export default function LGStoryPage() {
     localStorage.setItem(STORAGE_KEY, nextIndex.toString());
 
     setFormData({
+      networkType: 'LG',
       name: '',
       birthDate: '',
       passportNumber: '',
       usimModel: '',
       usimNumber: '',
+      wishType: 'random',
       wishNumber1: '',
       wishNumber2: '',
-      address: `, ${ROOM_ORDER[nextIndex]}`,
+      wishNumber3: '',
+      address: `${BASE_ADDRESS}, ${ROOM_ORDER[nextIndex]}`,
       signDate: todayFormatted,
     });
   };
@@ -129,15 +149,26 @@ export default function LGStoryPage() {
     return date;
   };
 
+  // 통신망 선택에 따라 체크 위치 동적 생성
+  const networkPos = NETWORK_POSITIONS[formData.networkType];
+  const fieldPositions: FieldPosition[] = [
+    // 통신망 체크 표시 (✓)
+    { id: 'networkCheck', page: 1, top: networkPos.top, left: networkPos.left, fontSize: 14 },
+    ...BASE_FIELD_POSITIONS,
+  ];
+
   // LG는 생년월일과 여권번호가 따로 분리, USIM은 모델명+일련번호 2줄
   const fieldValues: FieldValue = {
+    networkCheck: '✓',
     name: formData.name,
     birthDate: formData.birthDate,
     passportNumber: formData.passportNumber,
     usimInfo: `${formData.usimModel}\n${formData.usimNumber}`,
     address: formData.address,
-    wishNumber1: formData.wishNumber1,
-    wishNumber2: formData.wishNumber2,
+    randomCheck: formData.wishType === 'random' ? '✓' : '',
+    wishNumber1: formData.wishType === 'manual' ? formData.wishNumber1 : '',
+    wishNumber2: formData.wishType === 'manual' ? formData.wishNumber2 : '',
+    wishNumber3: formData.wishType === 'manual' ? formData.wishNumber3 : '',
     signDate: formatSignDate(formData.signDate),
   };
 
@@ -158,6 +189,27 @@ export default function LGStoryPage() {
                     <CardDescription>필수 정보를 입력하세요</CardDescription>
                   </CardHeader>
                   <CardContent className="space-y-4">
+                    {/* 통신망 선택 */}
+                    <div className="space-y-4">
+                      <p className="text-sm font-medium text-muted-foreground">통신망 선택</p>
+                      <RadioGroup value={formData.networkType} onValueChange={(value) => setFormData((prev) => ({ ...prev, networkType: value as 'SKT' | 'LG' | 'KT' }))} className="flex gap-4">
+                        <div className="flex items-center space-x-2">
+                          <RadioGroupItem value="SKT" id="skt" />
+                          <Label htmlFor="skt">SKT</Label>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <RadioGroupItem value="LG" id="lg" />
+                          <Label htmlFor="lg">LG</Label>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <RadioGroupItem value="KT" id="kt" />
+                          <Label htmlFor="kt">KT</Label>
+                        </div>
+                      </RadioGroup>
+                    </div>
+
+                    <Separator />
+
                     {/* 가입고객정보 */}
                     <div className="space-y-4">
                       <div className="space-y-2">
@@ -202,16 +254,37 @@ export default function LGStoryPage() {
 
                     {/* 선호번호 */}
                     <div className="space-y-4">
-                      <div className="grid grid-cols-2 gap-4">
-                        <div className="space-y-2">
-                          <Label htmlFor="wishNumber1">선호번호 1</Label>
-                          <Input id="wishNumber1" name="wishNumber1" value={formData.wishNumber1} onChange={handleChange} placeholder="1234" maxLength={4} />
+                      <p className="text-sm font-medium text-muted-foreground">희망번호</p>
+                      <RadioGroup value={formData.wishType} onValueChange={(value) => setFormData((prev) => ({ ...prev, wishType: value as 'random' | 'manual' }))} className="flex gap-4">
+                        <div className="flex items-center space-x-2">
+                          <RadioGroupItem value="random" id="wish-random" />
+                          <Label htmlFor="wish-random" className="font-normal cursor-pointer">
+                            랜덤
+                          </Label>
                         </div>
-                        <div className="space-y-2">
-                          <Label htmlFor="wishNumber2">선호번호 2</Label>
-                          <Input id="wishNumber2" name="wishNumber2" value={formData.wishNumber2} onChange={handleChange} placeholder="5678" maxLength={4} />
+                        <div className="flex items-center space-x-2">
+                          <RadioGroupItem value="manual" id="wish-manual" />
+                          <Label htmlFor="wish-manual" className="font-normal cursor-pointer">
+                            직접입력
+                          </Label>
                         </div>
-                      </div>
+                      </RadioGroup>
+                      {formData.wishType === 'manual' && (
+                        <div className="grid grid-cols-3 gap-4">
+                          <div className="space-y-2">
+                            <Label htmlFor="wishNumber1">선호번호 1</Label>
+                            <Input id="wishNumber1" name="wishNumber1" value={formData.wishNumber1} onChange={handleChange} placeholder="1234" maxLength={4} />
+                          </div>
+                          <div className="space-y-2">
+                            <Label htmlFor="wishNumber2">선호번호 2</Label>
+                            <Input id="wishNumber2" name="wishNumber2" value={formData.wishNumber2} onChange={handleChange} placeholder="5678" maxLength={4} />
+                          </div>
+                          <div className="space-y-2">
+                            <Label htmlFor="wishNumber3">선호번호 3</Label>
+                            <Input id="wishNumber3" name="wishNumber3" value={formData.wishNumber3} onChange={handleChange} placeholder="9012" maxLength={4} />
+                          </div>
+                        </div>
+                      )}
                     </div>
 
                     <Separator />
@@ -248,7 +321,7 @@ export default function LGStoryPage() {
             <ScrollArea className="h-full">
               <div className="">
                 {debugMode && <p className="text-xs text-muted-foreground mb-2">이미지를 클릭하면 좌표가 표시됩니다</p>}
-                <ImageViewer images={PAGE_IMAGES} fieldPositions={FIELD_POSITIONS} fieldValues={fieldValues} scale={scale} debugMode={debugMode} />
+                <ImageViewer images={PAGE_IMAGES} fieldPositions={fieldPositions} fieldValues={fieldValues} scale={scale} debugMode={debugMode} />
               </div>
             </ScrollArea>
           </div>
@@ -256,7 +329,7 @@ export default function LGStoryPage() {
       </div>
 
       {/* 인쇄 모달 */}
-      <PrintModal isOpen={showPrintModal} onClose={() => setShowPrintModal(false)} images={PAGE_IMAGES} fieldPositions={FIELD_POSITIONS} fieldValues={fieldValues} />
+      <PrintModal isOpen={showPrintModal} onClose={() => setShowPrintModal(false)} images={PAGE_IMAGES} fieldPositions={fieldPositions} fieldValues={fieldValues} />
     </>
   );
 }
