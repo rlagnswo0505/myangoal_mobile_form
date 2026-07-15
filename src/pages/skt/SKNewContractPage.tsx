@@ -47,6 +47,9 @@ const CARRIER_CHECK_POSITIONS: Record<string, { top: number; left: number }> = {
   mvno: { top: 833, left: 599 },
 };
 
+// 판매점 정보 (고정)
+const DEALER_INFO = { storeName: '미얀골', sellerName: '김재윤', sellerPhone: '010-4427-7675' };
+
 // 필드 위치 설정 (임시 좌표 - debugMode로 실제 좌표 확인 후 조정 필요)
 const BASE_FIELD_POSITIONS: FieldPosition[] = [
   { id: 'customerName', page: 1, top: 403, left: 167, width: 192, height: 24, fontSize: 14 },
@@ -70,7 +73,24 @@ const BASE_FIELD_POSITIONS: FieldPosition[] = [
   // 예금주명 / 예금주 전화번호 (신규 입력 필드 없이 고객명·전화번호를 그대로 표시 - 임시 좌표, debugMode로 조정 필요)
   { id: 'accountHolderName', page: 1, top: 532, left: 244, width: 132, height: 24, fontSize: 14 },
   { id: 'accountHolderPhone', page: 1, top: 562, left: 244, width: 230, height: 24, fontSize: 14 },
-  { id: 'signDate', page: 1, top: 962, left: 562, width: 174, height: 30, fontSize: 16 },
+  { id: 'signDate', page: 1, top: 962, left: 590, width: 174, height: 30, fontSize: 16 },
+  // 판매점 정보 - 임시 좌표, debugMode로 조정 필요
+  { id: 'dealerName', page: 1, top: 1009, left: 188, width: 110, height: 21, fontSize: 14 },
+  { id: 'sellerName', page: 1, top: 1019, left: 296, width: 76, height: 21, fontSize: 14 },
+  { id: 'sellerPhone', page: 1, top: 1030, left: 189, width: 106, height: 20, fontSize: 14 },
+  { id: 'agencyName', page: 1, top: 992, left: 188, width: 108, height: 18, fontSize: 14 },
+  // 6페이지 - 대리점 / 매장명 / 판매자명 (임시 좌표, debugMode로 조정 필요)
+  { id: 'agencyName2', page: 6, top: 946, left: 150, width: 243, height: 27, fontSize: 14 },
+  { id: 'dealerName2', page: 6, top: 946, left: 503, width: 159, height: 24, fontSize: 14 },
+  { id: 'sellerName2', page: 6, top: 972, left: 197, width: 55, height: 24, fontSize: 14 },
+  // 6페이지 - 가입일자 / 월요금 / 할인요금 / 납부요금 (임시 좌표, debugMode로 조정 필요)
+  { id: 'signDate2', page: 6, top: 1024, left: 180, width: 219, height: 25, fontSize: 14 },
+  { id: 'planName2', page: 6, top: 282, left: 49, width: 120, height: 31, fontSize: 14 },
+  { id: 'monthlyFee2', page: 6, top: 282, left: 200, width: 88, height: 30, fontSize: 14 },
+  { id: 'discount3', page: 6, top: 284, left: 494, width: 72, height: 25, fontSize: 14 },
+  { id: 'monthlyPayment3', page: 6, top: 281, left: 623, width: 97, height: 30, fontSize: 14 },
+  { id: 'monthlyPayment4', page: 6, top: 350, left: 623, width: 97, height: 30, fontSize: 14 },
+  { id: 'phoneNumber2', page: 6, top: 998, left: 167, width: 182, height: 26, fontSize: 14 },
 ];
 
 interface FormData {
@@ -166,11 +186,11 @@ export default function SKNewContractPage() {
   };
 
   // 신청일자 포맷팅 (2026.07.15 -> 2026    07    15, "년 월 일" 서식 위치에 맞춰 . 제거 후 공백으로 정렬)
-  const formatSignDate = (date: string) => {
+  const formatSignDate = (date: string, spacing = 8) => {
     const parts = date.split('.');
     if (parts.length === 3) {
       const nbsp = ' ';
-      return `${parts[0]}${nbsp.repeat(8)}${parts[1]}${nbsp.repeat(8)}${parts[2]}`;
+      return `${parts[0]}${nbsp.repeat(spacing)}${parts[1]}${nbsp.repeat(spacing)}${parts[2]}`;
     }
     return date;
   };
@@ -188,6 +208,7 @@ export default function SKNewContractPage() {
     birthDate: formData.birthDate,
     foreignerNumber: formData.foreignerNumber,
     phoneNumber: formatPhoneWithDash(formData.phoneNumber),
+    phoneNumber2: formatPhoneWithDash(formData.phoneNumber),
     address: formData.address,
     usimNumber: formData.usimNumber,
     planName: selectedPlan?.label || '',
@@ -203,7 +224,20 @@ export default function SKNewContractPage() {
     cardExpiry: formData.paymentMethod === '카드' ? formatCardExpiry(formData.cardExpiry) : '',
     accountHolderName: formData.customerName,
     accountHolderPhone: formatPhoneWithDash(formData.phoneNumber),
+    dealerName: DEALER_INFO.storeName,
+    sellerName: DEALER_INFO.sellerName,
+    sellerPhone: DEALER_INFO.sellerPhone,
+    agencyName: DEALER_INFO.storeName,
+    agencyName2: DEALER_INFO.storeName,
+    dealerName2: DEALER_INFO.storeName,
+    sellerName2: DEALER_INFO.sellerName,
     signDate: formatSignDate(formData.signDate),
+    signDate2: formatSignDate(formData.signDate, 18),
+    planName2: selectedPlan?.label || '',
+    monthlyFee2: selectedPlan ? formatWon(selectedPlan.monthlyFee) : '',
+    discount3: selectedPlan ? `-${formatWon(selectedPlan.discount)}` : '',
+    monthlyPayment3: selectedPlan ? formatWon(selectedPlan.monthlyPayment) : '',
+    monthlyPayment4: selectedPlan ? formatWon(selectedPlan.monthlyPayment) : '',
   };
 
   return (
