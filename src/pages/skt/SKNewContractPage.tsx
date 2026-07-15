@@ -36,19 +36,25 @@ const formatWon = (amount: number) => amount.toLocaleString('ko-KR');
 // 주소 기본값
 const BASE_ADDRESS = '인천광역시 부평구 광장로 16 부평민자역사 1층 10~12호';
 
-// 전통신사 옵션 (신규계약 전 사용하던 통신사)
+// 전통신사 옵션 (번호이동 시 변경 전 통신사)
 const CARRIER_OPTIONS = [
   { value: 'kt', label: 'KT' },
   { value: 'lg', label: 'LG U+' },
-  { value: 'mvno', label: '알뜰폰' },
+  { value: 'mvno', label: 'MVNO' },
 ];
 
-// 전통신사별 체크 위치 (○ KT ○ LG U+ ○ MVNO - SK는 우선 신규만 고려, 아직 미사용)
-// const CARRIER_CHECK_POSITIONS: Record<string, { top: number; left: number }> = {
-//   kt: { top: 833, left: 499 },
-//   lg: { top: 833, left: 549 },
-//   mvno: { top: 833, left: 599 },
-// };
+// 전통신사별 체크 위치 (변경전통신사 ○ KT ○ LG U+ ○ MVNO - 임시 좌표, debugMode로 조정 필요)
+const CARRIER_CHECK_POSITIONS: Record<string, { top: number; left: number }> = {
+  kt: { top: 586, left: 393 },
+  lg: { top: 586, left: 430 },
+  mvno: { top: 586, left: 480 },
+};
+
+// 가입유형(신규/번호이동) 체크 위치 (업무구분 ☐신규 ☐번호이동 - 임시 좌표, debugMode로 조정 필요)
+const SUBSCRIPTION_TYPE_POSITIONS: Record<'new' | 'transfer', { top: number; left: number }> = {
+  new: { top: 92, left: 74 },
+  transfer: { top: 92, left: 106 },
+};
 
 // 판매점 정보 (고정)
 const DEALER_INFO = { storeName: '미얀골', sellerName: '김재윤', sellerPhone: '010-4427-7675' };
@@ -61,8 +67,9 @@ const BASE_FIELD_POSITIONS: FieldPosition[] = [
   { id: 'phoneNumber', page: 1, top: 428, left: 583, width: 165, height: 25, fontSize: 14 },
   { id: 'address', page: 1, top: 428, left: 168, width: 369, height: 25, fontSize: 12 },
   { id: 'usimNumber', page: 1, top: 645, left: 166, width: 184, height: 25, fontSize: 14 },
-  // 알뜰폰 상세 - SK는 우선 신규만 고려, 아직 미사용
-  // { id: 'mvnoDetail', page: 1, top: 828, left: 651, width: 93, height: 25, fontSize: 12 },
+  // 번호이동정보 - 이동할 전화번호 / 알뜰폰 상세 (임시 좌표, debugMode로 조정 필요)
+  { id: 'portNumber', page: 1, top: 586, left: 143, width: 110, height: 20, fontSize: 12 },
+  { id: 'mvnoDetail', page: 1, top: 586, left: 520, width: 42, height: 20, fontSize: 11 },
   // 요금제 정보 - 월정액 1곳, 할인액/월납부액은 서식지 내 2곳에 표시
   { id: 'planName', page: 1, top: 224, left: 137, width: 136, height: 28, fontSize: 14 },
   { id: 'monthlyFee', page: 1, top: 249, left: 207, width: 110, height: 26, fontSize: 14 },
@@ -98,6 +105,7 @@ const BASE_FIELD_POSITIONS: FieldPosition[] = [
 ];
 
 interface FormData {
+  subscriptionType: 'new' | 'transfer';
   customerName: string;
   birthDate: string;
   foreignerNumber: string;
@@ -105,8 +113,9 @@ interface FormData {
   address: string;
   usimNumber: string;
   plan: string;
+  portNumber: string;
   prevCarrier: string;
-  // mvnoDetail: string; // SK는 우선 신규만 고려, 아직 미사용
+  mvnoDetail: string;
   paymentMethod: '계좌' | '카드';
   bankOrCard: string;
   accountOrCardNumber: string;
@@ -125,6 +134,7 @@ export default function SKNewContractPage() {
   const [showPrintModal, setShowPrintModal] = useState(false);
 
   const [formData, setFormData] = useState<FormData>({
+    subscriptionType: 'new',
     customerName: '',
     birthDate: '',
     foreignerNumber: '',
@@ -132,8 +142,9 @@ export default function SKNewContractPage() {
     address: BASE_ADDRESS,
     usimNumber: '',
     plan: '',
+    portNumber: '',
     prevCarrier: '',
-    // mvnoDetail: '',
+    mvnoDetail: '',
     paymentMethod: '계좌',
     bankOrCard: '',
     accountOrCardNumber: '',
@@ -161,6 +172,7 @@ export default function SKNewContractPage() {
 
   const resetForm = () => {
     setFormData({
+      subscriptionType: 'new',
       customerName: '',
       birthDate: '',
       foreignerNumber: '',
@@ -168,8 +180,9 @@ export default function SKNewContractPage() {
       address: BASE_ADDRESS,
       usimNumber: '',
       plan: '',
+      portNumber: '',
       prevCarrier: '',
-      // mvnoDetail: '',
+      mvnoDetail: '',
       paymentMethod: '계좌',
       bankOrCard: '',
       accountOrCardNumber: '',
@@ -200,12 +213,16 @@ export default function SKNewContractPage() {
   };
 
   const selectedPlan = PLAN_OPTIONS.find((p) => p.value === formData.plan);
-  // carrierCheck - SK는 우선 신규만 고려, 아직 미사용
-  // const carrierCheckLabel = CARRIER_OPTIONS.find((c) => c.value === formData.prevCarrier)?.label;
-  // 선택된 전통신사에 따라 체크 위치를 동적으로 생성
-  // const carrierCheckPos = formData.prevCarrier ? CARRIER_CHECK_POSITIONS[formData.prevCarrier] : null;
+  const isTransfer = formData.subscriptionType === 'transfer';
+  // 선택된 전통신사에 따라 체크 위치를 동적으로 생성 (번호이동일 때만 표시)
+  const carrierCheckPos = isTransfer && formData.prevCarrier ? CARRIER_CHECK_POSITIONS[formData.prevCarrier] : null;
+  const subscriptionTypePos = SUBSCRIPTION_TYPE_POSITIONS[formData.subscriptionType];
 
-  const fieldPositions: FieldPosition[] = [...BASE_FIELD_POSITIONS];
+  const fieldPositions: FieldPosition[] = [
+    ...BASE_FIELD_POSITIONS,
+    { id: 'subscriptionTypeCheck', page: 1, top: subscriptionTypePos.top, left: subscriptionTypePos.left, fontSize: 12 },
+    ...(carrierCheckPos ? [{ id: 'carrierCheck', page: 1, top: carrierCheckPos.top, left: carrierCheckPos.left, fontSize: 12 }] : []),
+  ];
 
   const fieldValues: FieldValue = {
     customerName: formData.customerName,
@@ -221,8 +238,10 @@ export default function SKNewContractPage() {
     discount2: selectedPlan ? `-${formatWon(selectedPlan.discount)}` : '',
     monthlyPayment1: selectedPlan ? formatWon(selectedPlan.monthlyPayment) : '',
     monthlyPayment2: selectedPlan ? formatWon(selectedPlan.monthlyPayment) : '',
-    // carrierCheck: carrierCheckLabel ? '✓' : '',
-    // mvnoDetail: formData.prevCarrier === 'mvno' ? formData.mvnoDetail : '',
+    subscriptionTypeCheck: '✓',
+    portNumber: isTransfer ? formatPhoneWithDash(formData.portNumber) : '',
+    carrierCheck: carrierCheckPos ? '✓' : '',
+    mvnoDetail: isTransfer && formData.prevCarrier === 'mvno' ? formData.mvnoDetail : '',
     bankOrCard: formData.bankOrCard,
     accountOrCardNumber: formData.accountOrCardNumber,
     cardExpiry: formData.paymentMethod === '카드' ? formatCardExpiry(formData.cardExpiry) : '',
@@ -261,6 +280,27 @@ export default function SKNewContractPage() {
                     <CardDescription>필수 정보를 입력하세요 (좌표는 추후 조정 예정)</CardDescription>
                   </CardHeader>
                   <CardContent className="space-y-4">
+                    {/* 가입유형 */}
+                    <div className="space-y-4">
+                      <p className="text-sm font-medium text-muted-foreground">가입유형</p>
+                      <RadioGroup value={formData.subscriptionType} onValueChange={(value) => setFormData((prev) => ({ ...prev, subscriptionType: value as 'new' | 'transfer' }))} className="flex gap-6">
+                        <div className="flex items-center space-x-2">
+                          <RadioGroupItem value="new" id="subscription-new" />
+                          <Label htmlFor="subscription-new" className="font-normal cursor-pointer">
+                            신규
+                          </Label>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <RadioGroupItem value="transfer" id="subscription-transfer" />
+                          <Label htmlFor="subscription-transfer" className="font-normal cursor-pointer">
+                            번호이동
+                          </Label>
+                        </div>
+                      </RadioGroup>
+                    </div>
+
+                    <Separator />
+
                     <div className="space-y-4">
                       <div className="space-y-2">
                         <Label htmlFor="customerName">
@@ -301,34 +341,45 @@ export default function SKNewContractPage() {
                       </div>
                     </div>
 
-                    <Separator />
+                    {isTransfer && (
+                      <>
+                        <Separator />
 
-                    {/* 전통신사 */}
-                    <div className="space-y-4">
-                      <p className="text-sm font-medium text-muted-foreground">전통신사</p>
-                      <div className="space-y-2">
-                        <RadioGroup value={formData.prevCarrier} onValueChange={(value) => setFormData((prev) => ({ ...prev, prevCarrier: value }))} className="flex flex-wrap gap-4">
-                          {CARRIER_OPTIONS.map((option) => (
-                            <div key={option.value} className="flex items-center space-x-2">
-                              <RadioGroupItem value={option.value} id={`carrier-${option.value}`} />
-                              <Label htmlFor={`carrier-${option.value}`} className="font-normal cursor-pointer">
-                                {option.label}
-                              </Label>
-                            </div>
-                          ))}
-                        </RadioGroup>
-                        {/* 알뜰폰 상세 - SK는 우선 신규만 고려, 아직 미사용
-                        {formData.prevCarrier === 'mvno' && (
-                          <div className="space-y-2 pt-2">
-                            <Label htmlFor="mvnoDetail">
-                              알뜰폰 통신사명 <span className="text-destructive">*</span>
+                        {/* 번호이동정보 */}
+                        <div className="space-y-4">
+                          <p className="text-sm font-medium text-muted-foreground">번호이동정보</p>
+                          <div className="space-y-2">
+                            <Label htmlFor="portNumber">
+                              이동할 전화번호 <span className="text-destructive">*</span>
                             </Label>
-                            <Input id="mvnoDetail" name="mvnoDetail" value={formData.mvnoDetail} onChange={handleChange} placeholder="알뜰폰 통신사명 입력" />
+                            <PhoneInput id="portNumber" value={formData.portNumber} onChange={(value) => setFormData((prev) => ({ ...prev, portNumber: value }))} />
                           </div>
-                        )}
-                        */}
-                      </div>
-                    </div>
+                          <div className="space-y-2">
+                            <Label>
+                              변경전통신사 <span className="text-destructive">*</span>
+                            </Label>
+                            <RadioGroup value={formData.prevCarrier} onValueChange={(value) => setFormData((prev) => ({ ...prev, prevCarrier: value }))} className="flex flex-wrap gap-4">
+                              {CARRIER_OPTIONS.map((option) => (
+                                <div key={option.value} className="flex items-center space-x-2">
+                                  <RadioGroupItem value={option.value} id={`carrier-${option.value}`} />
+                                  <Label htmlFor={`carrier-${option.value}`} className="font-normal cursor-pointer">
+                                    {option.label}
+                                  </Label>
+                                </div>
+                              ))}
+                            </RadioGroup>
+                            {formData.prevCarrier === 'mvno' && (
+                              <div className="space-y-2 pt-2">
+                                <Label htmlFor="mvnoDetail">
+                                  알뜰폰 통신사명 <span className="text-destructive">*</span>
+                                </Label>
+                                <Input id="mvnoDetail" name="mvnoDetail" value={formData.mvnoDetail} onChange={handleChange} placeholder="알뜰폰 통신사명 입력" />
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      </>
+                    )}
 
                     <Separator />
 
