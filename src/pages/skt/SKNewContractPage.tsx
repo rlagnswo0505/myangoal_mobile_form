@@ -52,8 +52,8 @@ const CARRIER_CHECK_POSITIONS: Record<string, { top: number; left: number }> = {
 
 // 가입유형(신규/번호이동) 체크 위치 (업무구분 ☐신규 ☐번호이동 - 임시 좌표, debugMode로 조정 필요)
 const SUBSCRIPTION_TYPE_POSITIONS: Record<'new' | 'transfer', { top: number; left: number }> = {
-  new: { top: 92, left: 74 },
-  transfer: { top: 92, left: 106 },
+  new: { top: 83, left: 89 },
+  transfer: { top: 83, left: 126 },
 };
 
 // 판매점 정보 (고정)
@@ -68,7 +68,7 @@ const BASE_FIELD_POSITIONS: FieldPosition[] = [
   { id: 'address', page: 1, top: 428, left: 168, width: 369, height: 25, fontSize: 12 },
   { id: 'usimNumber', page: 1, top: 645, left: 166, width: 184, height: 25, fontSize: 14 },
   // 번호이동정보 - 이동할 전화번호 / 알뜰폰 상세 (임시 좌표, debugMode로 조정 필요)
-  { id: 'portNumber', page: 1, top: 586, left: 143, width: 110, height: 20, fontSize: 12 },
+  { id: 'portNumber', page: 1, top: 828, left: 245, width: 167, height: 25, fontSize: 12 },
   { id: 'mvnoDetail', page: 1, top: 586, left: 520, width: 42, height: 20, fontSize: 11 },
   // 요금제 정보 - 월정액 1곳, 할인액/월납부액은 서식지 내 2곳에 표시
   { id: 'planName', page: 1, top: 224, left: 137, width: 136, height: 28, fontSize: 14 },
@@ -218,11 +218,7 @@ export default function SKNewContractPage() {
   const carrierCheckPos = isTransfer && formData.prevCarrier ? CARRIER_CHECK_POSITIONS[formData.prevCarrier] : null;
   const subscriptionTypePos = SUBSCRIPTION_TYPE_POSITIONS[formData.subscriptionType];
 
-  const fieldPositions: FieldPosition[] = [
-    ...BASE_FIELD_POSITIONS,
-    { id: 'subscriptionTypeCheck', page: 1, top: subscriptionTypePos.top, left: subscriptionTypePos.left, fontSize: 12 },
-    ...(carrierCheckPos ? [{ id: 'carrierCheck', page: 1, top: carrierCheckPos.top, left: carrierCheckPos.left, fontSize: 12 }] : []),
-  ];
+  const fieldPositions: FieldPosition[] = [...BASE_FIELD_POSITIONS, { id: 'subscriptionTypeCheck', page: 1, top: subscriptionTypePos.top, left: subscriptionTypePos.left, fontSize: 12 }, ...(carrierCheckPos ? [{ id: 'carrierCheck', page: 1, top: carrierCheckPos.top, left: carrierCheckPos.left, fontSize: 12 }] : [])];
 
   const fieldValues: FieldValue = {
     customerName: formData.customerName,
