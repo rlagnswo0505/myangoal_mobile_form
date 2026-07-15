@@ -20,7 +20,9 @@ import LGHelloPaymentChangePage from './pages/lg/LGHelloPaymentChangePage';
 import JoytelPrepaidPage from './pages/skt/JoytelPrepaidPage';
 import SKTSevenMobilePaymentChangePage from './pages/skt/SKTSevenMobilePaymentChangePage';
 import SKNewContractPage from './pages/skt/SKNewContractPage';
+import SKTransferPage from './pages/skt/SKTransferPage';
 import LGApplicationPage from './pages/lg/LGApplicationPage';
+import LGInfoChangePage from './pages/lg/LGInfoChangePage';
 import LimitedTransferWithinPeriodPage from './pages/etc/LimitedTransferWithinPeriodPage';
 
 function App() {
@@ -38,7 +40,9 @@ function App() {
           <Route path="skt/joytel-prepaid" element={<JoytelPrepaidPage />} />
           <Route path="skt/seven-mobile-payment-change" element={<SKTSevenMobilePaymentChangePage />} />
           <Route path="skt/new-contract" element={<SKNewContractPage />} />
+          <Route path="skt/transfer" element={<SKTransferPage />} />
           <Route path="lg/application" element={<LGApplicationPage />} />
+          <Route path="lg/info-change" element={<LGInfoChangePage />} />
           <Route path="lg/story" element={<LGStoryPage />} />
           <Route path="lg/story-transfer" element={<LGStoryTransferPage />} />
           <Route path="lg/ins" element={<LGInsPage />} />

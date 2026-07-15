@@ -71,6 +71,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           url: '/skt/new-contract',
           isActive: location.pathname === '/skt/new-contract',
         },
+        {
+          title: 'SK 명의변경서',
+          url: '/skt/transfer',
+          isActive: location.pathname === '/skt/transfer',
+        },
       ],
     },
     {
@@ -133,6 +138,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           title: 'LG 신청서',
           url: '/lg/application',
           isActive: location.pathname === '/lg/application',
+        },
+        {
+          title: 'LG 변경신청서',
+          url: '/lg/info-change',
+          isActive: location.pathname === '/lg/info-change',
         },
       ],
     },
