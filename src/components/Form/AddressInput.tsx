@@ -9,6 +9,8 @@ interface AddressInputProps {
   value: string;
   onChange: (value: string) => void;
   placeholder?: string;
+  /** 주소 검색 완료 시 도로명주소/지번주소를 함께 전달 (지번 기반 동/읍/면 등이 필요한 경우 사용) */
+  onSelectAddress?: (data: { roadAddress: string; jibunAddress: string }) => void;
 }
 
 /**
@@ -17,7 +19,7 @@ interface AddressInputProps {
  * - 도로명주소 선택 후 상세주소 추가 입력
  * - 최종 결합된 주소를 onChange로 전달
  */
-export default function AddressInput({ id, value, onChange, placeholder }: AddressInputProps) {
+export default function AddressInput({ id, value, onChange, placeholder, onSelectAddress }: AddressInputProps) {
   const [roadAddress, setRoadAddress] = useState(() => value || '');
   const [detailAddress, setDetailAddress] = useState('');
   const detailRef = useRef<HTMLInputElement>(null);
@@ -35,6 +37,7 @@ export default function AddressInput({ id, value, onChange, placeholder }: Addre
         setRoadAddress(address);
         setDetailAddress('');
         onChange(address);
+        onSelectAddress?.({ roadAddress: data.roadAddress, jibunAddress: data.jibunAddress });
         setTimeout(() => detailRef.current?.focus(), 0);
       },
     });

@@ -66,6 +66,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           url: '/skt/seven-mobile-payment-change',
           isActive: location.pathname === '/skt/seven-mobile-payment-change',
         },
+        {
+          title: 'SK 신규계약서',
+          url: '/skt/new-contract',
+          isActive: location.pathname === '/skt/new-contract',
+        },
       ],
     },
     {
@@ -123,6 +128,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           title: '헬로 납부변경',
           url: '/lg/hello-payment-change',
           isActive: location.pathname === '/lg/hello-payment-change',
+        },
+        {
+          title: 'LG 신청서',
+          url: '/lg/application',
+          isActive: location.pathname === '/lg/application',
         },
       ],
     },
