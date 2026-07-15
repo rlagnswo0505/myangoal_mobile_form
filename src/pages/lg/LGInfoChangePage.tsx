@@ -33,26 +33,26 @@ const BASE_ADDRESS = '인천광역시 부평구 광장로 16 부평민자역사 
 // 필드 위치 설정 (임시 좌표 - debugMode로 실제 좌표 확인 후 조정 필요)
 const BASE_FIELD_POSITIONS: FieldPosition[] = [
   // 가입자정보(기존명의자정보) - 명의변경할 전화번호 및 기존 명의자
-  { id: 'prevName', page: 1, top: 145, left: 232, width: 190, height: 18, fontSize: 12 },
-  { id: 'prevBirthDate', page: 1, top: 145, left: 440, width: 150, height: 18, fontSize: 12 },
-  { id: 'phoneNumber', page: 1, top: 145, left: 655, width: 140, height: 18, fontSize: 12 },
+  { id: 'prevName', page: 1, top: 131, left: 172, width: 168, height: 30, fontSize: 12 },
+  { id: 'prevBirthDate', page: 1, top: 131, left: 403, width: 144, height: 28, fontSize: 12 },
+  { id: 'phoneNumber', page: 1, top: 131, left: 598, width: 135, height: 27, fontSize: 12 },
   // 신규 명의자 정보
-  { id: 'newName', page: 1, top: 278, left: 232, width: 190, height: 18, fontSize: 12 },
-  { id: 'newBirthDate', page: 1, top: 278, left: 440, width: 150, height: 18, fontSize: 12 },
-  { id: 'phoneNumber2', page: 1, top: 278, left: 655, width: 140, height: 18, fontSize: 12 },
-  { id: 'newAddress', page: 1, top: 296, left: 200, width: 400, height: 18, fontSize: 11 },
+  { id: 'newName', page: 1, top: 266, left: 254, width: 126, height: 18, fontSize: 12 },
+  { id: 'newBirthDate', page: 1, top: 266, left: 463, width: 94, height: 16, fontSize: 12 },
+  { id: 'phoneNumber2', page: 1, top: 266, left: 620, width: 115, height: 16, fontSize: 12 },
+  { id: 'newAddress', page: 1, top: 282, left: 263, width: 471, height: 16, fontSize: 11 },
   // 요금 납부방법 변경 - 예금주명/생년월일, 은행명/계좌번호, 유효기간
-  { id: 'accountHolderName', page: 1, top: 618, left: 232, width: 150, height: 16, fontSize: 12 },
-  { id: 'accountHolderBirthDate', page: 1, top: 618, left: 440, width: 140, height: 16, fontSize: 12 },
-  { id: 'bankOrCard', page: 1, top: 634, left: 232, width: 150, height: 16, fontSize: 12 },
-  { id: 'accountOrCardNumber', page: 1, top: 634, left: 390, width: 190, height: 16, fontSize: 12 },
-  { id: 'cardExpiry', page: 1, top: 634, left: 620, width: 60, height: 16, fontSize: 12 },
+  { id: 'accountHolderName', page: 1, top: 609, left: 301, width: 131, height: 19, fontSize: 12 },
+  { id: 'accountHolderBirthDate', page: 1, top: 608, left: 529, width: 204, height: 20, fontSize: 12 },
+  { id: 'bankOrCard', page: 1, top: 624, left: 301, width: 49, height: 20, fontSize: 12 },
+  { id: 'accountOrCardNumber', page: 1, top: 625, left: 427, width: 196, height: 18, fontSize: 12 },
+  { id: 'cardExpiry', page: 1, top: 627, left: 652, width: 64, height: 17, fontSize: 12 },
   // 서명일자
-  { id: 'signDate', page: 1, top: 1085, left: 60, width: 130, height: 20, fontSize: 14 },
+  { id: 'signDate', page: 1, top: 985, left: 104, width: 139, height: 24, fontSize: 14 },
   // 판매점 정보 (매장명 / 매장연락처 / 직원이름)
-  { id: 'dealerName', page: 1, top: 1101, left: 132, width: 110, height: 14, fontSize: 12 },
-  { id: 'sellerPhone', page: 1, top: 1101, left: 335, width: 110, height: 14, fontSize: 12 },
-  { id: 'sellerName', page: 1, top: 1101, left: 505, width: 80, height: 14, fontSize: 12 },
+  { id: 'dealerName', page: 1, top: 1001, left: 96, width: 158, height: 24, fontSize: 12 },
+  { id: 'sellerPhone', page: 1, top: 1002, left: 346, width: 171, height: 20, fontSize: 12 },
+  { id: 'sellerName', page: 1, top: 1001, left: 603, width: 83, height: 22, fontSize: 12 },
 ];
 
 interface FormData {
