@@ -48,6 +48,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           url: '/kt/skylife-payment-change',
           isActive: location.pathname === '/kt/skylife-payment-change',
         },
+        {
+          title: 'KT 사전기입서식',
+          url: '/kt/pre-entry',
+          isActive: location.pathname === '/kt/pre-entry',
+        },
       ],
     },
     {
@@ -75,6 +80,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           title: 'SK 명의변경서',
           url: '/skt/transfer',
           isActive: location.pathname === '/skt/transfer',
+        },
+        {
+          title: 'SKT 티폼 사전기입서식',
+          url: '/skt/t-form',
+          isActive: location.pathname === '/skt/t-form',
         },
       ],
     },

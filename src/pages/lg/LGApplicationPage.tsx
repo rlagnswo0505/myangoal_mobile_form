@@ -113,7 +113,7 @@ const BASE_FIELD_POSITIONS: FieldPosition[] = [
   { id: 'dealerName1', page: 1, top: 339, left: 78, width: 84, height: 15, fontSize: 14 },
   { id: 'sellerName1', page: 1, top: 340, left: 177, width: 47, height: 15, fontSize: 14 },
   { id: 'sellerPhone1', page: 1, top: 339, left: 260, width: 89, height: 17, fontSize: 14 },
-  { id: 'sellerAddress', page: 1, top: 338, left: 373, width: 140, height: 18, fontSize: 12 },
+  { id: 'sellerAddress', page: 1, top: 338, left: 373, width: 120, height: 18, fontSize: 10 },
   { id: 'dealerName2', page: 1, top: 1014, left: 195, width: 121, height: 21, fontSize: 14 },
   { id: 'sellerName2', page: 1, top: 1030, left: 185, width: 69, height: 18, fontSize: 14 },
   { id: 'sellerPhone2', page: 1, top: 1029, left: 289, width: 104, height: 19, fontSize: 14 },
