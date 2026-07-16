@@ -43,6 +43,15 @@ const PLAN_OPTIONS = [
 
 const formatWon = (amount: number) => amount.toLocaleString('ko-KR');
 
+// 가입자 주소를 "시/도 · 구/시/군 · 동/읍/면" 3단으로 분해 (지번주소 기준 - "시도 시군구 동 지번" 순서를 가정, 지번주소가 없으면 도로명주소로 최선 추정)
+const parseResidenceRegion = (address: string) => {
+  const tokens = address.trim().split(/\s+/).filter(Boolean);
+  const sido = tokens[0] ?? '';
+  const sigungu = tokens[1] && /(시|군|구)$/.test(tokens[1]) ? tokens[1] : '';
+  const dong = tokens.slice(2).find((token) => /(동|읍|면|리)$/.test(token)) ?? '';
+  return { sido, sigungu, dong };
+};
+
 // 주소 기본값
 const BASE_ADDRESS = '인천광역시 부평구 광장로 16 부평민자역사 1층 10~12호';
 
@@ -109,6 +118,10 @@ const BASE_FIELD_POSITIONS: FieldPosition[] = [
   { id: 'birthDate', page: 6, top: 144, left: 405, width: 142, height: 29, fontSize: 14 },
   { id: 'phoneNumber', page: 6, top: 145, left: 600, width: 134, height: 29, fontSize: 14 },
   { id: 'signDate2', page: 6, top: 984, left: 110, width: 223, height: 25, fontSize: 16 },
+  // 주 생활지역 (시/도, 구/시/군, 동/읍/면) - 가입자 주소에서 자동 추출, 임시 좌표
+  { id: 'residenceSido', page: 1, top: 389, left: 85, width: 135, height: 22, fontSize: 12 },
+  { id: 'residenceSigungu', page: 1, top: 411, left: 85, width: 135, height: 24, fontSize: 12 },
+  { id: 'residenceDong', page: 1, top: 434, left: 85, width: 135, height: 28, fontSize: 12 },
   // 7페이지 - 요금제 / 요금제요금 / 할인 / 최종요금 / 판매직원 / 가입자전화 / 가입일자 (임시 좌표, debugMode로 조정 필요)
   { id: 'planName', page: 7, top: 171, left: 411, width: 107, height: 26, fontSize: 14 },
   { id: 'monthlyFee', page: 7, top: 193, left: 412, width: 93, height: 27, fontSize: 14 },
@@ -126,6 +139,7 @@ interface FormData {
   // foreignerNumber: string; // 외국인등록번호 - 아직 미사용
   phoneNumber: string;
   address: string;
+  jibunAddress: string;
   usimModel: string;
   usimNumber: string;
   plan: string;
@@ -156,6 +170,7 @@ export default function LGApplicationPage() {
     // foreignerNumber: '',
     phoneNumber: '',
     address: BASE_ADDRESS,
+    jibunAddress: '',
     usimModel: '',
     usimNumber: '',
     plan: '',
@@ -195,6 +210,7 @@ export default function LGApplicationPage() {
       // foreignerNumber: '',
       phoneNumber: '',
       address: BASE_ADDRESS,
+      jibunAddress: '',
       usimModel: '',
       usimNumber: '',
       plan: '',
@@ -242,6 +258,9 @@ export default function LGApplicationPage() {
   // 예금주 생년월일 미입력 시 가입자 생년월일을 기본값으로 사용
   const accountHolderBirthDateValue = formData.accountHolderBirthDate || formData.birthDate;
 
+  // 주 생활지역 - 가입자 지번주소에서 자동 추출 (지번주소가 없으면 입력된 주소로 대체)
+  const residenceRegion = parseResidenceRegion(formData.jibunAddress || formData.address);
+
   // 선택된 전통신사에 따라 체크 위치를 동적으로 생성
   // const carrierCheckPos = formData.prevCarrier ? CARRIER_CHECK_POSITIONS[formData.prevCarrier] : null;
 
@@ -253,6 +272,9 @@ export default function LGApplicationPage() {
     // foreignerNumber: formData.foreignerNumber,
     phoneNumber: formatPhoneWithDash(formData.phoneNumber),
     address: formData.address,
+    residenceSido: residenceRegion.sido,
+    residenceSigungu: residenceRegion.sigungu,
+    residenceDong: residenceRegion.dong,
     usimModel: formData.usimModel,
     usimNumber: formData.usimNumber,
     planName: selectedPlan?.label || '',
@@ -349,7 +371,10 @@ export default function LGApplicationPage() {
                         <Label htmlFor="address">
                           주소 <span className="text-destructive">*</span>
                         </Label>
-                        <AddressInput id="address" value={formData.address} onChange={(value) => setFormData((prev) => ({ ...prev, address: value }))} />
+                        <AddressInput id="address" value={formData.address} onChange={(value) => setFormData((prev) => ({ ...prev, address: value }))} onSelectAddress={({ jibunAddress }) => setFormData((prev) => ({ ...prev, jibunAddress }))} />
+                        <p className="text-xs text-muted-foreground">
+                          주 생활지역(지번주소 기준 자동 추출): {residenceRegion.sido || '-'} · {residenceRegion.sigungu || '-'} · {residenceRegion.dong || '-'}
+                        </p>
                       </div>
                     </div>
 

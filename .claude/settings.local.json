@@ -16,7 +16,8 @@
       "Bash(grep -v \"^\\\\s*//\")",
       "Bash(grep -v \"// \")",
       "Bash(npm run *)",
-      "Bash(git commit *)"
+      "Bash(git commit *)",
+      "Bash(git apply *)"
     ]
   }
 }
