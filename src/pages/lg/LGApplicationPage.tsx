@@ -43,13 +43,20 @@ const PLAN_OPTIONS = [
 
 const formatWon = (amount: number) => amount.toLocaleString('ko-KR');
 
+// 주 생활지역 기본값 (매장 소재지 - 주소에서 추출하지 못한 항목은 이 값으로 대체)
+const DEFAULT_RESIDENCE_REGION = { sido: '인천광역시', sigungu: '부평구', dong: '부평동' };
+
 // 가입자 주소를 "시/도 · 구/시/군 · 동/읍/면" 3단으로 분해 (지번주소 기준 - "시도 시군구 동 지번" 순서를 가정, 지번주소가 없으면 도로명주소로 최선 추정)
 const parseResidenceRegion = (address: string) => {
   const tokens = address.trim().split(/\s+/).filter(Boolean);
   const sido = tokens[0] ?? '';
   const sigungu = tokens[1] && /(시|군|구)$/.test(tokens[1]) ? tokens[1] : '';
   const dong = tokens.slice(2).find((token) => /(동|읍|면|리)$/.test(token)) ?? '';
-  return { sido, sigungu, dong };
+  return {
+    sido: sido || DEFAULT_RESIDENCE_REGION.sido,
+    sigungu: sigungu || DEFAULT_RESIDENCE_REGION.sigungu,
+    dong: dong || DEFAULT_RESIDENCE_REGION.dong,
+  };
 };
 
 // 주소 기본값

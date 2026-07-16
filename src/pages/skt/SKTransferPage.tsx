@@ -1,4 +1,4 @@
-import { useState, useRef, type ChangeEvent } from 'react';
+import { useState, useRef, useMemo, type ChangeEvent } from 'react';
 import ImageViewer, { type FieldPosition, type FieldValue } from '@/components/PDFPreview/ImageViewer';
 import { usePreviewScale } from '@/hooks/use-preview-scale';
 import PrintModal from '@/components/PrintModal/PrintModal';
@@ -21,8 +21,15 @@ import skTransferPage6 from '@/assets/templates/sk 명의변경_6.jpg';
 import skTransferPage7 from '@/assets/templates/sk 명의변경_7.jpg';
 import skTransferPage8 from '@/assets/templates/sk 명의변경_8.jpg';
 
-// 템플릿 이미지 (1페이지: 이동전화 명의변경계약서 본문, 2페이지: 단말/분할상환 승계, 3~8페이지: 약관 및 동의서)
-const PAGE_IMAGES: string[] = [skTransferPage1, skTransferPage2, skTransferPage3, skTransferPage4, skTransferPage5, skTransferPage6, skTransferPage7, skTransferPage8];
+// 템플릿 이미지 (전체 8페이지 - 대리점에 따라 필요한 페이지만 선택하여 출력)
+// 1페이지: 이동전화 명의변경계약서 본문, 2페이지: 단말/분할상환 승계, 3~4페이지: 부가안내, 5~6페이지: 개인정보 처리동의서, 7~8페이지: 약관
+const ALL_PAGE_IMAGES: string[] = [skTransferPage1, skTransferPage2, skTransferPage3, skTransferPage4, skTransferPage5, skTransferPage6, skTransferPage7, skTransferPage8];
+
+// 대리점 옵션 (대리점별로 필요한 서식 페이지가 다름)
+const AGENCY_OPTIONS: { value: 'entoel' | 'esm'; label: string; pages: number[] }[] = [
+  { value: 'entoel', label: '엔투엘', pages: [1, 5, 6] },
+  { value: 'esm', label: 'ESM', pages: [1] },
+];
 
 // 주소 기본값
 const BASE_ADDRESS = '인천광역시 부평구 광장로 16 부평민자역사 1층 10~12호';
@@ -59,6 +66,7 @@ const BASE_FIELD_POSITIONS: FieldPosition[] = [
 ];
 
 interface FormData {
+  agency: 'entoel' | 'esm';
   phoneNumber: string;
   prevName: string;
   prevBirthDate: string;
@@ -87,6 +95,7 @@ export default function SKTransferPage() {
   const [sameAsPrev, setSameAsPrev] = useState(true);
 
   const [formData, setFormData] = useState<FormData>({
+    agency: 'entoel',
     phoneNumber: '',
     prevName: '',
     prevBirthDate: '',
@@ -122,6 +131,7 @@ export default function SKTransferPage() {
 
   const resetForm = () => {
     setFormData({
+      agency: 'entoel',
       phoneNumber: '',
       prevName: '',
       prevBirthDate: '',
@@ -167,7 +177,13 @@ export default function SKTransferPage() {
   // 예금주명/생년월일 미입력 시 신규 명의자 정보를 기본값으로 사용
   const accountHolderBirthDateValue = formData.accountHolderBirthDate || effectiveNewBirthDate;
 
-  const fieldPositions: FieldPosition[] = [...BASE_FIELD_POSITIONS];
+  // 선택된 대리점에 필요한 페이지만 추려서 이미지와 필드 위치를 재구성 (원본 페이지 번호 -> 선택된 페이지 순서로 매핑)
+  const selectedAgency = AGENCY_OPTIONS.find((a) => a.value === formData.agency) || AGENCY_OPTIONS[0];
+  // eslint-disable-next-line react-hooks/exhaustive-deps -- 대리점(agency)이 바뀔 때만 배열 참조를 새로 만들어 이미지가 매 입력마다 재로딩되는 것을 방지
+  const pageImages = useMemo(() => selectedAgency.pages.map((p) => ALL_PAGE_IMAGES[p - 1]), [formData.agency]);
+  const pageNumberMap = new Map(selectedAgency.pages.map((p, index) => [p, index + 1]));
+
+  const fieldPositions: FieldPosition[] = BASE_FIELD_POSITIONS.filter((f) => pageNumberMap.has(f.page)).map((f) => ({ ...f, page: pageNumberMap.get(f.page)! }));
 
   const fieldValues: FieldValue = {
     phoneNumber: formatPhoneWithDash(formData.phoneNumber),
@@ -208,6 +224,24 @@ export default function SKTransferPage() {
                     <CardDescription>필수 정보를 입력하세요 (좌표는 추후 조정 예정)</CardDescription>
                   </CardHeader>
                   <CardContent className="space-y-4">
+                    {/* 대리점 */}
+                    <div className="space-y-4">
+                      <p className="text-sm font-medium text-muted-foreground">대리점</p>
+                      <RadioGroup value={formData.agency} onValueChange={(value) => setFormData((prev) => ({ ...prev, agency: value as 'entoel' | 'esm' }))} className="flex gap-6">
+                        {AGENCY_OPTIONS.map((option) => (
+                          <div key={option.value} className="flex items-center space-x-2">
+                            <RadioGroupItem value={option.value} id={`agency-${option.value}`} />
+                            <Label htmlFor={`agency-${option.value}`} className="font-normal cursor-pointer">
+                              {option.label}
+                            </Label>
+                          </div>
+                        ))}
+                      </RadioGroup>
+                      <p className="text-xs text-muted-foreground">선택한 대리점에 필요한 서식 페이지만 출력됩니다 ({selectedAgency.pages.length}페이지)</p>
+                    </div>
+
+                    <Separator />
+
                     {/* 명의를 주는 분 */}
                     <div className="space-y-4">
                       <p className="text-sm font-medium text-muted-foreground">명의를 주는 분 (기존 명의자)</p>
@@ -361,7 +395,7 @@ export default function SKTransferPage() {
             <ScrollArea className="h-full">
               <div className="">
                 {debugMode && <p className="text-xs text-muted-foreground mb-2">이미지를 클릭하면 좌표가 표시됩니다</p>}
-                <ImageViewer images={PAGE_IMAGES} fieldPositions={fieldPositions} fieldValues={fieldValues} scale={scale} debugMode={debugMode} />
+                <ImageViewer images={pageImages} fieldPositions={fieldPositions} fieldValues={fieldValues} scale={scale} debugMode={debugMode} />
               </div>
             </ScrollArea>
           </div>
@@ -369,7 +403,7 @@ export default function SKTransferPage() {
       </div>
 
       {/* 인쇄 모달 */}
-      <PrintModal isOpen={showPrintModal} onClose={() => setShowPrintModal(false)} images={PAGE_IMAGES} fieldPositions={fieldPositions} fieldValues={fieldValues} />
+      <PrintModal isOpen={showPrintModal} onClose={() => setShowPrintModal(false)} images={pageImages} fieldPositions={fieldPositions} fieldValues={fieldValues} />
     </>
   );
 }

@@ -1,4 +1,4 @@
-import { useState, useRef, type ChangeEvent } from 'react';
+import { useState, useRef, useMemo, type ChangeEvent } from 'react';
 import ImageViewer, { type FieldPosition, type FieldValue } from '@/components/PDFPreview/ImageViewer';
 import { usePreviewScale } from '@/hooks/use-preview-scale';
 import PrintModal from '@/components/PrintModal/PrintModal';
@@ -20,8 +20,14 @@ import skContractPage4 from '@/assets/templates/SK 신규계약서_4.jpg';
 import skContractPage5 from '@/assets/templates/SK 신규계약서_5.jpg';
 import skContractPage6 from '@/assets/templates/SK 신규계약서_6.jpg';
 
-// 템플릿 이미지
-const PAGE_IMAGES: string[] = [skContractPage1, skContractPage2, skContractPage3, skContractPage4, skContractPage5, skContractPage6];
+// 템플릿 이미지 (전체 6페이지 - 대리점에 따라 필요한 페이지만 선택하여 출력)
+const ALL_PAGE_IMAGES: string[] = [skContractPage1, skContractPage2, skContractPage3, skContractPage4, skContractPage5, skContractPage6];
+
+// 대리점 옵션 (대리점별로 필요한 서식 페이지가 다름)
+const AGENCY_OPTIONS: { value: 'entoel' | 'esm'; label: string; pages: number[] }[] = [
+  { value: 'entoel', label: '엔투엘', pages: [1, 4, 5] },
+  { value: 'esm', label: 'ESM', pages: [1] },
+];
 
 // 요금제 옵션 (월정액 / 할인액 / 월납부액)
 const PLAN_OPTIONS = [
@@ -74,16 +80,16 @@ const BASE_FIELD_POSITIONS: FieldPosition[] = [
   { id: 'planName', page: 1, top: 224, left: 137, width: 136, height: 28, fontSize: 14 },
   { id: 'monthlyFee', page: 1, top: 249, left: 207, width: 110, height: 26, fontSize: 14 },
   { id: 'discount1', page: 1, top: 276, left: 207, width: 105, height: 27, fontSize: 14 },
-  { id: 'discount2', page: 1, top: 305, left: 207, width: 75, height: 25, fontSize: 14 },
+  { id: 'discount2', page: 1, top: 312, left: 207, width: 75, height: 25, fontSize: 14 },
   { id: 'monthlyPayment1', page: 1, top: 226, left: 666, width: 82, height: 32, fontSize: 14 },
   { id: 'monthlyPayment2', page: 1, top: 298, left: 666, width: 81, height: 32, fontSize: 14 },
-  // 납부방법 - 계좌/카드 정보
-  { id: 'bankOrCard', page: 1, top: 506, left: 244, width: 132, height: 26, fontSize: 14 },
-  { id: 'accountOrCardNumber', page: 1, top: 507, left: 433, width: 198, height: 25, fontSize: 14 },
-  { id: 'cardExpiry', page: 1, top: 505, left: 674, width: 60, height: 27, fontSize: 14 },
-  // 예금주명 / 예금주 전화번호 (신규 입력 필드 없이 고객명·전화번호를 그대로 표시 - 임시 좌표, debugMode로 조정 필요)
-  { id: 'accountHolderName', page: 1, top: 532, left: 244, width: 132, height: 24, fontSize: 14 },
-  { id: 'accountHolderPhone', page: 1, top: 562, left: 244, width: 230, height: 24, fontSize: 14 },
+  // 납부방법 - 계좌/카드 정보 (우선 미사용)
+  // { id: 'bankOrCard', page: 1, top: 506, left: 244, width: 132, height: 26, fontSize: 14 },
+  // { id: 'accountOrCardNumber', page: 1, top: 507, left: 433, width: 198, height: 25, fontSize: 14 },
+  // { id: 'cardExpiry', page: 1, top: 505, left: 674, width: 60, height: 27, fontSize: 14 },
+  // 예금주명 / 예금주 전화번호 (신규 입력 필드 없이 고객명·전화번호를 그대로 표시 - 임시 좌표, debugMode로 조정 필요) - 납부방법 우선 미사용
+  // { id: 'accountHolderName', page: 1, top: 532, left: 244, width: 132, height: 24, fontSize: 14 },
+  // { id: 'accountHolderPhone', page: 1, top: 562, left: 244, width: 230, height: 24, fontSize: 14 },
   { id: 'signDate', page: 1, top: 962, left: 590, width: 174, height: 30, fontSize: 16 },
   // 판매점 정보 - 임시 좌표, debugMode로 조정 필요
   { id: 'dealerName', page: 1, top: 1009, left: 188, width: 110, height: 21, fontSize: 14 },
@@ -105,6 +111,7 @@ const BASE_FIELD_POSITIONS: FieldPosition[] = [
 ];
 
 interface FormData {
+  agency: 'entoel' | 'esm';
   subscriptionType: 'new' | 'transfer';
   customerName: string;
   birthDate: string;
@@ -116,10 +123,11 @@ interface FormData {
   portNumber: string;
   prevCarrier: string;
   mvnoDetail: string;
-  paymentMethod: '계좌' | '카드';
-  bankOrCard: string;
-  accountOrCardNumber: string;
-  cardExpiry: string;
+  // 납부방법 - 우선 미사용
+  // paymentMethod: '계좌' | '카드';
+  // bankOrCard: string;
+  // accountOrCardNumber: string;
+  // cardExpiry: string;
   signDate: string;
 }
 
@@ -134,6 +142,7 @@ export default function SKNewContractPage() {
   const [showPrintModal, setShowPrintModal] = useState(false);
 
   const [formData, setFormData] = useState<FormData>({
+    agency: 'entoel',
     subscriptionType: 'new',
     customerName: '',
     birthDate: '',
@@ -145,10 +154,10 @@ export default function SKNewContractPage() {
     portNumber: '',
     prevCarrier: '',
     mvnoDetail: '',
-    paymentMethod: '계좌',
-    bankOrCard: '',
-    accountOrCardNumber: '',
-    cardExpiry: '',
+    // paymentMethod: '계좌',
+    // bankOrCard: '',
+    // accountOrCardNumber: '',
+    // cardExpiry: '',
     signDate: todayFormatted,
   });
 
@@ -158,13 +167,14 @@ export default function SKNewContractPage() {
     setFormData((prev) => ({ ...prev, [name]: nextValue }));
   };
 
-  const handlePaymentMethodChange = (value: '계좌' | '카드') => {
-    setFormData((prev) => ({
-      ...prev,
-      paymentMethod: value,
-      cardExpiry: value === '계좌' ? '' : prev.cardExpiry,
-    }));
-  };
+  // 납부방법 - 우선 미사용
+  // const handlePaymentMethodChange = (value: '계좌' | '카드') => {
+  //   setFormData((prev) => ({
+  //     ...prev,
+  //     paymentMethod: value,
+  //     cardExpiry: value === '계좌' ? '' : prev.cardExpiry,
+  //   }));
+  // };
 
   const handlePrint = () => {
     setShowPrintModal(true);
@@ -172,6 +182,7 @@ export default function SKNewContractPage() {
 
   const resetForm = () => {
     setFormData({
+      agency: 'entoel',
       subscriptionType: 'new',
       customerName: '',
       birthDate: '',
@@ -183,24 +194,24 @@ export default function SKNewContractPage() {
       portNumber: '',
       prevCarrier: '',
       mvnoDetail: '',
-      paymentMethod: '계좌',
-      bankOrCard: '',
-      accountOrCardNumber: '',
-      cardExpiry: '',
+      // paymentMethod: '계좌',
+      // bankOrCard: '',
+      // accountOrCardNumber: '',
+      // cardExpiry: '',
       signDate: todayFormatted,
     });
   };
 
-  // 카드 유효기간 포맷팅 (2512 -> 25        12)
-  const formatCardExpiry = (expiry: string) => {
-    if (expiry.length === 4) {
-      const yy = expiry.slice(0, 2);
-      const mm = expiry.slice(2, 4);
-      const nbsp = ' ';
-      return `${yy}${nbsp.repeat(6)}${mm}`;
-    }
-    return expiry;
-  };
+  // 카드 유효기간 포맷팅 (2512 -> 25        12) - 납부방법 우선 미사용
+  //   const formatCardExpiry = (expiry: string) => {
+  //     if (expiry.length === 4) {
+  //       const yy = expiry.slice(0, 2);
+  //       const mm = expiry.slice(2, 4);
+  //       const nbsp = ' ';
+  //       return `${yy}${nbsp.repeat(6)}${mm}`;
+  //     }
+  //     return expiry;
+  //   };
 
   // 신청일자 포맷팅 (2026.07.15 -> 2026    07    15, "년 월 일" 서식 위치에 맞춰 . 제거 후 공백으로 정렬)
   const formatSignDate = (date: string, spacing = 8) => {
@@ -218,7 +229,15 @@ export default function SKNewContractPage() {
   const carrierCheckPos = isTransfer && formData.prevCarrier ? CARRIER_CHECK_POSITIONS[formData.prevCarrier] : null;
   const subscriptionTypePos = SUBSCRIPTION_TYPE_POSITIONS[formData.subscriptionType];
 
-  const fieldPositions: FieldPosition[] = [...BASE_FIELD_POSITIONS, { id: 'subscriptionTypeCheck', page: 1, top: subscriptionTypePos.top, left: subscriptionTypePos.left, fontSize: 12 }, ...(carrierCheckPos ? [{ id: 'carrierCheck', page: 1, top: carrierCheckPos.top, left: carrierCheckPos.left, fontSize: 12 }] : [])];
+  // 선택된 대리점에 필요한 페이지만 추려서 이미지와 필드 위치를 재구성 (원본 페이지 번호 -> 선택된 페이지 순서로 매핑)
+  const selectedAgency = AGENCY_OPTIONS.find((a) => a.value === formData.agency) || AGENCY_OPTIONS[0];
+  // eslint-disable-next-line react-hooks/exhaustive-deps -- 대리점(agency)이 바뀔 때만 배열 참조를 새로 만들어 이미지가 매 입력마다 재로딩되는 것을 방지
+  const pageImages = useMemo(() => selectedAgency.pages.map((p) => ALL_PAGE_IMAGES[p - 1]), [formData.agency]);
+  const pageNumberMap = new Map(selectedAgency.pages.map((p, index) => [p, index + 1]));
+
+  const rawFieldPositions: FieldPosition[] = [...BASE_FIELD_POSITIONS, { id: 'subscriptionTypeCheck', page: 1, top: subscriptionTypePos.top, left: subscriptionTypePos.left, fontSize: 12 }, ...(carrierCheckPos ? [{ id: 'carrierCheck', page: 1, top: carrierCheckPos.top, left: carrierCheckPos.left, fontSize: 12 }] : [])];
+
+  const fieldPositions: FieldPosition[] = rawFieldPositions.filter((f) => pageNumberMap.has(f.page)).map((f) => ({ ...f, page: pageNumberMap.get(f.page)! }));
 
   const fieldValues: FieldValue = {
     customerName: formData.customerName,
@@ -238,11 +257,12 @@ export default function SKNewContractPage() {
     portNumber: isTransfer ? formatPhoneWithDash(formData.portNumber) : '',
     carrierCheck: carrierCheckPos ? '✓' : '',
     mvnoDetail: isTransfer && formData.prevCarrier === 'mvno' ? formData.mvnoDetail : '',
-    bankOrCard: formData.bankOrCard,
-    accountOrCardNumber: formData.accountOrCardNumber,
-    cardExpiry: formData.paymentMethod === '카드' ? formatCardExpiry(formData.cardExpiry) : '',
-    accountHolderName: formData.customerName,
-    accountHolderPhone: formatPhoneWithDash(formData.phoneNumber),
+    // 납부방법 - 우선 미사용
+    // bankOrCard: formData.bankOrCard,
+    // accountOrCardNumber: formData.accountOrCardNumber,
+    // cardExpiry: formData.paymentMethod === '카드' ? formatCardExpiry(formData.cardExpiry) : '',
+    // accountHolderName: formData.customerName,
+    // accountHolderPhone: formatPhoneWithDash(formData.phoneNumber),
     dealerName: DEALER_INFO.storeName,
     sellerName: DEALER_INFO.sellerName,
     sellerPhone: DEALER_INFO.sellerPhone,
@@ -276,6 +296,24 @@ export default function SKNewContractPage() {
                     <CardDescription>필수 정보를 입력하세요 (좌표는 추후 조정 예정)</CardDescription>
                   </CardHeader>
                   <CardContent className="space-y-4">
+                    {/* 대리점 */}
+                    <div className="space-y-4">
+                      <p className="text-sm font-medium text-muted-foreground">대리점</p>
+                      <RadioGroup value={formData.agency} onValueChange={(value) => setFormData((prev) => ({ ...prev, agency: value as 'entoel' | 'esm' }))} className="flex gap-6">
+                        {AGENCY_OPTIONS.map((option) => (
+                          <div key={option.value} className="flex items-center space-x-2">
+                            <RadioGroupItem value={option.value} id={`agency-${option.value}`} />
+                            <Label htmlFor={`agency-${option.value}`} className="font-normal cursor-pointer">
+                              {option.label}
+                            </Label>
+                          </div>
+                        ))}
+                      </RadioGroup>
+                      <p className="text-xs text-muted-foreground">선택한 대리점에 필요한 서식 페이지만 출력됩니다 ({selectedAgency.pages.length}페이지)</p>
+                    </div>
+
+                    <Separator />
+
                     {/* 가입유형 */}
                     <div className="space-y-4">
                       <p className="text-sm font-medium text-muted-foreground">가입유형</p>
@@ -414,9 +452,9 @@ export default function SKNewContractPage() {
                       )}
                     </div>
 
+                    {/* 납부방법 - 우선 미사용
                     <Separator />
 
-                    {/* 납부방법 */}
                     <div className="space-y-4">
                       <p className="text-sm font-medium text-muted-foreground">납부방법</p>
                       <RadioGroup value={formData.paymentMethod} onValueChange={(value) => handlePaymentMethodChange(value as '계좌' | '카드')} className="flex gap-6">
@@ -456,6 +494,7 @@ export default function SKNewContractPage() {
                         )}
                       </div>
                     </div>
+                    */}
 
                     <Separator />
 
@@ -479,7 +518,7 @@ export default function SKNewContractPage() {
             <ScrollArea className="h-full">
               <div className="">
                 {debugMode && <p className="text-xs text-muted-foreground mb-2">이미지를 클릭하면 좌표가 표시됩니다</p>}
-                <ImageViewer images={PAGE_IMAGES} fieldPositions={fieldPositions} fieldValues={fieldValues} scale={scale} debugMode={debugMode} />
+                <ImageViewer images={pageImages} fieldPositions={fieldPositions} fieldValues={fieldValues} scale={scale} debugMode={debugMode} />
               </div>
             </ScrollArea>
           </div>
@@ -487,7 +526,7 @@ export default function SKNewContractPage() {
       </div>
 
       {/* 인쇄 모달 */}
-      <PrintModal isOpen={showPrintModal} onClose={() => setShowPrintModal(false)} images={PAGE_IMAGES} fieldPositions={fieldPositions} fieldValues={fieldValues} />
+      <PrintModal isOpen={showPrintModal} onClose={() => setShowPrintModal(false)} images={pageImages} fieldPositions={fieldPositions} fieldValues={fieldValues} />
     </>
   );
 }
