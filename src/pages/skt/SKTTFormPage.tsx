@@ -104,7 +104,7 @@ const BASE_FIELD_POSITIONS: FieldPosition[] = [
   { id: 'planName', page: 1, top: 558, left: 466, width: 253, height: 16, fontSize: 11 },
   { id: 'monthlyFee', page: 1, top: 577, left: 462, width: 101, height: 24, fontSize: 11 },
   { id: 'planDiscountAmount', page: 1, top: 582, left: 620, width: 99, height: 19, fontSize: 11 },
-  { id: 'monthlyPayment', page: 1, top: 760, left: 602, width: 105, height: 23, fontSize: 11 },
+  { id: 'monthlyPayment', page: 1, top: 760, left: 642, width: 65, height: 23, fontSize: 11 },
   // 부가정보
   { id: 'usimInfo', page: 1, top: 832, left: 274, width: 298, height: 26, fontSize: 11 },
   // 판매자 정보 (하단)
@@ -136,40 +136,43 @@ interface FormData {
   commitmentMonths: string;
   planName: string;
   monthlyFee: string;
-  monthlyPayment: string;
   usimInfo: string;
   usimType: 'now' | 'later' | 'existing';
   activationDate: string;
 }
 
-const INITIAL_FORM_DATA: FormData = {
-  subscriptionType: 'new',
-  customerType: 'foreigner',
-  customerName: '',
-  residentNumber: '',
-  activationNumber: '',
-  email: '',
-  phoneNumber: '',
-  address: '',
-  paymentMethod: 'bank',
-  cardValidYear: '',
-  cardValidMonth: '',
-  bankOrCard: '',
-  accountOrCardNumber: '',
-  accountHolderName: '',
-  accountHolderRelation: '',
-  accountHolderResidentNumber: '',
-  accountHolderPhone: '',
-  prevCarrier: '',
-  authMethod: 'device',
-  authLast4: '',
-  commitmentMonths: '12',
-  planName: '',
-  monthlyFee: '',
-  monthlyPayment: '',
-  usimInfo: '',
-  usimType: 'now',
-  activationDate: '',
+// 개통일 기본값(오늘 날짜)을 포함한 초기값을 매번 새로 생성
+const createInitialFormData = (): FormData => {
+  const now = new Date();
+  const todayFormatted = `${now.getFullYear()}.${String(now.getMonth() + 1).padStart(2, '0')}.${String(now.getDate()).padStart(2, '0')}`;
+  return {
+    subscriptionType: 'new',
+    customerType: 'foreigner',
+    customerName: '',
+    residentNumber: '',
+    activationNumber: '',
+    email: '',
+    phoneNumber: '',
+    address: '',
+    paymentMethod: 'bank',
+    cardValidYear: '',
+    cardValidMonth: '',
+    bankOrCard: '',
+    accountOrCardNumber: '',
+    accountHolderName: '',
+    accountHolderRelation: '본인',
+    accountHolderResidentNumber: '',
+    accountHolderPhone: '',
+    prevCarrier: '',
+    authMethod: 'device',
+    authLast4: '',
+    commitmentMonths: '12',
+    planName: '',
+    monthlyFee: '',
+    usimInfo: '',
+    usimType: 'now',
+    activationDate: todayFormatted,
+  };
 };
 
 export default function SKTTFormPage() {
@@ -178,11 +181,22 @@ export default function SKTTFormPage() {
 
   const [debugMode, setDebugMode] = useState(false);
   const [showPrintModal, setShowPrintModal] = useState(false);
-  const [formData, setFormData] = useState<FormData>(INITIAL_FORM_DATA);
+  const [formData, setFormData] = useState<FormData>(createInitialFormData);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  // 고객명 입력 시 예금주명도 함께 입력
+  const handleCustomerNameChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const { value } = e.target;
+    setFormData((prev) => ({ ...prev, customerName: value, accountHolderName: value }));
+  };
+
+  // 개통번호 입력 시 연락처, 예금주연락처도 함께 입력
+  const handleActivationNumberChange = (value: string) => {
+    setFormData((prev) => ({ ...prev, activationNumber: value, phoneNumber: value, accountHolderPhone: value }));
   };
 
   const handlePrint = () => {
@@ -190,7 +204,7 @@ export default function SKTTFormPage() {
   };
 
   const resetForm = () => {
-    setFormData(INITIAL_FORM_DATA);
+    setFormData(createInitialFormData());
   };
 
   const isTransfer = formData.subscriptionType === 'transfer';
@@ -202,9 +216,11 @@ export default function SKTTFormPage() {
   const authMethodPos = isTransfer ? AUTH_METHOD_POSITIONS[formData.authMethod] : null;
   const usimTypePos = USIM_TYPE_POSITIONS[formData.usimType];
 
-  // 약정할인 = 월정액의 25% (직접 입력하지 않고 자동 계산)
+  // 약정할인 = 월정액의 25%, 월요금 = 월정액 - 약정할인 (직접 입력하지 않고 자동 계산)
   const monthlyFeeNumber = Number(formData.monthlyFee.replace(/[^0-9]/g, '')) || 0;
-  const planDiscountAmountValue = monthlyFeeNumber ? String(Math.round(monthlyFeeNumber * 0.25)) : '';
+  const planDiscountAmountNumber = monthlyFeeNumber ? Math.round(monthlyFeeNumber * 0.25) : 0;
+  const planDiscountAmountValue = monthlyFeeNumber ? String(planDiscountAmountNumber) : '';
+  const monthlyPaymentValue = monthlyFeeNumber ? String(monthlyFeeNumber - planDiscountAmountNumber) : '';
 
   const fieldPositions: FieldPosition[] = [
     ...BASE_FIELD_POSITIONS,
@@ -246,7 +262,7 @@ export default function SKTTFormPage() {
     planName: formData.planName,
     monthlyFee: formData.monthlyFee,
     planDiscountAmount: planDiscountAmountValue,
-    monthlyPayment: formData.monthlyPayment,
+    monthlyPayment: monthlyPaymentValue,
     usimInfo: formData.usimInfo,
     usimTypeCheck: '✓',
     sellerName: STORE_INFO.sellerName,
@@ -326,7 +342,7 @@ export default function SKTTFormPage() {
                       <p className="text-sm font-medium text-muted-foreground">고객정보</p>
                       <div className="space-y-2">
                         <Label htmlFor="customerName">고객명</Label>
-                        <Input id="customerName" name="customerName" value={formData.customerName} onChange={handleChange} placeholder="홍길동" />
+                        <Input id="customerName" name="customerName" value={formData.customerName} onChange={handleCustomerNameChange} placeholder="홍길동" />
                       </div>
                       <div className="grid grid-cols-2 gap-4">
                         <div className="space-y-2">
@@ -335,7 +351,7 @@ export default function SKTTFormPage() {
                         </div>
                         <div className="space-y-2">
                           <Label htmlFor="activationNumber">개통번호</Label>
-                          <PhoneInput id="activationNumber" value={formData.activationNumber} onChange={(value) => setFormData((prev) => ({ ...prev, activationNumber: value }))} />
+                          <PhoneInput id="activationNumber" value={formData.activationNumber} onChange={handleActivationNumberChange} />
                         </div>
                       </div>
                       <div className="grid grid-cols-2 gap-4">
@@ -492,10 +508,7 @@ export default function SKTTFormPage() {
                         <Label htmlFor="monthlyFee">월정액(원)</Label>
                         <Input id="monthlyFee" name="monthlyFee" value={formData.monthlyFee} onChange={handleChange} />
                         <p className="text-xs text-muted-foreground">약정할인(25%): {planDiscountAmountValue ? `${planDiscountAmountValue}원` : '-'}</p>
-                      </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="monthlyPayment">월요금(원)</Label>
-                        <Input id="monthlyPayment" name="monthlyPayment" value={formData.monthlyPayment} onChange={handleChange} />
+                        <p className="text-xs text-muted-foreground">월요금(월정액 - 약정할인): {monthlyPaymentValue ? `${monthlyPaymentValue}원` : '-'}</p>
                       </div>
                     </div>
 
