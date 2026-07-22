@@ -19,6 +19,7 @@ import LGUmobilePaymentChangePage from './pages/lg/LGUmobilePaymentChangePage';
 import LGInsPaymentChangePage from './pages/lg/LGInsPaymentChangePage';
 import LGHelloPaymentChangePage from './pages/lg/LGHelloPaymentChangePage';
 import JoytelPrepaidPage from './pages/skt/JoytelPrepaidPage';
+import JoytelPaymentChangePage from './pages/skt/JoytelPaymentChangePage';
 import SKTSevenMobilePaymentChangePage from './pages/skt/SKTSevenMobilePaymentChangePage';
 import SKNewContractPage from './pages/skt/SKNewContractPage';
 import SKTransferPage from './pages/skt/SKTransferPage';
@@ -41,6 +42,7 @@ function App() {
           <Route path="kt/skylife-payment-change" element={<KTSkyLifePaymentChangePage />} />
           <Route path="kt/pre-entry" element={<KTPreEntryPage />} />
           <Route path="skt/joytel-prepaid" element={<JoytelPrepaidPage />} />
+          <Route path="skt/joytel-payment-change" element={<JoytelPaymentChangePage />} />
           <Route path="skt/seven-mobile-payment-change" element={<SKTSevenMobilePaymentChangePage />} />
           <Route path="skt/new-contract" element={<SKNewContractPage />} />
           <Route path="skt/transfer" element={<SKTransferPage />} />

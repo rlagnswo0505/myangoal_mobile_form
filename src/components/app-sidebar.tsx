@@ -67,6 +67,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           isActive: location.pathname === '/skt/joytel-prepaid',
         },
         {
+          title: '조이텔 납부변경',
+          url: '/skt/joytel-payment-change',
+          isActive: location.pathname === '/skt/joytel-payment-change',
+        },
+        {
           title: '세븐모바일 납부변경',
           url: '/skt/seven-mobile-payment-change',
           isActive: location.pathname === '/skt/seven-mobile-payment-change',

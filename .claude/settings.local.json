@@ -18,7 +18,19 @@
       "Bash(npm run *)",
       "Bash(git commit *)",
       "Bash(git apply *)",
-      "Bash(grep -v \"^--$\")"
+      "Bash(grep -v \"^--$\")",
+      "Bash(python3 -c \"from PIL import Image; im=Image.open\\('src/assets/templates/조이텔 변경신청서_1.jpg'\\); print\\(im.size\\)\")",
+      "Bash(python3 -c \"import sys; print\\(sys.version\\)\")",
+      "Bash(pip show *)",
+      "Bash(pip install *)",
+      "Bash(python3 *)",
+      "Bash(cp \"src/assets/templates/조이텔 변경신청서_1.jpg\" /tmp/joytel.jpg)",
+      "Read(//tmp/**)",
+      "Bash(echo \"EXIT: $?\")",
+      "Bash(python -c ' *)",
+      "Bash(python *)",
+      "Bash(tasklist)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\\\\n\" http://localhost:5173)"
     ]
   }
 }
