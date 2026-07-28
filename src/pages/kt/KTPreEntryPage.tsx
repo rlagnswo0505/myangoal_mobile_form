@@ -56,6 +56,9 @@ const CARRIER_POSITIONS: Record<string, { top: number; left: number }> = {
   mvno: { top: 414, left: 496 },
 };
 
+// MVNO 통신사명 입력 위치 (MVNO 체크박스 옆 - 임시 좌표, debugMode로 조정 필요)
+const MVNO_CARRIER_NAME_POSITION = { top: 414, left: 545 };
+
 // 인증방법 체크 위치 (☐단말(유심)일련번호 ☐신용카드 ☐은행계좌 ☐지로납부 - 임시 좌표, debugMode로 조정 필요)
 const AUTH_METHOD_POSITIONS: Record<'device' | 'card' | 'account' | 'giro', { top: number; left: number }> = {
   device: { top: 440, left: 266 },
@@ -131,6 +134,7 @@ interface FormData {
   accountHolderResidentNumber: string;
   accountHolderPhone: string;
   prevCarrier: string;
+  mvnoCarrierName: string;
   authMethod: 'device' | 'card' | 'account' | 'giro';
   authLast4: string;
   commitmentMonths: string;
@@ -151,7 +155,7 @@ const createInitialFormData = (): FormData => {
     customerName: '',
     residentNumber: '',
     activationNumber: '',
-    email: '',
+    email: 'rlawogbs0324@naver.com',
     phoneNumber: '',
     address: '',
     paymentMethod: 'bank',
@@ -164,6 +168,7 @@ const createInitialFormData = (): FormData => {
     accountHolderResidentNumber: '',
     accountHolderPhone: '',
     prevCarrier: '',
+    mvnoCarrierName: '',
     authMethod: 'device',
     authLast4: '',
     commitmentMonths: '12',
@@ -199,6 +204,18 @@ export default function KTPreEntryPage() {
     setFormData((prev) => ({ ...prev, activationNumber: value, phoneNumber: value, accountHolderPhone: value }));
   };
 
+  // 주민번호 입력 시 앞 6자리를 납부정보 주민번호(앞)에도 함께 입력
+  const handleResidentNumberChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const { value } = e.target;
+    const digitsOnly = value.replace(/[^0-9]/g, '');
+    setFormData((prev) => ({ ...prev, residentNumber: value, accountHolderResidentNumber: digitsOnly.slice(0, 6) }));
+  };
+
+  // 연락처 입력 시 납부정보 연락처에도 함께 입력
+  const handlePhoneNumberChange = (value: string) => {
+    setFormData((prev) => ({ ...prev, phoneNumber: value, accountHolderPhone: value }));
+  };
+
   const handlePrint = () => {
     setShowPrintModal(true);
   };
@@ -228,6 +245,9 @@ export default function KTPreEntryPage() {
     { id: 'customerTypeCheck', page: 1, top: customerTypePos.top, left: customerTypePos.left, fontSize: 12 },
     { id: 'paymentMethodCheck', page: 1, top: paymentMethodPos.top, left: paymentMethodPos.left, fontSize: 12 },
     ...(carrierPos ? [{ id: 'carrierCheck', page: 1, top: carrierPos.top, left: carrierPos.left, fontSize: 12 }] : []),
+    ...(isTransfer && formData.prevCarrier === 'mvno'
+      ? [{ id: 'mvnoCarrierName', page: 1, top: MVNO_CARRIER_NAME_POSITION.top, left: MVNO_CARRIER_NAME_POSITION.left, width: 140, height: 20, fontSize: 11 }]
+      : []),
     ...(authMethodPos ? [{ id: 'authMethodCheck', page: 1, top: authMethodPos.top, left: authMethodPos.left, fontSize: 12 }] : []),
     { id: 'supportTypeCheck', page: 1, top: SUPPORT_TYPE_POSITION.top, left: SUPPORT_TYPE_POSITION.left, fontSize: 12 },
     { id: 'usimTypeCheck', page: 1, top: usimTypePos.top, left: usimTypePos.left, fontSize: 12 },
@@ -255,6 +275,7 @@ export default function KTPreEntryPage() {
     accountHolderResidentNumber: formData.accountHolderResidentNumber,
     accountHolderPhone: formatPhoneWithDash(formData.accountHolderPhone),
     carrierCheck: carrierPos ? '✓' : '',
+    mvnoCarrierName: isTransfer && formData.prevCarrier === 'mvno' ? formData.mvnoCarrierName : '',
     authMethodCheck: authMethodPos ? '✓' : '',
     authLast4: isTransfer ? formData.authLast4 : '',
     supportTypeCheck: '✓',
@@ -347,7 +368,7 @@ export default function KTPreEntryPage() {
                       <div className="grid grid-cols-2 gap-4">
                         <div className="space-y-2">
                           <Label htmlFor="residentNumber">주민번호</Label>
-                          <Input id="residentNumber" name="residentNumber" value={formData.residentNumber} onChange={handleChange} placeholder="000000-0000000" />
+                          <Input id="residentNumber" name="residentNumber" value={formData.residentNumber} onChange={handleResidentNumberChange} placeholder="000000-0000000" />
                         </div>
                         <div className="space-y-2">
                           <Label htmlFor="activationNumber">개통번호</Label>
@@ -361,7 +382,7 @@ export default function KTPreEntryPage() {
                         </div>
                         <div className="space-y-2">
                           <Label htmlFor="phoneNumber">연락처</Label>
-                          <PhoneInput id="phoneNumber" value={formData.phoneNumber} onChange={(value) => setFormData((prev) => ({ ...prev, phoneNumber: value }))} />
+                          <PhoneInput id="phoneNumber" value={formData.phoneNumber} onChange={handlePhoneNumberChange} />
                         </div>
                       </div>
                       <div className="space-y-2">
@@ -447,7 +468,11 @@ export default function KTPreEntryPage() {
                           <p className="text-sm font-medium text-muted-foreground">번호이동 인증정보</p>
                           <div className="space-y-2">
                             <Label>이전통신사</Label>
-                            <RadioGroup value={formData.prevCarrier} onValueChange={(value) => setFormData((prev) => ({ ...prev, prevCarrier: value }))} className="flex flex-wrap gap-4">
+                            <RadioGroup
+                              value={formData.prevCarrier}
+                              onValueChange={(value) => setFormData((prev) => ({ ...prev, prevCarrier: value, mvnoCarrierName: value === 'mvno' ? prev.mvnoCarrierName : '' }))}
+                              className="flex flex-wrap gap-4"
+                            >
                               {CARRIER_OPTIONS.map((option) => (
                                 <div key={option.value} className="flex items-center space-x-2">
                                   <RadioGroupItem value={option.value} id={`carrier-${option.value}`} />
@@ -457,6 +482,12 @@ export default function KTPreEntryPage() {
                                 </div>
                               ))}
                             </RadioGroup>
+                            {formData.prevCarrier === 'mvno' && (
+                              <div className="space-y-2 pt-2">
+                                <Label htmlFor="mvnoCarrierName">MVNO 통신사명</Label>
+                                <Input id="mvnoCarrierName" name="mvnoCarrierName" value={formData.mvnoCarrierName} onChange={handleChange} placeholder="예: 프리티, 아이즈모바일 등" />
+                              </div>
+                            )}
                           </div>
                           <div className="space-y-2">
                             <Label>인증방법</Label>
