@@ -57,7 +57,7 @@ const CARRIER_POSITIONS: Record<string, { top: number; left: number }> = {
 };
 
 // MVNO 통신사명 입력 위치 (MVNO 체크박스 옆)
-const MVNO_CARRIER_NAME_POSITION = { top: 406, left: 555, width: 154, height: 21 };
+const MVNO_CARRIER_NAME_POSITION = { top: 402, left: 575, width: 154, height: 21 };
 
 // 인증방법 체크 위치 (☐단말(유심)일련번호 ☐신용카드 ☐은행계좌 ☐지로납부 - 임시 좌표, debugMode로 조정 필요)
 const AUTH_METHOD_POSITIONS: Record<'device' | 'card' | 'account' | 'giro', { top: number; left: number }> = {
