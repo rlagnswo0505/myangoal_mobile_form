@@ -56,8 +56,8 @@ const CARRIER_POSITIONS: Record<string, { top: number; left: number }> = {
   mvno: { top: 414, left: 496 },
 };
 
-// MVNO 통신사명 입력 위치 (MVNO 체크박스 옆 - 임시 좌표, debugMode로 조정 필요)
-const MVNO_CARRIER_NAME_POSITION = { top: 414, left: 545 };
+// MVNO 통신사명 입력 위치 (MVNO 체크박스 옆)
+const MVNO_CARRIER_NAME_POSITION = { top: 406, left: 555, width: 154, height: 21 };
 
 // 인증방법 체크 위치 (☐단말(유심)일련번호 ☐신용카드 ☐은행계좌 ☐지로납부 - 임시 좌표, debugMode로 조정 필요)
 const AUTH_METHOD_POSITIONS: Record<'device' | 'card' | 'account' | 'giro', { top: number; left: number }> = {
@@ -246,7 +246,7 @@ export default function SKTTFormPage() {
     { id: 'paymentMethodCheck', page: 1, top: paymentMethodPos.top, left: paymentMethodPos.left, fontSize: 12 },
     ...(carrierPos ? [{ id: 'carrierCheck', page: 1, top: carrierPos.top, left: carrierPos.left, fontSize: 12 }] : []),
     ...(isTransfer && formData.prevCarrier === 'mvno'
-      ? [{ id: 'mvnoCarrierName', page: 1, top: MVNO_CARRIER_NAME_POSITION.top, left: MVNO_CARRIER_NAME_POSITION.left, width: 140, height: 20, fontSize: 11 }]
+      ? [{ id: 'mvnoCarrierName', page: 1, top: MVNO_CARRIER_NAME_POSITION.top, left: MVNO_CARRIER_NAME_POSITION.left, width: MVNO_CARRIER_NAME_POSITION.width, height: MVNO_CARRIER_NAME_POSITION.height, fontSize: 11 }]
       : []),
     ...(authMethodPos ? [{ id: 'authMethodCheck', page: 1, top: authMethodPos.top, left: authMethodPos.left, fontSize: 12 }] : []),
     { id: 'supportTypeCheck', page: 1, top: SUPPORT_TYPE_POSITION.top, left: SUPPORT_TYPE_POSITION.left, fontSize: 12 },
