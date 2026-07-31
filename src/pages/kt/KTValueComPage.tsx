@@ -85,7 +85,7 @@ const BASE_FIELD_POSITIONS: FieldPosition[] = [
   { id: 'accountHolderName', page: 1, top: 455, left: 161, width: 245, height: 28, fontSize: 11 },
   { id: 'accountHolderBirthDate', page: 1, top: 456, left: 526, width: 247, height: 28, fontSize: 11 },
   { id: 'accountOrCardNumber', page: 1, top: 485, left: 160, width: 244, height: 25, fontSize: 11 },
-  { id: 'cardValidPeriod', page: 1, top: 485, left: 465, width: 121, height: 26, fontSize: 10 },
+  { id: 'cardValidPeriod', page: 1, top: 485, left: 482, width: 104, height: 25, fontSize: 10 },
   { id: 'cardPinFirst2', page: 1, top: 483, left: 684, width: 89, height: 27, fontSize: 10 },
   // 명의변경
   { id: 'nameChangeCustomerName', page: 1, top: 568, left: 162, width: 245, height: 26, fontSize: 11 },
