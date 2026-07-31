@@ -8,6 +8,7 @@ import KTMainApplicationPage from './pages/kt/KTMainApplicationPage';
 import KTMmobilePaymentChangePage from './pages/kt/KTMmobilePaymentChangePage';
 import KTSkyLifePaymentChangePage from './pages/kt/KTSkyLifePaymentChangePage';
 import KTPreEntryPage from './pages/kt/KTPreEntryPage';
+import KTValueComPage from './pages/kt/KTValueComPage';
 import LGStoryPage from './pages/lg/LGStoryPage';
 import LGStoryTransferPage from './pages/lg/LGStoryTransferPage';
 import LGInsPage from './pages/lg/LGInsPage';
@@ -41,6 +42,7 @@ function App() {
           <Route path="kt/mmobile-payment-change" element={<KTMmobilePaymentChangePage />} />
           <Route path="kt/skylife-payment-change" element={<KTSkyLifePaymentChangePage />} />
           <Route path="kt/pre-entry" element={<KTPreEntryPage />} />
+          <Route path="kt/valuecom" element={<KTValueComPage />} />
           <Route path="skt/joytel-prepaid" element={<JoytelPrepaidPage />} />
           <Route path="skt/joytel-payment-change" element={<JoytelPaymentChangePage />} />
           <Route path="skt/seven-mobile-payment-change" element={<SKTSevenMobilePaymentChangePage />} />

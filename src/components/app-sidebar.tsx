@@ -53,6 +53,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           url: '/kt/pre-entry',
           isActive: location.pathname === '/kt/pre-entry',
         },
+        {
+          title: '밸류컴 가입신청서',
+          url: '/kt/valuecom',
+          isActive: location.pathname === '/kt/valuecom',
+        },
       ],
     },
     {
