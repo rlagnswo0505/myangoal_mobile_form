@@ -143,7 +143,7 @@ const createInitialFormData = (): FormData => {
     foreignerNumber: '',
     phoneNumber: '010-4427-7675',
     address: '인천광역시 부평구 광장로 16 1층 10호 미얀골',
-    wishNumberRandom: false,
+    wishNumberRandom: true,
     wishNumber1: '',
     wishNumber2: '',
     usimModelName: '',
@@ -195,6 +195,12 @@ export default function KTValueComPage() {
   // 개통번호 입력 시 번호이동 신청번호·명의변경 연락처도 함께 입력
   const handleActivationNumberChange = (value: string) => {
     setFormData((prev) => ({ ...prev, activationNumber: value, portInNumber: value, nameChangePhone: value }));
+  };
+
+  // 희망번호 직접 입력 시 희망번호 랜덤 체크 해제
+  const handleWishNumberChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value, wishNumberRandom: value ? false : prev.wishNumberRandom }));
   };
 
   const handlePrint = () => {
@@ -366,11 +372,11 @@ export default function KTValueComPage() {
                         <div className="grid grid-cols-2 gap-4">
                           <div className="space-y-2">
                             <Label htmlFor="wishNumber1">희망번호 ①</Label>
-                            <Input id="wishNumber1" name="wishNumber1" value={formData.wishNumber1} onChange={handleChange} placeholder="1234" maxLength={4} />
+                            <Input id="wishNumber1" name="wishNumber1" value={formData.wishNumber1} onChange={handleWishNumberChange} placeholder="1234" maxLength={4} />
                           </div>
                           <div className="space-y-2">
                             <Label htmlFor="wishNumber2">희망번호 ②</Label>
-                            <Input id="wishNumber2" name="wishNumber2" value={formData.wishNumber2} onChange={handleChange} placeholder="5678" maxLength={4} />
+                            <Input id="wishNumber2" name="wishNumber2" value={formData.wishNumber2} onChange={handleWishNumberChange} placeholder="5678" maxLength={4} />
                           </div>
                         </div>
                       </div>
