@@ -187,9 +187,9 @@ export default function KTValueComPage() {
     setFormData((prev) => ({ ...prev, customerName: value, accountHolderName: value, nameChangeCustomerName: value }));
   };
 
-  // 생년월일 입력 시 예금주생년월일·명의변경 생년월일도 함께 입력
+  // 생년월일 입력 시 예금주생년월일·명의변경 생년월일·외국인등록번호 앞자리도 함께 입력
   const handleBirthDateChange = (value: string) => {
-    setFormData((prev) => ({ ...prev, birthDate: value, accountHolderBirthDate: value, nameChangeBirthDate: value }));
+    setFormData((prev) => ({ ...prev, birthDate: value, accountHolderBirthDate: value, nameChangeBirthDate: value, foreignerNumber: value ? `${value}-` : '' }));
   };
 
   // 개통번호 입력 시 번호이동 신청번호·명의변경 연락처도 함께 입력
