@@ -73,7 +73,7 @@ const BASE_FIELD_POSITIONS: FieldPosition[] = [
   { id: 'phoneNumber', page: 1, top: 167, left: 161, width: 246, height: 26, fontSize: 11 },
   { id: 'address', page: 1, top: 192, left: 161, width: 613, height: 29, fontSize: 10 },
   // 가입단말정보
-  { id: 'wishNumber1', page: 1, top: 224, left: 236, width: 79, height: 27, fontSize: 11 },
+  { id: 'wishNumber1', page: 1, top: 224, left: 236, width: 77, height: 28, fontSize: 11 },
   { id: 'wishNumber2', page: 1, top: 226, left: 330, width: 77, height: 28, fontSize: 11 },
   { id: 'usimModelName', page: 1, top: 253, left: 161, width: 146, height: 25, fontSize: 9 },
   { id: 'usimSerialNumber', page: 1, top: 279, left: 163, width: 245, height: 28, fontSize: 9 },
