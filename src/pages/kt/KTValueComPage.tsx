@@ -217,7 +217,7 @@ export default function KTValueComPage() {
     { id: 'networkCheck', page: 1, top: networkPos.top, left: networkPos.left, fontSize: 12 },
     { id: 'taskTypeCheck', page: 1, top: taskTypePos.top, left: taskTypePos.left, fontSize: 12 },
     ...(formData.wishNumberRandom ? [{ id: 'wishNumberRandomCheck', page: 1, top: 236, left: 168, fontSize: 12 }] : []),
-    ...(formData.usimStandalone ? [{ id: 'usimStandaloneCheck', page: 1, top: 260, left: 270, fontSize: 12 }] : []),
+    ...(formData.usimStandalone ? [{ id: 'usimStandaloneCheck', page: 1, top: 261, left: 310, fontSize: 12 }] : []),
     ...(planPos ? [{ id: 'planCheck', page: 1, top: planPos.top, left: planPos.left, fontSize: 12 }] : []),
     ...(carrierPos ? [{ id: 'carrierCheck', page: 1, top: carrierPos.top, left: carrierPos.left, fontSize: 12 }] : []),
     ...(isTransfer && formData.prevCarrier === 'mvno' ? [{ id: 'mvnoCarrierName', page: 1, top: 402, left: 688, width: 86, height: 27, fontSize: 10 }] : []),
