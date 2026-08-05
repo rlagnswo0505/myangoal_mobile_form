@@ -26,22 +26,31 @@ import lgAppPage9 from '@/assets/templates/LG신청서_9.jpg';
 // 템플릿 이미지
 const PAGE_IMAGES: string[] = [lgAppPage1, lgAppPage2, lgAppPage3, lgAppPage4, lgAppPage5, lgAppPage6, lgAppPage7, lgAppPage8, lgAppPage9];
 
-// 요금제 옵션 (월정액 / 선약할인 / 월납부액) - ESM 2026년 7월 MNO 온라인 정책(LG 요금제.png) 기준
-// 일반 데이터플랜과 유쓰 데이터플랜은 동일 구간(31/50/80/95/125)에서 기본료·선약할인이 같음. 유쓰는 데이터가 더 제공되어 요금제명에 추가 데이터량을 함께 표시
-const PLAN_OPTIONS = [
-  { value: 'data_31', label: '데이터플랜31GB', monthlyFee: 61000, discount: 15250, monthlyPayment: 45750 },
-  { value: 'data_50', label: '데이터플랜50GB', monthlyFee: 63000, discount: 15750, monthlyPayment: 47250 },
-  { value: 'data_80', label: '데이터플랜80GB', monthlyFee: 66000, discount: 16500, monthlyPayment: 49500 },
-  { value: 'data_95', label: '데이터플랜95GB', monthlyFee: 68000, discount: 17000, monthlyPayment: 51000 },
-  { value: 'data_125', label: '데이터플랜125GB', monthlyFee: 70000, discount: 17500, monthlyPayment: 52500 },
-  { value: 'yous_31', label: '유쓰데이터플랜31GB + 10GB', monthlyFee: 61000, discount: 15250, monthlyPayment: 45750 },
-  { value: 'yous_50', label: '유쓰데이터플랜50GB + 20GB', monthlyFee: 63000, discount: 15750, monthlyPayment: 47250 },
-  { value: 'yous_80', label: '유쓰데이터플랜80GB + 30GB', monthlyFee: 66000, discount: 16500, monthlyPayment: 49500 },
-  { value: 'yous_95', label: '유쓰데이터플랜95GB + 40GB', monthlyFee: 68000, discount: 17000, monthlyPayment: 51000 },
-  { value: 'yous_125', label: '유쓰데이터플랜125GB + 60GB', monthlyFee: 70000, discount: 17500, monthlyPayment: 52500 },
-];
-
 const formatWon = (amount: number) => amount.toLocaleString('ko-KR');
+
+// 프로모션 할인 옵션 생성 (요금제별 선택 가능한 프로모션 할인 단계 - 금액이 클수록 월납부액이 낮아짐)
+const buildPromotions = (amounts: number[]) =>
+  amounts.map((amount, index) => ({
+    value: `promo_${index}`,
+    label: amount > 0 ? `-${formatWon(amount)}원` : '프로모션 없음 (0원)',
+    amount,
+  }));
+
+// 요금제 옵션 (월정액 / 선약할인 / 프로모션 할인) - ESM 2026년 7월 ~ 2차 MNO 온라인 정책(LG 요금제.png, 엔투엘 기준) 기준
+// 일반 데이터플랜과 유쓰 데이터플랜은 동일 구간(31/50/80/95/125)에서 기본료·선약할인·프로모션이 같음. 유쓰는 데이터가 더 제공되어 요금제명에 추가 데이터량을 함께 표시
+// 월납부액 = 기본료 - 선약할인 - 프로모션 할인 (선택한 프로모션에 따라 달라짐, 서식지의 선택약정할인 문구/총 요금할인은 프로모션과 무관하게 선약할인만 표시)
+const PLAN_OPTIONS = [
+  { value: 'data_31', label: '데이터플랜31GB', monthlyFee: 61000, discount: 15250, promotions: buildPromotions([26750, 24750, 18000]) },
+  { value: 'data_50', label: '데이터플랜50GB', monthlyFee: 63000, discount: 15750, promotions: buildPromotions([22000, 18000]) },
+  { value: 'data_80', label: '데이터플랜80GB', monthlyFee: 66000, discount: 16500, promotions: buildPromotions([25000, 22000, 16500]) },
+  { value: 'data_95', label: '데이터플랜95GB', monthlyFee: 68000, discount: 17000, promotions: buildPromotions([25000, 22000, 16500]) },
+  { value: 'data_125', label: '데이터플랜125GB', monthlyFee: 70000, discount: 17500, promotions: buildPromotions([25000, 22000, 16500, 0]) },
+  { value: 'yous_31', label: '유쓰데이터플랜31GB + 10GB', monthlyFee: 61000, discount: 15250, promotions: buildPromotions([26750, 24750, 18000]) },
+  { value: 'yous_50', label: '유쓰데이터플랜50GB + 20GB', monthlyFee: 63000, discount: 15750, promotions: buildPromotions([22000, 18000]) },
+  { value: 'yous_80', label: '유쓰데이터플랜80GB + 30GB', monthlyFee: 66000, discount: 16500, promotions: buildPromotions([25000, 22000, 16500]) },
+  { value: 'yous_95', label: '유쓰데이터플랜95GB + 40GB', monthlyFee: 68000, discount: 17000, promotions: buildPromotions([25000, 22000, 16500]) },
+  { value: 'yous_125', label: '유쓰데이터플랜125GB + 60GB', monthlyFee: 70000, discount: 17500, promotions: buildPromotions([25000, 22000, 16500, 0]) },
+];
 
 // 주 생활지역 기본값 (매장 소재지 - 주소에서 추출하지 못한 항목은 이 값으로 대체)
 const DEFAULT_RESIDENCE_REGION = { sido: '인천광역시', sigungu: '부평구', dong: '부평동' };
@@ -80,6 +89,7 @@ const BASE_ADDRESS = '인천광역시 부평구 광장로 16 부평민자역사 
 const VENDOR_OPTIONS = [
   { value: 'entoel', label: '엔투엘 LG', storeName: '엔투엘', sellerName: '이경건', sellerPhone: '1544-4069', sellerAddress: '서울시 마포구 큰우물로75번길 9호' },
   { value: 'esm', label: 'ESM', storeName: '엔투엘', sellerName: '', sellerPhone: '', sellerAddress: '' },
+  { value: 'green', label: '그린', storeName: '그린', sellerName: '', sellerPhone: '', sellerAddress: '' },
 ];
 
 // 필드 위치 설정 (임시 좌표 - debugMode로 실제 좌표 확인 후 조정 필요)
@@ -101,6 +111,9 @@ const BASE_FIELD_POSITIONS: FieldPosition[] = [
   { id: 'monthlyPayment1', page: 1, top: 268, left: 143, width: 115, height: 19, fontSize: 14 },
   { id: 'monthlyPayment2', page: 1, top: 262, left: 627, width: 93, height: 27, fontSize: 14 },
   { id: 'monthlyFee2', page: 1, top: 219, left: 270, width: 64, height: 26, fontSize: 14 },
+  // 그린 판매점 전용 - 요금제명/월정액을 상단 빈공간에 별도 표시 (임시 좌표, 위치는 추후 수동 조정 예정)
+  { id: 'topPlanName', page: 1, top: 40, left: 550, width: 150, height: 22, fontSize: 12 },
+  { id: 'topAmount', page: 1, top: 65, left: 550, width: 150, height: 22, fontSize: 12 },
   // 납부방법 - 계좌/카드 정보
   { id: 'bankOrCard', page: 1, top: 565, left: 226, width: 92, height: 24, fontSize: 14 },
   { id: 'accountOrCardNumber', page: 1, top: 564, left: 338, width: 236, height: 26, fontSize: 14 },
@@ -130,8 +143,8 @@ const BASE_FIELD_POSITIONS: FieldPosition[] = [
   { id: 'residenceSigungu', page: 1, top: 411, left: 85, width: 135, height: 24, fontSize: 12 },
   { id: 'residenceDong', page: 1, top: 434, left: 85, width: 135, height: 28, fontSize: 12 },
   // 7페이지 - 요금제 / 요금제요금 / 할인 / 최종요금 / 판매직원 / 가입자전화 / 가입일자 (임시 좌표, debugMode로 조정 필요)
-  { id: 'planName', page: 7, top: 171, left: 411, width: 107, height: 26, fontSize: 14 },
-  { id: 'monthlyFee', page: 7, top: 193, left: 412, width: 93, height: 27, fontSize: 14 },
+  { id: 'planName2', page: 7, top: 171, left: 411, width: 107, height: 26, fontSize: 14 },
+  { id: 'monthlyFee3', page: 7, top: 193, left: 412, width: 93, height: 27, fontSize: 14 },
   { id: 'discount2', page: 7, top: 244, left: 433, width: 68, height: 26, fontSize: 14 },
   { id: 'monthlyPayment3', page: 7, top: 427, left: 416, width: 87, height: 36, fontSize: 14 },
   { id: 'monthlyPayment4', page: 7, top: 421, left: 652, width: 69, height: 29, fontSize: 14 },
@@ -150,6 +163,8 @@ interface FormData {
   usimModel: string;
   usimNumber: string;
   plan: string;
+  promotionApplied: '적용' | '미적용';
+  promotion: string;
   // prevCarrier: string; // 전통신사 - 우선 신규만 고려, 아직 미사용
   // mvnoDetail: string;
   paymentMethod: '계좌' | '카드';
@@ -181,6 +196,8 @@ export default function LGApplicationPage() {
     usimModel: '',
     usimNumber: '',
     plan: '',
+    promotionApplied: '미적용',
+    promotion: '',
     // prevCarrier: '',
     // mvnoDetail: '',
     paymentMethod: '계좌',
@@ -221,6 +238,8 @@ export default function LGApplicationPage() {
       usimModel: '',
       usimNumber: '',
       plan: '',
+      promotionApplied: '미적용',
+      promotion: '',
       // prevCarrier: '',
       // mvnoDetail: '',
       paymentMethod: '계좌',
@@ -258,9 +277,15 @@ export default function LGApplicationPage() {
   };
 
   const selectedPlan = PLAN_OPTIONS.find((p) => p.value === formData.plan);
+  const selectedPromotion = selectedPlan?.promotions.find((p) => p.value === formData.promotion);
+  // 프로모션 미적용 선택 시(또는 세부 단계 미선택 시) 프로모션 할인 0원으로 간주 (선약할인만 적용된 금액)
+  const promotionAmount = formData.promotionApplied === '적용' ? selectedPromotion?.amount ?? 0 : 0;
+  const monthlyPayment = selectedPlan ? selectedPlan.monthlyFee - selectedPlan.discount - promotionAmount : 0;
   // 전통신사 - 우선 신규만 고려, 아직 미사용
   // const carrierCheckLabel = CARRIER_OPTIONS.find((c) => c.value === formData.prevCarrier)?.label;
   const selectedVendor = VENDOR_OPTIONS.find((v) => v.value === formData.vendor) || VENDOR_OPTIONS[0];
+  // 그린 판매점은 1페이지 요금제 영역에 금액을 표시하지 않고(유심단독개통으로만 표시), 실제 요금제명/월정액은 상단 빈공간에 별도 표시
+  const isGreenVendor = formData.vendor === 'green';
 
   // 예금주 생년월일 미입력 시 가입자 생년월일을 기본값으로 사용
   const accountHolderBirthDateValue = formData.accountHolderBirthDate || formData.birthDate;
@@ -284,16 +309,22 @@ export default function LGApplicationPage() {
     residenceDong: residenceRegion.dong,
     usimModel: formData.usimModel,
     usimNumber: formData.usimNumber,
-    planName: selectedPlan?.label || '',
-    monthlyFee: selectedPlan ? formatWon(selectedPlan.monthlyFee) : '',
-    monthlyFee2: selectedPlan ? formatWon(selectedPlan.monthlyFee) : '',
-    discount: selectedPlan ? `선택약정할인 ${formatWon(selectedPlan.discount)}` : '',
+    // 그린 판매점: 1페이지 요금제 영역은 '유심단독개통'만 표시하고 금액은 비움, 실제 요금제명/월정액은 topPlanName/topAmount로 표시
+    planName: isGreenVendor ? (selectedPlan ? '유심단독개통' : '') : selectedPlan?.label || '',
+    monthlyFee: isGreenVendor ? '' : selectedPlan ? formatWon(selectedPlan.monthlyFee) : '',
+    monthlyFee2: isGreenVendor ? '' : selectedPlan ? formatWon(selectedPlan.monthlyFee) : '',
+    discount: isGreenVendor ? '' : selectedPlan ? `선택약정할인 ${formatWon(selectedPlan.discount)}` : '',
+    totalDiscount: isGreenVendor ? '' : selectedPlan ? formatWon(selectedPlan.discount * 12) : '',
+    monthlyPayment1: isGreenVendor ? '' : selectedPlan ? formatWon(monthlyPayment) : '',
+    monthlyPayment2: isGreenVendor ? '' : selectedPlan ? formatWon(monthlyPayment) : '',
+    topPlanName: isGreenVendor && selectedPlan ? selectedPlan.label : '',
+    topAmount: isGreenVendor && selectedPlan ? formatWon(selectedPlan.monthlyFee) : '',
+    // 7페이지 요금제 영역은 판매점과 무관하게 항상 실제 값 표시
+    planName2: selectedPlan?.label || '',
+    monthlyFee3: selectedPlan ? formatWon(selectedPlan.monthlyFee) : '',
     discount2: selectedPlan ? formatWon(selectedPlan.discount) : '',
-    totalDiscount: selectedPlan ? formatWon(selectedPlan.discount * 12) : '',
-    monthlyPayment1: selectedPlan ? formatWon(selectedPlan.monthlyPayment) : '',
-    monthlyPayment2: selectedPlan ? formatWon(selectedPlan.monthlyPayment) : '',
-    monthlyPayment3: selectedPlan ? formatWon(selectedPlan.monthlyPayment) : '',
-    monthlyPayment4: selectedPlan ? formatWon(selectedPlan.monthlyPayment) : '',
+    monthlyPayment3: selectedPlan ? formatWon(monthlyPayment) : '',
+    monthlyPayment4: selectedPlan ? formatWon(monthlyPayment) : '',
     // carrierCheck: carrierCheckLabel ? '✓' : '',
     // mvnoDetail: formData.prevCarrier === 'mvno' ? formData.mvnoDetail : '',
     bankOrCard: formData.bankOrCard,
@@ -335,6 +366,37 @@ export default function LGApplicationPage() {
                     <CardDescription>필수 정보를 입력하세요 (좌표는 추후 조정 예정)</CardDescription>
                   </CardHeader>
                   <CardContent className="space-y-4">
+                    {/* 판매업체 - 요금제 인쇄 방식이 판매점마다 달라 최상단에 배치 */}
+                    <div className="space-y-4">
+                      <p className="text-sm font-medium text-muted-foreground">판매업체</p>
+                      <RadioGroup value={formData.vendor} onValueChange={(value) => setFormData((prev) => ({ ...prev, vendor: value }))} className="flex gap-6">
+                        {VENDOR_OPTIONS.map((option) => (
+                          <div key={option.value} className="flex items-center space-x-2">
+                            <RadioGroupItem value={option.value} id={`vendor-${option.value}`} />
+                            <Label htmlFor={`vendor-${option.value}`} className="font-normal cursor-pointer">
+                              {option.label}
+                            </Label>
+                          </div>
+                        ))}
+                      </RadioGroup>
+                      <div className="rounded-md border bg-white p-3 text-sm space-y-1">
+                        <p>
+                          판매점 상호: <span className="font-medium">{selectedVendor.storeName}</span>
+                        </p>
+                        <p>
+                          판매자: <span className="font-medium">{selectedVendor.sellerName || '-'}</span>
+                        </p>
+                        <p>
+                          판매자전화: <span className="font-medium">{selectedVendor.sellerPhone || '-'}</span>
+                        </p>
+                        <p>
+                          판매자 주소: <span className="font-medium">{selectedVendor.sellerAddress || '-'}</span>
+                        </p>
+                      </div>
+                    </div>
+
+                    <Separator />
+
                     <div className="space-y-4">
                       <div className="space-y-2">
                         <Label htmlFor="customerName">
@@ -421,7 +483,7 @@ export default function LGApplicationPage() {
                         <Label htmlFor="plan">
                           요금제 선택 <span className="text-destructive">*</span>
                         </Label>
-                        <Select value={formData.plan} onValueChange={(value) => setFormData((prev) => ({ ...prev, plan: value }))}>
+                        <Select value={formData.plan} onValueChange={(value) => setFormData((prev) => ({ ...prev, plan: value, promotionApplied: '미적용', promotion: '' }))}>
                           <SelectTrigger>
                             <SelectValue placeholder="요금제를 선택하세요" />
                           </SelectTrigger>
@@ -435,15 +497,58 @@ export default function LGApplicationPage() {
                         </Select>
                       </div>
                       {selectedPlan && (
+                        <div className="space-y-2">
+                          <Label>프로모션 할인 적용 여부</Label>
+                          <RadioGroup
+                            value={formData.promotionApplied}
+                            onValueChange={(value) => setFormData((prev) => ({ ...prev, promotionApplied: value as '적용' | '미적용', promotion: value === '미적용' ? '' : prev.promotion }))}
+                            className="flex gap-6"
+                          >
+                            <div className="flex items-center space-x-2">
+                              <RadioGroupItem value="미적용" id="promotion-off" />
+                              <Label htmlFor="promotion-off" className="font-normal cursor-pointer">
+                                미적용
+                              </Label>
+                            </div>
+                            <div className="flex items-center space-x-2">
+                              <RadioGroupItem value="적용" id="promotion-on" />
+                              <Label htmlFor="promotion-on" className="font-normal cursor-pointer">
+                                적용
+                              </Label>
+                            </div>
+                          </RadioGroup>
+                        </div>
+                      )}
+                      {selectedPlan && formData.promotionApplied === '적용' && (
+                        <div className="space-y-2">
+                          <Label htmlFor="promotion">프로모션 단계</Label>
+                          <Select value={formData.promotion} onValueChange={(value) => setFormData((prev) => ({ ...prev, promotion: value }))}>
+                            <SelectTrigger>
+                              <SelectValue placeholder="프로모션을 선택하세요" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {selectedPlan.promotions.map((promo) => (
+                                <SelectItem key={promo.value} value={promo.value}>
+                                  {promo.label}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        </div>
+                      )}
+                      {selectedPlan && (
                         <div className="rounded-md border bg-white p-3 text-sm space-y-1">
                           <p>
                             월정액: <span className="font-medium">{formatWon(selectedPlan.monthlyFee)}원</span>
                           </p>
                           <p>
-                            할인액: <span className="font-medium">-{formatWon(selectedPlan.discount)}원</span>
+                            선약할인: <span className="font-medium">-{formatWon(selectedPlan.discount)}원</span>
                           </p>
                           <p>
-                            월납부액: <span className="font-medium">{formatWon(selectedPlan.monthlyPayment)}원</span>
+                            프로모션 할인: <span className="font-medium">-{formatWon(promotionAmount)}원</span>
+                          </p>
+                          <p>
+                            월납부액: <span className="font-medium">{formatWon(monthlyPayment)}원</span>
                           </p>
                           <p>
                             총 요금할인 (선약할인 12개월): <span className="font-medium">-{formatWon(selectedPlan.discount * 12)}원</span>
@@ -497,37 +602,6 @@ export default function LGApplicationPage() {
                         <Label htmlFor="accountHolderBirthDate">예금주 생년월일 (6자리)</Label>
                         <DateInput id="accountHolderBirthDate" format="6" value={accountHolderBirthDateValue} onChange={(value) => setFormData((prev) => ({ ...prev, accountHolderBirthDate: value }))} />
                         <p className="text-xs text-muted-foreground">미입력 시 가입자 생년월일과 동일하게 표시됩니다</p>
-                      </div>
-                    </div>
-
-                    <Separator />
-
-                    {/* 판매업체 */}
-                    <div className="space-y-4">
-                      <p className="text-sm font-medium text-muted-foreground">판매업체</p>
-                      <RadioGroup value={formData.vendor} onValueChange={(value) => setFormData((prev) => ({ ...prev, vendor: value }))} className="flex gap-6">
-                        {VENDOR_OPTIONS.map((option) => (
-                          <div key={option.value} className="flex items-center space-x-2">
-                            <RadioGroupItem value={option.value} id={`vendor-${option.value}`} />
-                            <Label htmlFor={`vendor-${option.value}`} className="font-normal cursor-pointer">
-                              {option.label}
-                            </Label>
-                          </div>
-                        ))}
-                      </RadioGroup>
-                      <div className="rounded-md border bg-white p-3 text-sm space-y-1">
-                        <p>
-                          판매점 상호: <span className="font-medium">{selectedVendor.storeName}</span>
-                        </p>
-                        <p>
-                          판매자: <span className="font-medium">{selectedVendor.sellerName || '-'}</span>
-                        </p>
-                        <p>
-                          판매자전화: <span className="font-medium">{selectedVendor.sellerPhone || '-'}</span>
-                        </p>
-                        <p>
-                          판매자 주소: <span className="font-medium">{selectedVendor.sellerAddress || '-'}</span>
-                        </p>
                       </div>
                     </div>
 
