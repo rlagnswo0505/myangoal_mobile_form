@@ -22,6 +22,45 @@ const NETWORK_POSITIONS = {
   KT: { top: 95, left: 236 },
 };
 
+// 통신사별 요금제 옵션 (기타 포함 4개) - 서식지 요금제 표에 인쇄된 순서와 동일
+const PLAN_OPTIONS: Record<'SKT' | 'LG' | 'KT', string[]> = {
+  SKT: ['Band 데이터 안심 300MB', 'Band 데이터 15G+', 'Band 데이터 퍼펙트'],
+  LG: ['이야기 선불정액 300MB', '선불정액383(10.3GB)', '이야기 선불정액 15GB+'],
+  KT: ['이야기K 선불정액 300MB', '이야기 선불 15G+', '이야기 K 선불정액 10G+'],
+};
+
+// 통신사/요금제별 체크 위치 (좌표 확인 모드로 조정 필요)
+const PLAN_CHECK_POSITIONS: Record<'SKT' | 'LG' | 'KT', Record<'plan1' | 'plan2' | 'plan3' | 'etc', { top: number; left: number }>> = {
+  SKT: {
+    plan1: { top: 444, left: 279 },
+    plan2: { top: 444, left: 399 },
+    plan3: { top: 444, left: 491 },
+    etc: { top: 444, left: 589 },
+  },
+  LG: {
+    plan1: { top: 460, left: 278 },
+    plan2: { top: 460, left: 391 },
+    plan3: { top: 460, left: 496 },
+    etc: { top: 460, left: 607 },
+  },
+  KT: {
+    plan1: { top: 478, left: 279 },
+    plan2: { top: 478, left: 396 },
+    plan3: { top: 478, left: 484 },
+    etc: { top: 478, left: 596 },
+  },
+};
+
+// 통신사별 '기타' 요금제 직접입력 텍스트 위치 (좌표 확인 모드로 조정 필요)
+const PLAN_ETC_TEXT_POSITIONS: Record<'SKT' | 'LG' | 'KT', { top: number; left: number; width: number; height: number }> = {
+  SKT: { top: 440, left: 620, width: 121, height: 18 },
+  LG: { top: 459, left: 641, width: 100, height: 17 },
+  KT: { top: 477, left: 629, width: 112, height: 15 },
+};
+
+// 부가서비스 위치 (좌표 확인 모드로 조정 필요)
+const ADD_SERVICE_POSITION = { top: 466, left: 113, width: 115, height: 31 };
+
 // A4 용지 크기 (96dpi 기준: 794 x 1123 px)
 // 필드 위치 설정 (A4 픽셀 좌표 기준) - 좌표 확인 모드로 조정 필요
 const BASE_FIELD_POSITIONS: FieldPosition[] = [
@@ -60,6 +99,9 @@ const BASE_ADDRESS = '인천 부평구 경원대로 1344번길 34';
 
 interface FormData {
   networkType: 'SKT' | 'LG' | 'KT';
+  plan: 'plan1' | 'plan2' | 'plan3' | 'etc';
+  planEtcText: string;
+  addService: string;
   name: string;
   birthDate: string;
   passportNumber: string;
@@ -93,6 +135,9 @@ export default function LGStoryPage() {
 
   const [formData, setFormData] = useState<FormData>({
     networkType: 'LG',
+    plan: 'plan1',
+    planEtcText: '',
+    addService: '3개월 무료충전',
     name: '',
     birthDate: '',
     passportNumber: '',
@@ -125,6 +170,9 @@ export default function LGStoryPage() {
 
     setFormData({
       networkType: 'LG',
+      plan: 'plan1',
+      planEtcText: '',
+      addService: '3개월 무료충전',
       name: '',
       birthDate: '',
       passportNumber: '',
@@ -151,15 +199,26 @@ export default function LGStoryPage() {
 
   // 통신망 선택에 따라 체크 위치 동적 생성
   const networkPos = NETWORK_POSITIONS[formData.networkType];
+  const planCheckPos = PLAN_CHECK_POSITIONS[formData.networkType][formData.plan];
+  const planEtcTextPos = PLAN_ETC_TEXT_POSITIONS[formData.networkType];
   const fieldPositions: FieldPosition[] = [
     // 통신망 체크 표시 (✓)
     { id: 'networkCheck', page: 1, top: networkPos.top, left: networkPos.left, fontSize: 14 },
+    // 요금제 체크 표시 (✓)
+    { id: 'planCheck', page: 1, top: planCheckPos.top, left: planCheckPos.left, fontSize: 14 },
+    // 요금제 '기타' 직접입력
+    { id: 'planEtcText', page: 1, ...planEtcTextPos, fontSize: 12 },
+    // 부가서비스
+    { id: 'addService', page: 1, ...ADD_SERVICE_POSITION, fontSize: 14 },
     ...BASE_FIELD_POSITIONS,
   ];
 
   // LG는 생년월일과 여권번호가 따로 분리, USIM은 모델명+일련번호 2줄
   const fieldValues: FieldValue = {
     networkCheck: '✓',
+    planCheck: '✓',
+    planEtcText: formData.plan === 'etc' ? formData.planEtcText : '',
+    addService: formData.addService,
     name: formData.name,
     birthDate: formData.birthDate,
     passportNumber: formData.passportNumber,
@@ -192,7 +251,7 @@ export default function LGStoryPage() {
                     {/* 통신망 선택 */}
                     <div className="space-y-4">
                       <p className="text-sm font-medium text-muted-foreground">통신망 선택</p>
-                      <RadioGroup value={formData.networkType} onValueChange={(value) => setFormData((prev) => ({ ...prev, networkType: value as 'SKT' | 'LG' | 'KT' }))} className="flex gap-4">
+                      <RadioGroup value={formData.networkType} onValueChange={(value) => setFormData((prev) => ({ ...prev, networkType: value as 'SKT' | 'LG' | 'KT', plan: 'plan1', planEtcText: '' }))} className="flex gap-4">
                         <div className="flex items-center space-x-2">
                           <RadioGroupItem value="SKT" id="skt" />
                           <Label htmlFor="skt">SKT</Label>
@@ -206,6 +265,35 @@ export default function LGStoryPage() {
                           <Label htmlFor="kt">KT</Label>
                         </div>
                       </RadioGroup>
+                    </div>
+
+                    {/* 요금제 선택 */}
+                    <div className="space-y-4">
+                      <p className="text-sm font-medium text-muted-foreground">요금제 선택</p>
+                      <RadioGroup value={formData.plan} onValueChange={(value) => setFormData((prev) => ({ ...prev, plan: value as 'plan1' | 'plan2' | 'plan3' | 'etc' }))} className="flex flex-col gap-2">
+                        {PLAN_OPTIONS[formData.networkType].map((label, idx) => {
+                          const key = `plan${idx + 1}` as 'plan1' | 'plan2' | 'plan3';
+                          return (
+                            <div key={key} className="flex items-center space-x-2">
+                              <RadioGroupItem value={key} id={key} />
+                              <Label htmlFor={key} className="font-normal cursor-pointer">
+                                {label}
+                              </Label>
+                            </div>
+                          );
+                        })}
+                        <div className="flex items-center space-x-2">
+                          <RadioGroupItem value="etc" id="plan-etc" />
+                          <Label htmlFor="plan-etc" className="font-normal cursor-pointer">
+                            기타
+                          </Label>
+                          {formData.plan === 'etc' && <Input value={formData.planEtcText} onChange={(e) => setFormData((prev) => ({ ...prev, planEtcText: e.target.value }))} placeholder="요금제명 직접입력" className="h-8 flex-1" />}
+                        </div>
+                      </RadioGroup>
+                      <div className="space-y-2">
+                        <Label htmlFor="addService">부가서비스</Label>
+                        <Input id="addService" name="addService" value={formData.addService} onChange={handleChange} placeholder="3개월 무료충전" />
+                      </div>
                     </div>
 
                     <Separator />
