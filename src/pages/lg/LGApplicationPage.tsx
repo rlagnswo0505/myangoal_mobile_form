@@ -112,8 +112,10 @@ const BASE_FIELD_POSITIONS: FieldPosition[] = [
   { id: 'monthlyPayment2', page: 1, top: 262, left: 627, width: 93, height: 27, fontSize: 14 },
   { id: 'monthlyFee2', page: 1, top: 219, left: 270, width: 64, height: 26, fontSize: 14 },
   // 그린 판매점 전용 - 요금제명/월정액을 상단 빈공간에 별도 표시 (임시 좌표, 위치는 추후 수동 조정 예정)
-  { id: 'topPlanName', page: 1, top: 40, left: 550, width: 150, height: 22, fontSize: 12 },
-  { id: 'topAmount', page: 1, top: 65, left: 550, width: 150, height: 22, fontSize: 12 },
+  { id: 'topPlanName', page: 1, top: 36, left: 291, width: 190, height: 28, fontSize: 12 },
+  { id: 'topAmount', page: 1, top: 70, left: 291, width: 190, height: 28, fontSize: 12 },
+  // 가입내역 박스 내 요금제명 (임시 좌표, 위치는 추후 수동 조정 예정)
+  { id: 'planName3', page: 1, top: 647, left: 147, width: 258, height: 23, fontSize: 14 },
   // 납부방법 - 계좌/카드 정보
   { id: 'bankOrCard', page: 1, top: 565, left: 226, width: 92, height: 24, fontSize: 14 },
   { id: 'accountOrCardNumber', page: 1, top: 564, left: 338, width: 236, height: 26, fontSize: 14 },
@@ -279,7 +281,7 @@ export default function LGApplicationPage() {
   const selectedPlan = PLAN_OPTIONS.find((p) => p.value === formData.plan);
   const selectedPromotion = selectedPlan?.promotions.find((p) => p.value === formData.promotion);
   // 프로모션 미적용 선택 시(또는 세부 단계 미선택 시) 프로모션 할인 0원으로 간주 (선약할인만 적용된 금액)
-  const promotionAmount = formData.promotionApplied === '적용' ? selectedPromotion?.amount ?? 0 : 0;
+  const promotionAmount = formData.promotionApplied === '적용' ? (selectedPromotion?.amount ?? 0) : 0;
   const monthlyPayment = selectedPlan ? selectedPlan.monthlyFee - selectedPlan.discount - promotionAmount : 0;
   // 전통신사 - 우선 신규만 고려, 아직 미사용
   // const carrierCheckLabel = CARRIER_OPTIONS.find((c) => c.value === formData.prevCarrier)?.label;
@@ -317,14 +319,16 @@ export default function LGApplicationPage() {
     totalDiscount: isGreenVendor ? '' : selectedPlan ? formatWon(selectedPlan.discount * 12) : '',
     monthlyPayment1: isGreenVendor ? '' : selectedPlan ? formatWon(monthlyPayment) : '',
     monthlyPayment2: isGreenVendor ? '' : selectedPlan ? formatWon(monthlyPayment) : '',
-    topPlanName: isGreenVendor && selectedPlan ? selectedPlan.label : '',
-    topAmount: isGreenVendor && selectedPlan ? formatWon(selectedPlan.monthlyFee) : '',
-    // 7페이지 요금제 영역은 판매점과 무관하게 항상 실제 값 표시
-    planName2: selectedPlan?.label || '',
-    monthlyFee3: selectedPlan ? formatWon(selectedPlan.monthlyFee) : '',
-    discount2: selectedPlan ? formatWon(selectedPlan.discount) : '',
-    monthlyPayment3: selectedPlan ? formatWon(monthlyPayment) : '',
-    monthlyPayment4: selectedPlan ? formatWon(monthlyPayment) : '',
+    topPlanName: isGreenVendor && selectedPlan ? `요금제명 : ${selectedPlan.label}` : '',
+    topAmount: isGreenVendor && selectedPlan ? `월요금 : ${formatWon(selectedPlan.monthlyFee)}` : '',
+    // 1페이지 "가입내역" 박스 내 요금제명 - 그린 판매점은 '유심단독개통'으로 표시
+    planName3: isGreenVendor ? (selectedPlan ? '유심단독개통' : '') : selectedPlan?.label || '',
+    // 7페이지(무선서비스 계약 표준안내서) 요금제 영역 - 그린 판매점은 1페이지와 동일하게 '유심단독개통'만 표시하고 금액은 비움
+    planName2: isGreenVendor ? (selectedPlan ? '유심단독개통' : '') : selectedPlan?.label || '',
+    monthlyFee3: isGreenVendor ? '' : selectedPlan ? formatWon(selectedPlan.monthlyFee) : '',
+    discount2: isGreenVendor ? '' : selectedPlan ? formatWon(selectedPlan.discount) : '',
+    monthlyPayment3: isGreenVendor ? '' : selectedPlan ? formatWon(monthlyPayment) : '',
+    monthlyPayment4: isGreenVendor ? '' : selectedPlan ? formatWon(monthlyPayment) : '',
     // carrierCheck: carrierCheckLabel ? '✓' : '',
     // mvnoDetail: formData.prevCarrier === 'mvno' ? formData.mvnoDetail : '',
     bankOrCard: formData.bankOrCard,
@@ -499,11 +503,7 @@ export default function LGApplicationPage() {
                       {selectedPlan && (
                         <div className="space-y-2">
                           <Label>프로모션 할인 적용 여부</Label>
-                          <RadioGroup
-                            value={formData.promotionApplied}
-                            onValueChange={(value) => setFormData((prev) => ({ ...prev, promotionApplied: value as '적용' | '미적용', promotion: value === '미적용' ? '' : prev.promotion }))}
-                            className="flex gap-6"
-                          >
+                          <RadioGroup value={formData.promotionApplied} onValueChange={(value) => setFormData((prev) => ({ ...prev, promotionApplied: value as '적용' | '미적용', promotion: value === '미적용' ? '' : prev.promotion }))} className="flex gap-6">
                             <div className="flex items-center space-x-2">
                               <RadioGroupItem value="미적용" id="promotion-off" />
                               <Label htmlFor="promotion-off" className="font-normal cursor-pointer">
