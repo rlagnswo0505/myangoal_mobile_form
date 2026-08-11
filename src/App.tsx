@@ -26,6 +26,7 @@ import SKNewContractPage from './pages/skt/SKNewContractPage';
 import SKTransferPage from './pages/skt/SKTransferPage';
 import SKTTFormPage from './pages/skt/SKTTFormPage';
 import LGApplicationPage from './pages/lg/LGApplicationPage';
+import LGYouthApplicationPage from './pages/lg/LGYouthApplicationPage';
 import LGInfoChangePage from './pages/lg/LGInfoChangePage';
 import LimitedTransferWithinPeriodPage from './pages/etc/LimitedTransferWithinPeriodPage';
 
@@ -50,6 +51,7 @@ function App() {
           <Route path="skt/transfer" element={<SKTransferPage />} />
           <Route path="skt/t-form" element={<SKTTFormPage />} />
           <Route path="lg/application" element={<LGApplicationPage />} />
+          <Route path="lg/youth-application" element={<LGYouthApplicationPage />} />
           <Route path="lg/info-change" element={<LGInfoChangePage />} />
           <Route path="lg/story" element={<LGStoryPage />} />
           <Route path="lg/story-transfer" element={<LGStoryTransferPage />} />

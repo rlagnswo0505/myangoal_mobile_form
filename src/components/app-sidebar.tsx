@@ -160,6 +160,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           isActive: location.pathname === '/lg/application',
         },
         {
+          title: 'LG 청소년 신청서',
+          url: '/lg/youth-application',
+          isActive: location.pathname === '/lg/youth-application',
+        },
+        {
           title: 'LG 변경신청서',
           url: '/lg/info-change',
           isActive: location.pathname === '/lg/info-change',
