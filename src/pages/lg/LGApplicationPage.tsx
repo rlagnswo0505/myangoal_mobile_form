@@ -13,15 +13,15 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import DateInput from '@/components/Form/DateInput';
 import PhoneInput, { formatPhoneWithDash } from '@/components/Form/PhoneInput';
 import AddressInput from '@/components/Form/AddressInput';
-import lgAppPage1 from '@/assets/templates/LG신청서_1.jpg';
-import lgAppPage2 from '@/assets/templates/LG신청서_2.jpg';
-import lgAppPage3 from '@/assets/templates/LG신청서_3.jpg';
-import lgAppPage4 from '@/assets/templates/LG신청서_4.jpg';
-import lgAppPage5 from '@/assets/templates/LG신청서_5.jpg';
-import lgAppPage6 from '@/assets/templates/LG신청서_6.jpg';
-import lgAppPage7 from '@/assets/templates/LG신청서_7.jpg';
-import lgAppPage8 from '@/assets/templates/LG신청서_8.jpg';
-import lgAppPage9 from '@/assets/templates/LG신청서_9.jpg';
+import lgAppPage1 from '@/assets/templates/LG빈서식지_1.jpg';
+import lgAppPage2 from '@/assets/templates/LG빈서식지_2.jpg';
+import lgAppPage3 from '@/assets/templates/LG빈서식지_3.jpg';
+import lgAppPage4 from '@/assets/templates/LG빈서식지_4.jpg';
+import lgAppPage5 from '@/assets/templates/LG빈서식지_5.jpg';
+import lgAppPage6 from '@/assets/templates/LG빈서식지_6.jpg';
+import lgAppPage7 from '@/assets/templates/LG빈서식지_7.jpg';
+import lgAppPage8 from '@/assets/templates/LG빈서식지_8.jpg';
+import lgAppPage9 from '@/assets/templates/LG빈서식지_9.jpg';
 
 // 템플릿 이미지
 const PAGE_IMAGES: string[] = [lgAppPage1, lgAppPage2, lgAppPage3, lgAppPage4, lgAppPage5, lgAppPage6, lgAppPage7, lgAppPage8, lgAppPage9];
