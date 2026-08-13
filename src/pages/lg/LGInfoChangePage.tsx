@@ -12,11 +12,11 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import DateInput from '@/components/Form/DateInput';
 import PhoneInput, { formatPhoneWithDash } from '@/components/Form/PhoneInput';
 import AddressInput from '@/components/Form/AddressInput';
-import infoChangePage1 from '@/assets/templates/고객정보 변경신청서LG_1.jpg';
-import infoChangePage2 from '@/assets/templates/고객정보 변경신청서LG_2.jpg';
-import infoChangePage3 from '@/assets/templates/고객정보 변경신청서LG_3.jpg';
-import infoChangePage4 from '@/assets/templates/고객정보 변경신청서LG_4.jpg';
-import infoChangePage5 from '@/assets/templates/고객정보 변경신청서LG_5.jpg';
+import infoChangePage1 from '@/assets/templates/엘지 고객정보 변경신청서 신형_1.jpg';
+import infoChangePage2 from '@/assets/templates/엘지 고객정보 변경신청서 신형_2.jpg';
+import infoChangePage3 from '@/assets/templates/엘지 고객정보 변경신청서 신형_3.jpg';
+import infoChangePage4 from '@/assets/templates/엘지 고객정보 변경신청서 신형_4.jpg';
+import infoChangePage5 from '@/assets/templates/엘지 고객정보 변경신청서 신형_5.jpg';
 
 // 템플릿 이미지 (1페이지: 고객정보 변경신청서 본문, 2~5페이지: 개인정보 및 개인위치정보 활용동의서)
 const PAGE_IMAGES: string[] = [infoChangePage1, infoChangePage2, infoChangePage3, infoChangePage4, infoChangePage5];
@@ -33,26 +33,26 @@ const BASE_ADDRESS = '인천광역시 부평구 광장로 16 부평민자역사 
 // 필드 위치 설정 (임시 좌표 - debugMode로 실제 좌표 확인 후 조정 필요)
 const BASE_FIELD_POSITIONS: FieldPosition[] = [
   // 가입자정보(기존명의자정보) - 명의변경할 전화번호 및 기존 명의자
-  { id: 'prevName', page: 1, top: 131, left: 172, width: 168, height: 30, fontSize: 12 },
-  { id: 'prevBirthDate', page: 1, top: 131, left: 403, width: 144, height: 28, fontSize: 12 },
-  { id: 'phoneNumber', page: 1, top: 131, left: 598, width: 135, height: 27, fontSize: 12 },
+  { id: 'prevName', page: 1, top: 195, left: 175, width: 170, height: 20, fontSize: 12 },
+  { id: 'prevBirthDate', page: 1, top: 195, left: 430, width: 140, height: 20, fontSize: 12 },
+  { id: 'phoneNumber', page: 1, top: 195, left: 660, width: 120, height: 20, fontSize: 12 },
   // 신규 명의자 정보
-  { id: 'newName', page: 1, top: 266, left: 254, width: 126, height: 18, fontSize: 12 },
-  { id: 'newBirthDate', page: 1, top: 266, left: 463, width: 94, height: 16, fontSize: 12 },
-  { id: 'phoneNumber2', page: 1, top: 266, left: 620, width: 115, height: 16, fontSize: 12 },
-  { id: 'newAddress', page: 1, top: 282, left: 263, width: 471, height: 16, fontSize: 11 },
+  { id: 'newName', page: 1, top: 470, left: 200, width: 130, height: 18, fontSize: 12 },
+  { id: 'newBirthDate', page: 1, top: 470, left: 440, width: 110, height: 18, fontSize: 12 },
+  { id: 'phoneNumber2', page: 1, top: 470, left: 650, width: 120, height: 18, fontSize: 12 },
+  { id: 'newAddress', page: 1, top: 488, left: 150, width: 550, height: 18, fontSize: 11 },
   // 요금 납부방법 변경 - 예금주명/생년월일, 은행명/계좌번호, 유효기간
-  { id: 'accountHolderName', page: 1, top: 609, left: 301, width: 131, height: 19, fontSize: 12 },
-  { id: 'accountHolderBirthDate', page: 1, top: 608, left: 529, width: 204, height: 20, fontSize: 12 },
-  { id: 'bankOrCard', page: 1, top: 624, left: 301, width: 49, height: 20, fontSize: 12 },
-  { id: 'accountOrCardNumber', page: 1, top: 625, left: 427, width: 196, height: 18, fontSize: 12 },
-  { id: 'cardExpiry', page: 1, top: 627, left: 652, width: 64, height: 17, fontSize: 12 },
+  { id: 'accountHolderName', page: 1, top: 905, left: 210, width: 190, height: 18, fontSize: 12 },
+  { id: 'accountHolderBirthDate', page: 1, top: 905, left: 610, width: 140, height: 18, fontSize: 12 },
+  { id: 'bankOrCard', page: 1, top: 928, left: 140, width: 140, height: 18, fontSize: 12 },
+  { id: 'accountOrCardNumber', page: 1, top: 928, left: 330, width: 180, height: 18, fontSize: 12 },
+  { id: 'cardExpiry', page: 1, top: 928, left: 650, width: 100, height: 18, fontSize: 12 },
   // 서명일자
-  { id: 'signDate', page: 1, top: 985, left: 104, width: 139, height: 24, fontSize: 14 },
+  { id: 'signDate', page: 1, top: 1000, left: 100, width: 140, height: 22, fontSize: 14 },
   // 판매점 정보 (매장명 / 매장연락처 / 직원이름)
-  { id: 'dealerName', page: 1, top: 1001, left: 96, width: 158, height: 24, fontSize: 12 },
-  { id: 'sellerPhone', page: 1, top: 1002, left: 346, width: 171, height: 20, fontSize: 12 },
-  { id: 'sellerName', page: 1, top: 1001, left: 603, width: 83, height: 22, fontSize: 12 },
+  { id: 'dealerName', page: 1, top: 1025, left: 100, width: 150, height: 18, fontSize: 12 },
+  { id: 'sellerPhone', page: 1, top: 1025, left: 350, width: 160, height: 18, fontSize: 12 },
+  { id: 'sellerName', page: 1, top: 1025, left: 610, width: 100, height: 18, fontSize: 12 },
 ];
 
 interface FormData {
