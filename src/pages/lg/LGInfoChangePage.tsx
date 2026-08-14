@@ -25,6 +25,7 @@ const PAGE_IMAGES: string[] = [infoChangePage1, infoChangePage2, infoChangePage3
 const VENDOR_OPTIONS = [
   { value: 'entoel', label: '엔투엘 LG', storeName: '엔투엘', sellerName: '이경건', sellerPhone: '1544-4069' },
   { value: 'esm', label: 'ESM', storeName: '엔투엘', sellerName: '', sellerPhone: '' },
+  { value: 'green', label: '그린', storeName: '그린', sellerName: '', sellerPhone: '' },
 ];
 
 // 주소 기본값
