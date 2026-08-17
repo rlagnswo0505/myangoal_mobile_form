@@ -109,7 +109,7 @@ const BASE_FIELD_POSITIONS: FieldPosition[] = [
   { id: 'discount', page: 1, top: 302, left: 107, width: 153, height: 17, fontSize: 14 },
   { id: 'totalDiscount', page: 1, top: 194, left: 486, width: 80, height: 20, fontSize: 14 },
   { id: 'monthlyPayment1', page: 1, top: 268, left: 143, width: 115, height: 19, fontSize: 14 },
-  { id: 'monthlyPayment2', page: 1, top: 262, left: 627, width: 93, height: 27, fontSize: 14 },
+  { id: 'monthlyPayment2', page: 1, top: 262, left: 647, width: 93, height: 27, fontSize: 14 },
   { id: 'monthlyFee2', page: 1, top: 219, left: 270, width: 64, height: 26, fontSize: 14 },
   // 그린 판매점 전용 - 요금제명/월정액을 상단 빈공간에 별도 표시 (임시 좌표, 위치는 추후 수동 조정 예정)
   { id: 'topPlanName', page: 1, top: 36, left: 291, width: 190, height: 28, fontSize: 12 },
