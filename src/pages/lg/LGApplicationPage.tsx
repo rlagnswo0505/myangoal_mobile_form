@@ -146,10 +146,10 @@ const BASE_FIELD_POSITIONS: FieldPosition[] = [
   { id: 'residenceDong', page: 1, top: 434, left: 85, width: 135, height: 28, fontSize: 12 },
   // 7페이지 - 요금제 / 요금제요금 / 할인 / 최종요금 / 판매직원 / 가입자전화 / 가입일자 (임시 좌표, debugMode로 조정 필요)
   { id: 'planName2', page: 7, top: 171, left: 411, width: 107, height: 26, fontSize: 14 },
-  { id: 'monthlyFee3', page: 7, top: 193, left: 412, width: 93, height: 27, fontSize: 14 },
+  { id: 'monthlyFee3', page: 7, top: 193, left: 432, width: 93, height: 27, fontSize: 14 },
   { id: 'discount2', page: 7, top: 244, left: 433, width: 68, height: 26, fontSize: 14 },
-  { id: 'monthlyPayment3', page: 7, top: 427, left: 416, width: 87, height: 36, fontSize: 14 },
-  { id: 'monthlyPayment4', page: 7, top: 421, left: 652, width: 69, height: 29, fontSize: 14 },
+  { id: 'monthlyPayment3', page: 7, top: 427, left: 436, width: 87, height: 36, fontSize: 14 },
+  { id: 'monthlyPayment4', page: 7, top: 421, left: 672, width: 69, height: 29, fontSize: 14 },
   { id: 'sellerName4', page: 7, top: 991, left: 114, width: 61, height: 24, fontSize: 14 },
   { id: 'phoneNumber', page: 7, top: 972, left: 514, width: 190, height: 24, fontSize: 14 },
   { id: 'signDate3', page: 7, top: 993, left: 552, width: 134, height: 29, fontSize: 14 },
