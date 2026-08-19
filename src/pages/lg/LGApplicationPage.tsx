@@ -21,8 +21,12 @@ import lgAppPage5 from '@/assets/templates/LG빈서식지_5.jpg';
 import lgAppPage6 from '@/assets/templates/LG빈서식지_6.jpg';
 import lgAppPage7 from '@/assets/templates/LG빈서식지_7.jpg';
 
-// 템플릿 이미지
-const PAGE_IMAGES: string[] = [lgAppPage1, lgAppPage2, lgAppPage3, lgAppPage4, lgAppPage5, lgAppPage6, lgAppPage7];
+// 템플릿 이미지 (전체 7페이지, 인덱스 0 = 1페이지)
+const ALL_PAGE_IMAGES: string[] = [lgAppPage1, lgAppPage2, lgAppPage3, lgAppPage4, lgAppPage5, lgAppPage6, lgAppPage7];
+const ALL_PAGE_NUMBERS = ALL_PAGE_IMAGES.map((_, index) => index + 1);
+
+// 2,3,4페이지는 1페이지와 중복되는 서식이라 기본적으로는 제외하고, 필요 시(여러 부 출력 등) 체크 해제로 전체 출력
+const DUPLICATE_PAGES = [2, 3, 4];
 
 const formatWon = (amount: number) => amount.toLocaleString('ko-KR');
 
@@ -185,6 +189,7 @@ export default function LGApplicationPage() {
 
   const [debugMode, setDebugMode] = useState(false);
   const [showPrintModal, setShowPrintModal] = useState(false);
+  const [excludeDuplicatePages, setExcludeDuplicatePages] = useState(true);
 
   const [formData, setFormData] = useState<FormData>({
     customerName: '',
@@ -296,7 +301,15 @@ export default function LGApplicationPage() {
   // 선택된 전통신사에 따라 체크 위치를 동적으로 생성
   // const carrierCheckPos = formData.prevCarrier ? CARRIER_CHECK_POSITIONS[formData.prevCarrier] : null;
 
-  const fieldPositions: FieldPosition[] = [...BASE_FIELD_POSITIONS];
+  // 중복 페이지(2,3,4) 제외 시 남는 페이지 번호를 1페이지부터 다시 순번 매김
+  const activePageNumbers = excludeDuplicatePages ? ALL_PAGE_NUMBERS.filter((page) => !DUPLICATE_PAGES.includes(page)) : ALL_PAGE_NUMBERS;
+  const pageNumberMap = new Map(activePageNumbers.map((originalPage, index) => [originalPage, index + 1]));
+  const pageImages = activePageNumbers.map((page) => ALL_PAGE_IMAGES[page - 1]);
+
+  const fieldPositions: FieldPosition[] = BASE_FIELD_POSITIONS.filter((field) => pageNumberMap.has(field.page)).map((field) => ({
+    ...field,
+    page: pageNumberMap.get(field.page)!,
+  }));
 
   const fieldValues: FieldValue = {
     customerName: formData.customerName,
@@ -368,6 +381,22 @@ export default function LGApplicationPage() {
                     <CardDescription>필수 정보를 입력하세요 (좌표는 추후 조정 예정)</CardDescription>
                   </CardHeader>
                   <CardContent className="space-y-4">
+                    {/* 중복 페이지(2,3,4) 제외 여부 - 기본은 제외, 여러 부 출력 등 필요 시 해제하여 전체 출력 */}
+                    <div className="flex items-center space-x-2 rounded-md border bg-white p-3">
+                      <input
+                        type="checkbox"
+                        id="excludeDuplicatePages"
+                        checked={excludeDuplicatePages}
+                        onChange={(e) => setExcludeDuplicatePages(e.target.checked)}
+                        className="h-4 w-4 rounded border-input accent-primary"
+                      />
+                      <Label htmlFor="excludeDuplicatePages" className="font-normal cursor-pointer">
+                        중복 페이지(2, 3, 4페이지) 제외하고 출력
+                      </Label>
+                    </div>
+
+                    <Separator />
+
                     {/* 판매업체 - 요금제 인쇄 방식이 판매점마다 달라 최상단에 배치 */}
                     <div className="space-y-4">
                       <p className="text-sm font-medium text-muted-foreground">판매업체</p>
@@ -625,7 +654,7 @@ export default function LGApplicationPage() {
             <ScrollArea className="h-full">
               <div className="">
                 {debugMode && <p className="text-xs text-muted-foreground mb-2">이미지를 클릭하면 좌표가 표시됩니다</p>}
-                <ImageViewer images={PAGE_IMAGES} fieldPositions={fieldPositions} fieldValues={fieldValues} scale={scale} debugMode={debugMode} />
+                <ImageViewer images={pageImages} fieldPositions={fieldPositions} fieldValues={fieldValues} scale={scale} debugMode={debugMode} />
               </div>
             </ScrollArea>
           </div>
@@ -633,7 +662,7 @@ export default function LGApplicationPage() {
       </div>
 
       {/* 인쇄 모달 */}
-      <PrintModal isOpen={showPrintModal} onClose={() => setShowPrintModal(false)} images={PAGE_IMAGES} fieldPositions={fieldPositions} fieldValues={fieldValues} />
+      <PrintModal isOpen={showPrintModal} onClose={() => setShowPrintModal(false)} images={pageImages} fieldPositions={fieldPositions} fieldValues={fieldValues} />
     </>
   );
 }
