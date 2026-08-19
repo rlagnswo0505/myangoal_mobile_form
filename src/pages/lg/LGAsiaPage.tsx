@@ -40,9 +40,9 @@ const FIELD_POSITIONS: FieldPosition[] = [
   },
   // 5. 고정 표시 - LG U+망 선택이므로 항상 동일하게 체크/표시 (KT망 대비 LG U+망 행 위치로 이동한 임시 좌표, debugMode로 조정 필요)
   { id: 'carrierCheck', page: 1, top: 54, left: 602, fontSize: 14 }, // 상단 "통신망 ○KT망 ○LG U+망" 중 LG U+망 체크
-  { id: 'planNetworkOval', page: 1, top: 297, left: 440, width: 53, height: 28 }, // 요금제란 "LG U+ 망" 표기에 타원 표시
-  { id: 'planCodeCheck', page: 1, top: 298, left: 593, fontSize: 14 }, // 요금제란 "APL36" 체크박스
-  { id: 'planDuration', page: 1, top: 297, left: 704, fontSize: 14 }, // APL36 옆 "3개월" 표기
+  { id: 'planNetworkOval', page: 1, top: 309, left: 442, width: 54, height: 25 }, // 요금제란 "LG U+ 망" 표기에 타원 표시
+  { id: 'planCodeCheck', page: 1, top: 302, left: 515, fontSize: 14 }, // 요금제란 "APL36" 체크박스
+  { id: 'planDuration', page: 1, top: 300, left: 720, fontSize: 14 }, // APL36 옆 "3개월" 표기
 ];
 
 interface FormData {
@@ -318,12 +318,7 @@ export default function LGAsiaPage() {
                         <p className="text-sm font-medium text-muted-foreground">대량 출력</p>
                         <span className="text-xs text-muted-foreground">형식: USIM모델 USIM일련번호 생년월일(6자리) 여권번호</span>
                       </div>
-                      <textarea
-                        value={bulkInput}
-                        onChange={(e) => setBulkInput(e.target.value)}
-                        placeholder="예) U8800 07621675 070420 MK572633"
-                        className="w-full min-h-36 rounded-md border border-input bg-background px-3 py-2 text-sm"
-                      />
+                      <textarea value={bulkInput} onChange={(e) => setBulkInput(e.target.value)} placeholder="예) U8800 07621675 070420 MK572633" className="w-full min-h-36 rounded-md border border-input bg-background px-3 py-2 text-sm" />
                       <div className="flex flex-wrap gap-2">
                         <Button type="button" variant="secondary" onClick={parseBulkInput}>
                           붙여넣기 분석
@@ -369,14 +364,7 @@ export default function LGAsiaPage() {
       </div>
 
       {/* 인쇄 모달 */}
-      <PrintModal
-        isOpen={showPrintModal}
-        onClose={() => setShowPrintModal(false)}
-        images={PAGE_IMAGES}
-        fieldPositions={FIELD_POSITIONS}
-        fieldValues={fieldValues}
-        batchFieldValues={useBatchPreview ? batchFieldValues : undefined}
-      />
+      <PrintModal isOpen={showPrintModal} onClose={() => setShowPrintModal(false)} images={PAGE_IMAGES} fieldPositions={FIELD_POSITIONS} fieldValues={fieldValues} batchFieldValues={useBatchPreview ? batchFieldValues : undefined} />
     </>
   );
 }
