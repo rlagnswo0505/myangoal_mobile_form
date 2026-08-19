@@ -18,29 +18,31 @@ const PAGE_IMAGES = [asiaFormImage];
 
 // A4 용지 크기 (96dpi 기준: 794 x 1123 px)
 // 필드 위치 설정 (A4 픽셀 좌표 기준)
+// KT/LG 공용 서식지이므로 가입고객정보 등 공통 필드 좌표는 KTAsiaPage와 동일하게 맞춤 (KTAsiaPage.tsx 기준)
 const FIELD_POSITIONS: FieldPosition[] = [
   // 1. 가입고객정보
-  { id: 'name', page: 1, top: 128, left: 208, width: 210, height: 45, fontSize: 18 },
-  { id: 'birthAndPassport', page: 1, top: 128, left: 588, width: 190, height: 45, fontSize: 14 },
+  { id: 'name', page: 1, top: 130, left: 170, width: 220, height: 29, opacity: 0.25 },
+  { id: 'birthAndPassport', page: 1, top: 132, left: 530, width: 225, height: 27, fontSize: 14 },
   // 2. USIM 정보
-  { id: 'usimNumber', page: 1, top: 312, left: 208, width: 210, height: 45, fontSize: 14 },
+  { id: 'usimNumber', page: 1, top: 266, left: 174, width: 216, height: 26, fontSize: 14 },
   // 3. 선호번호
-  { id: 'wishNumber1', page: 1, top: 280, left: 240, width: 70, height: 34, fontSize: 14 },
-  { id: 'wishNumber2', page: 1, top: 280, left: 340, width: 70, height: 34, fontSize: 14 },
+  { id: 'wishNumber1', page: 1, top: 242, left: 186, width: 89, height: 26, fontSize: 14 },
+  { id: 'wishNumber2', page: 1, top: 241, left: 298, width: 91, height: 26, fontSize: 14 },
   // 4. 서명일자
   {
     id: 'signDate',
     page: 1,
-    top: 1052,
-    left: 600,
-    height: 30,
+    top: 1038,
+    left: 528,
+    width: 145,
+    height: 28,
     fontSize: 14,
   },
-  // 5. 고정 표시 - LG U+망 선택이므로 항상 동일하게 체크/표시 (임시 좌표, debugMode로 조정 필요)
-  { id: 'carrierCheck', page: 1, top: 66, left: 605, fontSize: 14 }, // 상단 "통신망 ○KT망 ○LG U+망" 중 LG U+망 체크
-  { id: 'planNetworkOval', page: 1, top: 400, left: 415, width: 90, height: 34 }, // 요금제란 "LG U+ 망" 표기에 타원 표시
-  { id: 'planCodeCheck', page: 1, top: 402, left: 590, fontSize: 14 }, // 요금제란 "APL36" 체크박스
-  { id: 'planDuration', page: 1, top: 402, left: 700, fontSize: 14 }, // APL36 옆 "3개월" 표기
+  // 5. 고정 표시 - LG U+망 선택이므로 항상 동일하게 체크/표시 (KT망 대비 LG U+망 행 위치로 이동한 임시 좌표, debugMode로 조정 필요)
+  { id: 'carrierCheck', page: 1, top: 54, left: 602, fontSize: 14 }, // 상단 "통신망 ○KT망 ○LG U+망" 중 LG U+망 체크
+  { id: 'planNetworkOval', page: 1, top: 297, left: 440, width: 53, height: 28 }, // 요금제란 "LG U+ 망" 표기에 타원 표시
+  { id: 'planCodeCheck', page: 1, top: 298, left: 593, fontSize: 14 }, // 요금제란 "APL36" 체크박스
+  { id: 'planDuration', page: 1, top: 297, left: 704, fontSize: 14 }, // APL36 옆 "3개월" 표기
 ];
 
 interface FormData {
