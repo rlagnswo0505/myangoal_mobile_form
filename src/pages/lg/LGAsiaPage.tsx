@@ -10,10 +10,11 @@ import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import DateInput from '@/components/Form/DateInput';
-import asiaLgImage from '@/assets/templates/아시아LG.jpg';
+import { OVAL_MARK_IMAGE } from '@/lib/markOverlays';
+import asiaFormImage from '@/assets/templates/아시아 서식지.jpg';
 
-// PDF를 이미지로 변환한 파일
-const PAGE_IMAGES = [asiaLgImage];
+// PDF를 이미지로 변환한 파일 (KT/LG 공용 신규 서식지)
+const PAGE_IMAGES = [asiaFormImage];
 
 // A4 용지 크기 (96dpi 기준: 794 x 1123 px)
 // 필드 위치 설정 (A4 픽셀 좌표 기준)
@@ -35,6 +36,11 @@ const FIELD_POSITIONS: FieldPosition[] = [
     height: 30,
     fontSize: 14,
   },
+  // 5. 고정 표시 - LG U+망 선택이므로 항상 동일하게 체크/표시 (임시 좌표, debugMode로 조정 필요)
+  { id: 'carrierCheck', page: 1, top: 66, left: 605, fontSize: 14 }, // 상단 "통신망 ○KT망 ○LG U+망" 중 LG U+망 체크
+  { id: 'planNetworkOval', page: 1, top: 400, left: 415, width: 90, height: 34 }, // 요금제란 "LG U+ 망" 표기에 타원 표시
+  { id: 'planCodeCheck', page: 1, top: 402, left: 590, fontSize: 14 }, // 요금제란 "APL36" 체크박스
+  { id: 'planDuration', page: 1, top: 402, left: 700, fontSize: 14 }, // APL36 옆 "3개월" 표기
 ];
 
 interface FormData {
@@ -192,6 +198,14 @@ export default function LGAsiaPage() {
     return date;
   };
 
+  // LG U+망 전용 서식이므로 통신망/요금제 표시는 항상 고정
+  const fixedMarkValues: FieldValue = {
+    carrierCheck: '✓',
+    planNetworkOval: OVAL_MARK_IMAGE,
+    planCodeCheck: '✓',
+    planDuration: '3개월',
+  };
+
   const fieldValues: FieldValue = {
     name: hideNameOnPrint ? '' : formData.name,
     birthAndPassport: `${formData.birthDate}\n${formData.passportNumber}`,
@@ -199,6 +213,7 @@ export default function LGAsiaPage() {
     wishNumber1: formData.wishNumber1,
     wishNumber2: formData.wishNumber2,
     signDate: formatSignDate(formData.signDate),
+    ...fixedMarkValues,
   };
 
   const batchFieldValues: FieldValue[] = bulkRecords.map((record) => ({
@@ -208,6 +223,7 @@ export default function LGAsiaPage() {
     wishNumber1: formData.wishNumber1,
     wishNumber2: formData.wishNumber2,
     signDate: formatSignDate(formData.signDate),
+    ...fixedMarkValues,
   }));
 
   return (
