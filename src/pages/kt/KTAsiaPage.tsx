@@ -22,6 +22,7 @@ const FIELD_POSITIONS: FieldPosition[] = [
   // 1. 가입고객정보
   { id: 'name', page: 1, top: 130, left: 170, width: 220, height: 29, opacity: 0.25 },
   { id: 'birthAndPassport', page: 1, top: 132, left: 530, width: 225, height: 27, fontSize: 14 },
+  { id: 'address', page: 1, top: 215, left: 174, width: 440, height: 26, fontSize: 12 }, // 임시 좌표, debugMode로 조정 필요
   // 2. USIM 정보
   { id: 'usimNumber', page: 1, top: 266, left: 174, width: 216, height: 26, fontSize: 14 },
   // 3. 선호번호
@@ -48,6 +49,7 @@ interface FormData {
   name: string;
   birthDate: string;
   passportNumber: string;
+  address: string;
   usimNumber: string;
   wishNumber1: string;
   wishNumber2: string;
@@ -80,6 +82,7 @@ export default function KTAsiaPage() {
     name: '',
     birthDate: '',
     passportNumber: '',
+    address: '인천광역시 부평구 광장로 16 1층 10호 미얀골',
     usimNumber: '',
     wishNumber1: '',
     wishNumber2: '',
@@ -168,6 +171,7 @@ export default function KTAsiaPage() {
       name: '',
       birthDate: '',
       passportNumber: '',
+      address: '인천광역시 부평구 광장로 16 1층 10호 미얀골',
       usimNumber: '',
       wishNumber1: '',
       wishNumber2: '',
@@ -196,6 +200,7 @@ export default function KTAsiaPage() {
   const fieldValues: FieldValue = {
     name: hideNameOnPrint ? '' : formData.name,
     birthAndPassport: `${formData.birthDate}\n${formData.passportNumber}`,
+    address: formData.address,
     usimNumber: formData.usimNumber,
     wishNumber1: formData.wishNumber1,
     wishNumber2: formData.wishNumber2,
@@ -206,6 +211,7 @@ export default function KTAsiaPage() {
   const batchFieldValues: FieldValue[] = bulkRecords.map((record) => ({
     name: hideNameOnPrint ? '' : formData.name,
     birthAndPassport: `${record.birthDate}\n${record.passportNumber}`,
+    address: formData.address,
     usimNumber: record.usimNumber,
     wishNumber1: formData.wishNumber1,
     wishNumber2: formData.wishNumber2,
@@ -256,6 +262,10 @@ export default function KTAsiaPage() {
                           <Label htmlFor="passportNumber">여권번호</Label>
                           <Input id="passportNumber" name="passportNumber" value={formData.passportNumber} onChange={handleChange} placeholder="M12345678" />
                         </div>
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="address">주소</Label>
+                        <Input id="address" name="address" value={formData.address} onChange={handleChange} placeholder="서울시 강남구..." />
                       </div>
                     </div>
 
