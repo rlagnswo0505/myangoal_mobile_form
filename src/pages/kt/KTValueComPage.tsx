@@ -66,35 +66,36 @@ const CARRIER_POSITIONS: Record<string, { top: number; left: number }> = {
 // 필드 위치 설정 (임시 좌표 - debugMode로 실제 좌표 확인 후 조정 필요)
 const BASE_FIELD_POSITIONS: FieldPosition[] = [
   // 가입고객정보
-  { id: 'activationNumberDisplay', page: 1, top: 70, left: 519, width: 255, height: 25, fontSize: 11 },
-  { id: 'customerName', page: 1, top: 112, left: 161, width: 246, height: 27, fontSize: 11 },
-  { id: 'birthDate', page: 1, top: 112, left: 526, width: 247, height: 27, fontSize: 11 },
-  { id: 'foreignerNumber', page: 1, top: 138, left: 527, width: 247, height: 28, fontSize: 10 },
-  { id: 'phoneNumber', page: 1, top: 167, left: 161, width: 246, height: 26, fontSize: 11 },
-  { id: 'address', page: 1, top: 192, left: 161, width: 613, height: 29, fontSize: 10 },
+  { id: 'activationNumberDisplay', page: 1, top: 70, left: 519, width: 255, height: 25, fontSize: 14 },
+  { id: 'customerName', page: 1, top: 112, left: 161, width: 246, height: 27, fontSize: 14 },
+  { id: 'birthDate', page: 1, top: 112, left: 526, width: 247, height: 27, fontSize: 14 },
+  { id: 'foreignerNumber', page: 1, top: 138, left: 527, width: 247, height: 28, fontSize: 14 },
+  { id: 'phoneNumber', page: 1, top: 167, left: 161, width: 246, height: 26, fontSize: 14 },
+  { id: 'address', page: 1, top: 192, left: 161, width: 613, height: 29, fontSize: 14 },
   // 가입단말정보
-  { id: 'wishNumber1', page: 1, top: 224, left: 236, width: 77, height: 28, fontSize: 11 },
-  { id: 'wishNumber2', page: 1, top: 226, left: 330, width: 77, height: 28, fontSize: 11 },
-  { id: 'usimModelName', page: 1, top: 253, left: 161, width: 146, height: 25, fontSize: 9 },
-  { id: 'usimSerialNumber', page: 1, top: 279, left: 163, width: 245, height: 28, fontSize: 9 },
+  { id: 'wishNumber1', page: 1, top: 224, left: 236, width: 77, height: 28, fontSize: 14 },
+  { id: 'wishNumber2', page: 1, top: 226, left: 330, width: 77, height: 28, fontSize: 14 },
+  { id: 'usimModelName', page: 1, top: 253, left: 161, width: 146, height: 25, fontSize: 14 },
+  { id: 'usimSerialNumber', page: 1, top: 279, left: 163, width: 245, height: 28, fontSize: 14 },
   { id: 'planLGUOther', page: 1, top: 244, left: 600, width: 162, height: 22 },
-  { id: 'planKTOther', page: 1, top: 285, left: 601, width: 161, height: 22, fontSize: 9 },
+  { id: 'planKTOther', page: 1, top: 285, left: 601, width: 161, height: 22, fontSize: 14 },
   // 번호이동정보
-  { id: 'portInNumber', page: 1, top: 400, left: 161, width: 247, height: 27, fontSize: 10 },
+  { id: 'portInNumber', page: 1, top: 400, left: 161, width: 247, height: 27, fontSize: 11 },
   // 자동충전정보
-  { id: 'accountHolderName', page: 1, top: 455, left: 161, width: 245, height: 28, fontSize: 11 },
-  { id: 'accountHolderBirthDate', page: 1, top: 456, left: 526, width: 247, height: 28, fontSize: 11 },
-  { id: 'accountOrCardNumber', page: 1, top: 485, left: 160, width: 244, height: 25, fontSize: 11 },
-  { id: 'cardValidPeriod', page: 1, top: 485, left: 482, width: 104, height: 25, fontSize: 10 },
-  { id: 'cardPinFirst2', page: 1, top: 483, left: 684, width: 89, height: 27, fontSize: 10 },
+  // 예금주 - 우선 미사용, 필요 시 주석 해제
+  // { id: 'accountHolderName', page: 1, top: 455, left: 161, width: 245, height: 28, fontSize: 11 },
+  // { id: 'accountHolderBirthDate', page: 1, top: 456, left: 526, width: 247, height: 28, fontSize: 11 },
+  { id: 'accountOrCardNumber', page: 1, top: 485, left: 160, width: 244, height: 25, fontSize: 14 },
+  { id: 'cardValidPeriod', page: 1, top: 485, left: 482, width: 104, height: 25, fontSize: 14 },
+  { id: 'cardPinFirst2', page: 1, top: 483, left: 684, width: 89, height: 27, fontSize: 14 },
   // 명의변경
-  { id: 'nameChangeCustomerName', page: 1, top: 568, left: 162, width: 245, height: 26, fontSize: 11 },
-  { id: 'nameChangePhone', page: 1, top: 567, left: 528, width: 246, height: 28, fontSize: 11 },
-  { id: 'nameChangeBirthDate', page: 1, top: 595, left: 163, width: 245, height: 27, fontSize: 11 },
+  { id: 'nameChangeCustomerName', page: 1, top: 568, left: 162, width: 245, height: 26, fontSize: 14 },
+  { id: 'nameChangePhone', page: 1, top: 567, left: 528, width: 246, height: 28, fontSize: 14 },
+  { id: 'nameChangeBirthDate', page: 1, top: 595, left: 163, width: 245, height: 27, fontSize: 14 },
   // 신청일
-  { id: 'applicationYear', page: 1, top: 972, left: 109, width: 46, height: 28, fontSize: 11 },
-  { id: 'applicationMonth', page: 1, top: 977, left: 192, width: 38, height: 21, fontSize: 11 },
-  { id: 'applicationDay', page: 1, top: 977, left: 257, width: 38, height: 21, fontSize: 11 },
+  { id: 'applicationYear', page: 1, top: 972, left: 109, width: 46, height: 28, fontSize: 14 },
+  { id: 'applicationMonth', page: 1, top: 977, left: 192, width: 38, height: 21, fontSize: 14 },
+  { id: 'applicationDay', page: 1, top: 977, left: 257, width: 38, height: 21, fontSize: 14 },
 ];
 
 interface FormData {
@@ -119,8 +120,8 @@ interface FormData {
   portInNumber: string;
   prevCarrier: string;
   mvnoCarrierName: string;
-  accountHolderName: string;
-  accountHolderBirthDate: string;
+  // accountHolderName: string;
+  // accountHolderBirthDate: string;
   accountOrCardNumber: string;
   cardValidPeriod: string;
   cardPinFirst2: string;
@@ -156,8 +157,8 @@ const createInitialFormData = (): FormData => {
     portInNumber: '',
     prevCarrier: '',
     mvnoCarrierName: '',
-    accountHolderName: '',
-    accountHolderBirthDate: '',
+    // accountHolderName: '',
+    // accountHolderBirthDate: '',
     accountOrCardNumber: '',
     cardValidPeriod: '',
     cardPinFirst2: '',
@@ -181,15 +182,15 @@ export default function KTValueComPage() {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  // 고객명 입력 시 예금주명·명의변경 고객명도 함께 입력
+  // 고객명 입력 시 명의변경 고객명도 함께 입력
   const handleCustomerNameChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
-    setFormData((prev) => ({ ...prev, customerName: value, accountHolderName: value, nameChangeCustomerName: value }));
+    setFormData((prev) => ({ ...prev, customerName: value, nameChangeCustomerName: value }));
   };
 
-  // 생년월일 입력 시 예금주생년월일·명의변경 생년월일·외국인등록번호 앞자리도 함께 입력
+  // 생년월일 입력 시 명의변경 생년월일·외국인등록번호 앞자리도 함께 입력
   const handleBirthDateChange = (value: string) => {
-    setFormData((prev) => ({ ...prev, birthDate: value, accountHolderBirthDate: value, nameChangeBirthDate: value, foreignerNumber: value ? `${value}-` : '' }));
+    setFormData((prev) => ({ ...prev, birthDate: value, nameChangeBirthDate: value, foreignerNumber: value ? `${value}-` : '' }));
   };
 
   // 개통번호 입력 시 번호이동 신청번호·명의변경 연락처도 함께 입력
@@ -220,13 +221,13 @@ export default function KTValueComPage() {
 
   const fieldPositions: FieldPosition[] = [
     ...BASE_FIELD_POSITIONS,
-    { id: 'networkCheck', page: 1, top: networkPos.top, left: networkPos.left, fontSize: 12 },
-    { id: 'taskTypeCheck', page: 1, top: taskTypePos.top, left: taskTypePos.left, fontSize: 12 },
-    ...(formData.wishNumberRandom ? [{ id: 'wishNumberRandomCheck', page: 1, top: 236, left: 168, fontSize: 12 }] : []),
-    ...(formData.usimStandalone ? [{ id: 'usimStandaloneCheck', page: 1, top: 261, left: 310, fontSize: 12 }] : []),
-    ...(planPos ? [{ id: 'planCheck', page: 1, top: planPos.top, left: planPos.left, fontSize: 12 }] : []),
-    ...(carrierPos ? [{ id: 'carrierCheck', page: 1, top: carrierPos.top, left: carrierPos.left, fontSize: 12 }] : []),
-    ...(isTransfer && formData.prevCarrier === 'mvno' ? [{ id: 'mvnoCarrierName', page: 1, top: 402, left: 688, width: 86, height: 27, fontSize: 10 }] : []),
+    { id: 'networkCheck', page: 1, top: networkPos.top, left: networkPos.left, fontSize: 14 },
+    { id: 'taskTypeCheck', page: 1, top: taskTypePos.top, left: taskTypePos.left, fontSize: 14 },
+    ...(formData.wishNumberRandom ? [{ id: 'wishNumberRandomCheck', page: 1, top: 236, left: 168, fontSize: 14 }] : []),
+    ...(formData.usimStandalone ? [{ id: 'usimStandaloneCheck', page: 1, top: 261, left: 310, fontSize: 14 }] : []),
+    ...(planPos ? [{ id: 'planCheck', page: 1, top: planPos.top, left: planPos.left, fontSize: 14 }] : []),
+    ...(carrierPos ? [{ id: 'carrierCheck', page: 1, top: carrierPos.top, left: carrierPos.left, fontSize: 14 }] : []),
+    ...(isTransfer && formData.prevCarrier === 'mvno' ? [{ id: 'mvnoCarrierName', page: 1, top: 402, left: 688, width: 86, height: 27, fontSize: 14 }] : []),
   ];
 
   const applicationDateParts = formData.applicationDate.split('.');
@@ -252,8 +253,8 @@ export default function KTValueComPage() {
     portInNumber: isTransfer ? formData.portInNumber : '',
     carrierCheck: carrierPos ? '✓' : '',
     mvnoCarrierName: isTransfer && formData.prevCarrier === 'mvno' ? formData.mvnoCarrierName : '',
-    accountHolderName: formData.accountHolderName,
-    accountHolderBirthDate: formData.accountHolderBirthDate,
+    // accountHolderName: formData.accountHolderName,
+    // accountHolderBirthDate: formData.accountHolderBirthDate,
     accountOrCardNumber: formData.accountOrCardNumber,
     cardValidPeriod: formData.cardValidPeriod,
     cardPinFirst2: formData.cardPinFirst2,
@@ -505,6 +506,7 @@ export default function KTValueComPage() {
                     {/* 자동충전정보 */}
                     <div className="space-y-4">
                       <p className="text-sm font-medium text-muted-foreground">자동충전정보</p>
+                      {/* 예금주 - 우선 미사용, 필요 시 주석 해제
                       <div className="grid grid-cols-2 gap-4">
                         <div className="space-y-2">
                           <Label htmlFor="accountHolderName">예금주</Label>
@@ -515,6 +517,7 @@ export default function KTValueComPage() {
                           <DateInput id="accountHolderBirthDate" format="6" value={formData.accountHolderBirthDate} onChange={(value) => setFormData((prev) => ({ ...prev, accountHolderBirthDate: value }))} />
                         </div>
                       </div>
+                      */}
                       <div className="space-y-2">
                         <Label htmlFor="accountOrCardNumber">계좌(카드)번호</Label>
                         <Input id="accountOrCardNumber" name="accountOrCardNumber" value={formData.accountOrCardNumber} onChange={handleChange} />
