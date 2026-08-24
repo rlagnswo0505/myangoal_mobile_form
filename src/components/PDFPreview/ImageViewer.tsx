@@ -264,7 +264,7 @@ export default function ImageViewer({ images, fieldPositions, fieldValues, scale
                     wordBreak: 'keep-all',
                     lineHeight: 1.1,
                     color: '#000',
-                    fontFamily: field.fontFamily || "'KimjungchulScript', 'Malgun Gothic', sans-serif",
+                    fontFamily: field.fontFamily || "'Noto Sans KR', 'Malgun Gothic', sans-serif",
                     fontStyle: field.fontStyle || 'normal',
                     fontWeight: 'normal',
                     opacity: field.opacity ?? 0.8,

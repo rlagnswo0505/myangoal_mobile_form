@@ -2,7 +2,6 @@ import { useRef, useEffect, useState } from 'react';
 import { X, Printer, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { type FieldPosition, type FieldValue } from '@/components/PDFPreview/ImageViewer';
-import fontUrl from '@/font/Kimjungchul_Font/KimjungchulScript-Regular.ttf';
 
 interface PrintModalProps {
   isOpen: boolean;
@@ -59,7 +58,7 @@ export default function PrintModal({ isOpen, onClose, images, fieldPositions, fi
               word-break: keep-all;
               line-height: 1.1;
               color: #000;
-              font-family: ${field.fontFamily || "'KimjungchulScript', 'Malgun Gothic', sans-serif"};
+              font-family: ${field.fontFamily || "'Noto Sans KR', 'Malgun Gothic', sans-serif"};
               font-style: ${field.fontStyle || 'normal'};
               font-weight: normal;
               opacity: ${field.opacity ?? 1};
@@ -105,14 +104,8 @@ export default function PrintModal({ isOpen, onClose, images, fieldPositions, fi
         <title>인쇄 미리보기</title>
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;500;600&family=Nanum+Pen+Script&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;500;600&family=Nanum+Pen+Script&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
         <style>
-          @font-face {
-            font-family: 'KimjungchulScript';
-            src: url('${fontUrl}') format('truetype');
-            font-weight: normal;
-            font-style: normal;
-          }
           * {
             margin: 0;
             padding: 0;
