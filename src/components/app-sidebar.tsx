@@ -96,6 +96,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           url: '/skt/t-form',
           isActive: location.pathname === '/skt/t-form',
         },
+        {
+          title: 'SKT 자동이체 변경신청서',
+          url: '/skt/auto-transfer',
+          isActive: location.pathname === '/skt/auto-transfer',
+        },
       ],
     },
     {

@@ -25,6 +25,7 @@ import SKTSevenMobilePaymentChangePage from './pages/skt/SKTSevenMobilePaymentCh
 import SKNewContractPage from './pages/skt/SKNewContractPage';
 import SKTransferPage from './pages/skt/SKTransferPage';
 import SKTTFormPage from './pages/skt/SKTTFormPage';
+import SKTAutoTransferPage from './pages/skt/SKTAutoTransferPage';
 import LGApplicationPage from './pages/lg/LGApplicationPage';
 import LGYouthApplicationPage from './pages/lg/LGYouthApplicationPage';
 import LGInfoChangePage from './pages/lg/LGInfoChangePage';
@@ -50,6 +51,7 @@ function App() {
           <Route path="skt/new-contract" element={<SKNewContractPage />} />
           <Route path="skt/transfer" element={<SKTransferPage />} />
           <Route path="skt/t-form" element={<SKTTFormPage />} />
+          <Route path="skt/auto-transfer" element={<SKTAutoTransferPage />} />
           <Route path="lg/application" element={<LGApplicationPage />} />
           <Route path="lg/youth-application" element={<LGYouthApplicationPage />} />
           <Route path="lg/info-change" element={<LGInfoChangePage />} />
