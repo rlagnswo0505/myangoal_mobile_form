@@ -113,6 +113,8 @@ const BASE_FIELD_POSITIONS: FieldPosition[] = [
   { id: 'monthlyPayment1', page: 1, top: 268, left: 143, width: 115, height: 19, fontSize: 14 },
   { id: 'monthlyPayment2', page: 1, top: 262, left: 647, width: 93, height: 27, fontSize: 14 },
   { id: 'monthlyFee2', page: 1, top: 219, left: 270, width: 64, height: 26, fontSize: 14 },
+  // 1페이지 중앙 상단 "유심단독" 큰 글씨 표시 (임시 좌표, 위치는 추후 수동 조정 예정)
+  { id: 'usimOnlyLabel', page: 1, top: 60, left: 297, width: 200, height: 40, fontSize: 28, textAlign: 'center', opacity: 1 },
   // 그린 판매점 전용 - 요금제명/월정액을 상단 빈공간에 별도 표시 (임시 좌표, 위치는 추후 수동 조정 예정)
   { id: 'topPlanName', page: 1, top: 36, left: 291, width: 190, height: 28, fontSize: 12 },
   { id: 'topAmount', page: 1, top: 70, left: 291, width: 190, height: 28, fontSize: 12 },
@@ -312,6 +314,7 @@ export default function LGApplicationPage() {
   }));
 
   const fieldValues: FieldValue = {
+    usimOnlyLabel: '유심단독',
     customerName: formData.customerName,
     birthDate: formData.birthDate,
     // foreignerNumber: formData.foreignerNumber,
@@ -383,13 +386,7 @@ export default function LGApplicationPage() {
                   <CardContent className="space-y-4">
                     {/* 중복 페이지(2,3,4) 제외 여부 - 기본은 제외, 여러 부 출력 등 필요 시 해제하여 전체 출력 */}
                     <div className="flex items-center space-x-2 rounded-md border bg-white p-3">
-                      <input
-                        type="checkbox"
-                        id="excludeDuplicatePages"
-                        checked={excludeDuplicatePages}
-                        onChange={(e) => setExcludeDuplicatePages(e.target.checked)}
-                        className="h-4 w-4 rounded border-input accent-primary"
-                      />
+                      <input type="checkbox" id="excludeDuplicatePages" checked={excludeDuplicatePages} onChange={(e) => setExcludeDuplicatePages(e.target.checked)} className="h-4 w-4 rounded border-input accent-primary" />
                       <Label htmlFor="excludeDuplicatePages" className="font-normal cursor-pointer">
                         중복 페이지(2, 3, 4페이지) 제외하고 출력
                       </Label>
