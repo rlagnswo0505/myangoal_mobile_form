@@ -18,11 +18,9 @@ import lgAppPage2 from '@/assets/templates/LG빈서식지_2.jpg';
 import lgAppPage3 from '@/assets/templates/LG빈서식지_3.jpg';
 import lgAppPage4 from '@/assets/templates/LG빈서식지_4.jpg';
 import lgAppPage5 from '@/assets/templates/LG빈서식지_5.jpg';
-import lgAppPage6 from '@/assets/templates/LG빈서식지_6.jpg';
-import lgAppPage7 from '@/assets/templates/LG빈서식지_7.jpg';
 
-// 템플릿 이미지 (전체 7페이지, 인덱스 0 = 1페이지)
-const ALL_PAGE_IMAGES: string[] = [lgAppPage1, lgAppPage2, lgAppPage3, lgAppPage4, lgAppPage5, lgAppPage6, lgAppPage7];
+// 템플릿 이미지 (전체 5페이지, 인덱스 0 = 1페이지)
+const ALL_PAGE_IMAGES: string[] = [lgAppPage1, lgAppPage2, lgAppPage3, lgAppPage4, lgAppPage5];
 const ALL_PAGE_NUMBERS = ALL_PAGE_IMAGES.map((_, index) => index + 1);
 
 // 2,3,4페이지는 1페이지와 중복되는 서식이라 기본적으로는 제외하고, 필요 시(여러 부 출력 등) 체크 해제로 전체 출력
@@ -128,7 +126,7 @@ const BASE_FIELD_POSITIONS: FieldPosition[] = [
   { id: 'accountHolderName', page: 1, top: 539, left: 211, width: 325, height: 27, fontSize: 14 },
   { id: 'accountHolderBirthDate', page: 1, top: 539, left: 615, width: 112, height: 27, fontSize: 14 },
   { id: 'signDate', page: 1, top: 1017, left: 54, width: 100, height: 30, fontSize: 16 },
-  // 판매점 정보 - 1페이지에 2곳, 6페이지에 1곳 표시 (임시 좌표, debugMode로 조정 필요)
+  // 판매점 정보 - 1페이지에 2곳 표시 (임시 좌표, debugMode로 조정 필요)
   { id: 'dealerName1', page: 1, top: 339, left: 78, width: 84, height: 15, fontSize: 14 },
   { id: 'sellerName1', page: 1, top: 340, left: 177, width: 47, height: 15, fontSize: 14 },
   { id: 'sellerPhone1', page: 1, top: 339, left: 260, width: 89, height: 17, fontSize: 14 },
@@ -136,27 +134,10 @@ const BASE_FIELD_POSITIONS: FieldPosition[] = [
   { id: 'dealerName2', page: 1, top: 1014, left: 195, width: 121, height: 21, fontSize: 14 },
   { id: 'sellerName2', page: 1, top: 1030, left: 185, width: 69, height: 18, fontSize: 14 },
   { id: 'sellerPhone2', page: 1, top: 1029, left: 289, width: 104, height: 19, fontSize: 14 },
-  { id: 'dealerName3', page: 6, top: 1004, left: 117, width: 133, height: 23, fontSize: 14 },
-  { id: 'sellerName3', page: 6, top: 1006, left: 602, width: 115, height: 23, fontSize: 14 },
-  { id: 'sellerPhone3', page: 6, top: 1003, left: 347, width: 167, height: 26, fontSize: 14 },
-  // 6페이지 - 가입자명 / 생년월일 / 휴대폰 번호 (임시 좌표, debugMode로 조정 필요)
-  { id: 'customerName', page: 6, top: 143, left: 173, width: 168, height: 31, fontSize: 14 },
-  { id: 'birthDate', page: 6, top: 144, left: 405, width: 142, height: 29, fontSize: 14 },
-  { id: 'phoneNumber', page: 6, top: 145, left: 600, width: 134, height: 29, fontSize: 14 },
-  { id: 'signDate2', page: 6, top: 984, left: 110, width: 223, height: 25, fontSize: 16 },
   // 주 생활지역 (시/도, 구/시/군, 동/읍/면) - 가입자 주소에서 자동 추출, 임시 좌표
   { id: 'residenceSido', page: 1, top: 389, left: 85, width: 135, height: 22, fontSize: 12 },
   { id: 'residenceSigungu', page: 1, top: 411, left: 85, width: 135, height: 24, fontSize: 12 },
   { id: 'residenceDong', page: 1, top: 434, left: 85, width: 135, height: 28, fontSize: 12 },
-  // 7페이지 - 요금제 / 요금제요금 / 할인 / 최종요금 / 판매직원 / 가입자전화 / 가입일자 (임시 좌표, debugMode로 조정 필요)
-  { id: 'planName2', page: 7, top: 171, left: 411, width: 107, height: 26, fontSize: 14 },
-  { id: 'monthlyFee3', page: 7, top: 193, left: 432, width: 93, height: 27, fontSize: 14 },
-  { id: 'discount2', page: 7, top: 244, left: 433, width: 68, height: 26, fontSize: 14 },
-  { id: 'monthlyPayment3', page: 7, top: 427, left: 436, width: 87, height: 36, fontSize: 14 },
-  { id: 'monthlyPayment4', page: 7, top: 421, left: 672, width: 69, height: 29, fontSize: 14 },
-  { id: 'sellerName4', page: 7, top: 991, left: 114, width: 61, height: 24, fontSize: 14 },
-  { id: 'phoneNumber', page: 7, top: 972, left: 514, width: 190, height: 24, fontSize: 14 },
-  { id: 'signDate3', page: 7, top: 993, left: 552, width: 134, height: 29, fontSize: 14 },
 ];
 
 interface FormData {
@@ -191,7 +172,7 @@ export default function LGApplicationPage() {
 
   const [debugMode, setDebugMode] = useState(false);
   const [showPrintModal, setShowPrintModal] = useState(false);
-  const [excludeDuplicatePages, setExcludeDuplicatePages] = useState(true);
+  const [excludeDuplicatePages, setExcludeDuplicatePages] = useState(false);
 
   const [formData, setFormData] = useState<FormData>({
     customerName: '',
@@ -337,12 +318,6 @@ export default function LGApplicationPage() {
     topAmount: isGreenVendor && selectedPlan ? `월요금 : ${formatWon(selectedPlan.monthlyFee)}` : '',
     // 1페이지 "가입내역" 박스 내 요금제명 - 그린 판매점은 '유심단독개통'으로 표시
     planName3: isGreenVendor ? (selectedPlan ? '유심단독개통' : '') : selectedPlan?.label || '',
-    // 7페이지(무선서비스 계약 표준안내서) 요금제 영역 - 그린 판매점은 1페이지와 동일하게 '유심단독개통'만 표시하고 금액은 비움
-    planName2: isGreenVendor ? (selectedPlan ? '유심단독개통' : '') : selectedPlan?.label || '',
-    monthlyFee3: isGreenVendor ? '' : selectedPlan ? formatWon(selectedPlan.monthlyFee) : '',
-    discount2: isGreenVendor ? '' : selectedPlan ? formatWon(selectedPlan.discount) : '',
-    monthlyPayment3: isGreenVendor ? '' : selectedPlan ? formatWon(monthlyPayment) : '',
-    monthlyPayment4: isGreenVendor ? '' : selectedPlan ? formatWon(monthlyPayment) : '',
     // carrierCheck: carrierCheckLabel ? '✓' : '',
     // mvnoDetail: formData.prevCarrier === 'mvno' ? formData.mvnoDetail : '',
     bankOrCard: formData.bankOrCard,
@@ -357,14 +332,7 @@ export default function LGApplicationPage() {
     dealerName2: selectedVendor.storeName,
     sellerName2: selectedVendor.sellerName,
     sellerPhone2: selectedVendor.sellerPhone,
-    dealerName3: selectedVendor.storeName,
-    sellerName3: selectedVendor.sellerName,
-    sellerPhone3: selectedVendor.sellerPhone,
-    sellerName4: selectedVendor.sellerName,
     signDate: formatSignDate(formData.signDate),
-    signDate2: formatSignDate(formData.signDate, 14),
-    // 7페이지는 서식에 연도 "20"이 이미 인쇄되어 있어 뒤 2자리만 표시, 간격은 임시값(debugMode로 조정 필요)
-    signDate3: formatSignDate(formData.signDate, 12, 2),
   };
 
   return (
