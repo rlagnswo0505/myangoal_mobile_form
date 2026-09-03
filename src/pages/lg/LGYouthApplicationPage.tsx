@@ -96,6 +96,8 @@ const BASE_FIELD_POSITIONS: FieldPosition[] = [
   { id: 'monthlyPayment1', page: 1, top: 218, left: 143, width: 115, height: 19, fontSize: 14 },
   { id: 'monthlyPayment2', page: 1, top: 212, left: 627, width: 93, height: 27, fontSize: 14 },
   { id: 'monthlyFee2', page: 1, top: 169, left: 270, width: 64, height: 26, fontSize: 14 },
+  // 1페이지 중앙 상단 "유심단독" 큰 글씨 표시 (임시 좌표, 위치는 추후 수동 조정 예정)
+  { id: 'usimOnlyLabel', page: 1, top: 40, left: 368, width: 171, height: 34, fontSize: 24, textAlign: 'center', opacity: 1 },
   // 그린 판매점 전용 - 요금제명/월정액을 상단 빈공간에 별도 표시 (임시 좌표, 위치는 추후 수동 조정 예정)
   { id: 'topPlanName', page: 1, top: 25, left: 368, width: 171, height: 27, fontSize: 12 },
   { id: 'topAmount', page: 1, top: 55, left: 368, width: 171, height: 27, fontSize: 12 },
@@ -272,6 +274,7 @@ export default function LGYouthApplicationPage() {
   const fieldPositions: FieldPosition[] = [...BASE_FIELD_POSITIONS];
 
   const fieldValues: FieldValue = {
+    usimOnlyLabel: '유심단독',
     customerName: formData.customerName,
     birthDate: formData.birthDate,
     phoneNumber: formatPhoneWithDash(formData.phoneNumber),
