@@ -30,7 +30,11 @@
       "Bash(python -c ' *)",
       "Bash(python *)",
       "Bash(tasklist)",
-      "Bash(curl -s -o /dev/null -w \"%{http_code}\\\\n\" http://localhost:5173)"
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\\\\n\" http://localhost:5173)",
+      "Bash(git mv *)",
+      "Bash(git rm *)",
+      "Bash(npx eslint *)",
+      "Bash(node -e \"console.log\\(require\\('sharp'\\)\\)\")"
     ]
   }
 }
