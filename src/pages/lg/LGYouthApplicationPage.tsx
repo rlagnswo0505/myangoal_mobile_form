@@ -113,7 +113,7 @@ const BASE_FIELD_POSITIONS: FieldPosition[] = [
   // 예금주명 / 예금주 생년월일 (예금주명은 고객명을 그대로 표시 - 임시 좌표, debugMode로 조정 필요)
   { id: 'accountHolderName', page: 1, top: 489, left: 211, width: 325, height: 27, fontSize: 14 },
   { id: 'accountHolderBirthDate', page: 1, top: 489, left: 615, width: 112, height: 27, fontSize: 14 },
-  { id: 'signDate', page: 1, top: 978, left: 58, width: 96, height: 26, fontSize: 16 },
+  { id: 'signDate', page: 1, top: 978, left: 58, width: 96, height: 26, fontSize: 15 },
   // 판매점 정보 - 1페이지에 2곳 표시 (임시 좌표, debugMode로 조정 필요)
   { id: 'dealerName1', page: 1, top: 289, left: 78, width: 84, height: 15, fontSize: 14 },
   { id: 'sellerName1', page: 1, top: 290, left: 177, width: 47, height: 15, fontSize: 14 },
