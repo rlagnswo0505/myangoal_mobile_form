@@ -18,13 +18,9 @@ import lgYouthAppPage2 from '@/assets/templates/청소년 가입신청서_2.jpg'
 import lgYouthAppPage3 from '@/assets/templates/청소년 가입신청서_3.jpg';
 import lgYouthAppPage4 from '@/assets/templates/청소년 가입신청서_4.jpg';
 import lgYouthAppPage5 from '@/assets/templates/청소년 가입신청서_5.jpg';
-import lgYouthAppPage6 from '@/assets/templates/청소년 가입신청서_6.jpg';
-import lgYouthAppPage7 from '@/assets/templates/청소년 가입신청서_7.jpg';
-import lgYouthAppPage8 from '@/assets/templates/청소년 가입신청서_8.jpg';
-import lgYouthAppPage9 from '@/assets/templates/청소년 가입신청서_9.jpg';
 
-// 템플릿 이미지
-const PAGE_IMAGES: string[] = [lgYouthAppPage1, lgYouthAppPage2, lgYouthAppPage3, lgYouthAppPage4, lgYouthAppPage5, lgYouthAppPage6, lgYouthAppPage7, lgYouthAppPage8, lgYouthAppPage9];
+// 템플릿 이미지 (1~5페이지만 사용)
+const PAGE_IMAGES: string[] = [lgYouthAppPage1, lgYouthAppPage2, lgYouthAppPage3, lgYouthAppPage4, lgYouthAppPage5];
 
 const formatWon = (amount: number) => amount.toLocaleString('ko-KR');
 
@@ -51,6 +47,13 @@ const PLAN_OPTIONS = [
   { value: 'yous_95', label: '유쓰데이터플랜95GB + 40GB', monthlyFee: 68000, discount: 17000, promotions: buildPromotions([25000, 22000, 16500]) },
   { value: 'yous_125', label: '유쓰데이터플랜125GB + 60GB', monthlyFee: 70000, discount: 17500, promotions: buildPromotions([25000, 22000, 16500, 0]) },
 ];
+
+// 요금 납부 방법 체크 위치 (☐계좌 ☐카드 ☐지로 - 임시 좌표, debugMode로 조정 필요)
+const PAYMENT_METHOD_CHECK_POSITIONS: Record<'계좌' | '카드' | '지로', { top: number; left: number }> = {
+  계좌: { top: 506, left: 99 },
+  카드: { top: 514, left: 99 },
+  지로: { top: 526, left: 99 },
+};
 
 // 주 생활지역 기본값 (매장 소재지 - 주소에서 추출하지 못한 항목은 이 값으로 대체)
 const DEFAULT_RESIDENCE_REGION = { sido: '인천광역시', sigungu: '부평구', dong: '부평동' };
@@ -103,7 +106,7 @@ const BASE_FIELD_POSITIONS: FieldPosition[] = [
   { id: 'topAmount', page: 1, top: 55, left: 368, width: 171, height: 27, fontSize: 12 },
   // 가입내역 박스 내 요금제명 (임시 좌표, 위치는 추후 수동 조정 예정)
   { id: 'planName3', page: 1, top: 609, left: 150, width: 259, height: 23, fontSize: 14 },
-  // 납부방법 - 계좌/카드 정보
+  // 납부방법 - 계좌/카드 정보 (체크 위치는 paymentMethod에 따라 동적으로 추가됨)
   { id: 'bankOrCard', page: 1, top: 515, left: 226, width: 92, height: 24, fontSize: 14 },
   { id: 'accountOrCardNumber', page: 1, top: 514, left: 338, width: 236, height: 26, fontSize: 14 },
   { id: 'cardExpiry', page: 1, top: 518, left: 648, width: 69, height: 22, fontSize: 14 },
@@ -111,7 +114,7 @@ const BASE_FIELD_POSITIONS: FieldPosition[] = [
   { id: 'accountHolderName', page: 1, top: 489, left: 211, width: 325, height: 27, fontSize: 14 },
   { id: 'accountHolderBirthDate', page: 1, top: 489, left: 615, width: 112, height: 27, fontSize: 14 },
   { id: 'signDate', page: 1, top: 978, left: 58, width: 96, height: 26, fontSize: 16 },
-  // 판매점 정보 - 1페이지에 2곳, 6페이지에 1곳 표시 (임시 좌표, debugMode로 조정 필요)
+  // 판매점 정보 - 1페이지에 2곳 표시 (임시 좌표, debugMode로 조정 필요)
   { id: 'dealerName1', page: 1, top: 289, left: 78, width: 84, height: 15, fontSize: 14 },
   { id: 'sellerName1', page: 1, top: 290, left: 177, width: 47, height: 15, fontSize: 14 },
   { id: 'sellerPhone1', page: 1, top: 289, left: 260, width: 89, height: 17, fontSize: 14 },
@@ -119,27 +122,10 @@ const BASE_FIELD_POSITIONS: FieldPosition[] = [
   { id: 'dealerName2', page: 1, top: 972, left: 206, width: 207, height: 19, fontSize: 14 },
   { id: 'sellerName2', page: 1, top: 990, left: 192, width: 72, height: 18, fontSize: 14 },
   { id: 'sellerPhone2', page: 1, top: 989, left: 309, width: 102, height: 18, fontSize: 14 },
-  { id: 'dealerName3', page: 6, top: 992, left: 120, width: 175, height: 19, fontSize: 14 },
-  { id: 'sellerName3', page: 6, top: 992, left: 623, width: 129, height: 20, fontSize: 14 },
-  { id: 'sellerPhone3', page: 6, top: 991, left: 349, width: 168, height: 21, fontSize: 14 },
-  // 6페이지 - 가입자명 / 생년월일 / 휴대폰 번호 (임시 좌표, debugMode로 조정 필요)
-  { id: 'customerName', page: 6, top: 107, left: 173, width: 168, height: 31, fontSize: 14 },
-  { id: 'birthDate', page: 6, top: 107, left: 405, width: 142, height: 29, fontSize: 14 },
-  { id: 'phoneNumber', page: 6, top: 107, left: 600, width: 134, height: 29, fontSize: 14 },
-  { id: 'signDate2', page: 6, top: 972, left: 100, width: 255, height: 20, fontSize: 16 },
   // 주 생활지역 (시/도, 구/시/군, 동/읍/면) - 가입자 주소에서 자동 추출, 임시 좌표
   { id: 'residenceSido', page: 1, top: 337, left: 85, width: 135, height: 22, fontSize: 12 },
   { id: 'residenceSigungu', page: 1, top: 359, left: 85, width: 135, height: 24, fontSize: 12 },
   { id: 'residenceDong', page: 1, top: 382, left: 85, width: 135, height: 28, fontSize: 12 },
-  // 7페이지 - 요금제 / 요금제요금 / 할인 / 최종요금 / 판매직원 / 가입자전화 / 가입일자 (임시 좌표, debugMode로 조정 필요)
-  { id: 'planName2', page: 7, top: 151, left: 411, width: 107, height: 26, fontSize: 14 },
-  { id: 'monthlyFee3', page: 7, top: 173, left: 412, width: 93, height: 27, fontSize: 14 },
-  { id: 'discount2', page: 7, top: 220, left: 433, width: 68, height: 26, fontSize: 14 },
-  { id: 'monthlyPayment3', page: 7, top: 400, left: 416, width: 87, height: 36, fontSize: 14 },
-  { id: 'monthlyPayment4', page: 7, top: 394, left: 652, width: 69, height: 29, fontSize: 14 },
-  { id: 'sellerName4', page: 7, top: 968, left: 114, width: 39, height: 22, fontSize: 14 },
-  { id: 'phoneNumber', page: 7, top: 939, left: 513, width: 192, height: 22, fontSize: 14 },
-  { id: 'signDate3', page: 7, top: 959, left: 553, width: 126, height: 26, fontSize: 14 },
 ];
 
 interface FormData {
@@ -153,7 +139,7 @@ interface FormData {
   plan: string;
   promotionApplied: '적용' | '미적용';
   promotion: string;
-  paymentMethod: '계좌' | '카드';
+  paymentMethod: '계좌' | '카드' | '지로';
   bankOrCard: string;
   accountOrCardNumber: string;
   cardExpiry: string;
@@ -183,7 +169,7 @@ export default function LGYouthApplicationPage() {
     plan: '',
     promotionApplied: '미적용',
     promotion: '',
-    paymentMethod: '계좌',
+    paymentMethod: '지로',
     bankOrCard: '',
     accountOrCardNumber: '',
     cardExpiry: '',
@@ -198,11 +184,11 @@ export default function LGYouthApplicationPage() {
     setFormData((prev) => ({ ...prev, [name]: nextValue }));
   };
 
-  const handlePaymentMethodChange = (value: '계좌' | '카드') => {
+  const handlePaymentMethodChange = (value: '계좌' | '카드' | '지로') => {
     setFormData((prev) => ({
       ...prev,
       paymentMethod: value,
-      cardExpiry: value === '계좌' ? '' : prev.cardExpiry,
+      cardExpiry: value === '카드' ? prev.cardExpiry : '',
     }));
   };
 
@@ -222,7 +208,7 @@ export default function LGYouthApplicationPage() {
       plan: '',
       promotionApplied: '미적용',
       promotion: '',
-      paymentMethod: '계좌',
+      paymentMethod: '지로',
       bankOrCard: '',
       accountOrCardNumber: '',
       cardExpiry: '',
@@ -271,7 +257,9 @@ export default function LGYouthApplicationPage() {
   // 주 생활지역 - 가입자 지번주소에서 자동 추출 (지번주소가 없으면 입력된 주소로 대체)
   const residenceRegion = parseResidenceRegion(formData.jibunAddress || formData.address);
 
-  const fieldPositions: FieldPosition[] = [...BASE_FIELD_POSITIONS];
+  const paymentMethodCheckPos = PAYMENT_METHOD_CHECK_POSITIONS[formData.paymentMethod];
+
+  const fieldPositions: FieldPosition[] = [...BASE_FIELD_POSITIONS, { id: 'paymentMethodCheck', page: 1, top: paymentMethodCheckPos.top, left: paymentMethodCheckPos.left, fontSize: 12 }];
 
   const fieldValues: FieldValue = {
     usimOnlyLabel: '유심단독',
@@ -296,17 +284,13 @@ export default function LGYouthApplicationPage() {
     topAmount: isGreenVendor && selectedPlan ? `월요금 : ${formatWon(selectedPlan.monthlyFee)}` : '',
     // 1페이지 "가입내역" 박스 내 요금제명 - 그린 판매점은 '유심단독개통'으로 표시
     planName3: isGreenVendor ? (selectedPlan ? '유심단독개통' : '') : selectedPlan?.label || '',
-    // 7페이지(무선서비스 계약 표준안내서) 요금제 영역 - 그린 판매점은 1페이지와 동일하게 '유심단독개통'만 표시하고 금액은 비움
-    planName2: isGreenVendor ? (selectedPlan ? '유심단독개통' : '') : selectedPlan?.label || '',
-    monthlyFee3: isGreenVendor ? '' : selectedPlan ? formatWon(selectedPlan.monthlyFee) : '',
-    discount2: isGreenVendor ? '' : selectedPlan ? formatWon(selectedPlan.discount) : '',
-    monthlyPayment3: isGreenVendor ? '' : selectedPlan ? formatWon(monthlyPayment) : '',
-    monthlyPayment4: isGreenVendor ? '' : selectedPlan ? formatWon(monthlyPayment) : '',
-    bankOrCard: formData.bankOrCard,
-    accountOrCardNumber: formData.accountOrCardNumber,
+    paymentMethodCheck: '✓',
+    // 지로는 은행/카드 정보가 필요 없어(청구서 우편 발송) 계좌/카드 관련 필드는 비워둠
+    bankOrCard: formData.paymentMethod === '지로' ? '' : formData.bankOrCard,
+    accountOrCardNumber: formData.paymentMethod === '지로' ? '' : formData.accountOrCardNumber,
     cardExpiry: formData.paymentMethod === '카드' ? formatCardExpiry(formData.cardExpiry) : '',
-    accountHolderName: formData.customerName,
-    accountHolderBirthDate: accountHolderBirthDateValue,
+    accountHolderName: formData.paymentMethod === '지로' ? '' : formData.customerName,
+    accountHolderBirthDate: formData.paymentMethod === '지로' ? '' : accountHolderBirthDateValue,
     dealerName1: selectedVendor.storeName,
     sellerName1: selectedVendor.sellerName,
     sellerPhone1: selectedVendor.sellerPhone,
@@ -314,14 +298,7 @@ export default function LGYouthApplicationPage() {
     dealerName2: selectedVendor.storeName,
     sellerName2: selectedVendor.sellerName,
     sellerPhone2: selectedVendor.sellerPhone,
-    dealerName3: selectedVendor.storeName,
-    sellerName3: selectedVendor.sellerName,
-    sellerPhone3: selectedVendor.sellerPhone,
-    sellerName4: selectedVendor.sellerName,
     signDate: formatSignDate(formData.signDate),
-    signDate2: formatSignDate(formData.signDate, 14),
-    // 7페이지는 서식에 연도 "20"이 이미 인쇄되어 있어 뒤 2자리만 표시, 간격은 임시값(debugMode로 조정 필요)
-    signDate3: formatSignDate(formData.signDate, 12, 2),
   };
 
   return (
@@ -498,7 +475,13 @@ export default function LGYouthApplicationPage() {
                     {/* 납부방법 */}
                     <div className="space-y-4">
                       <p className="text-sm font-medium text-muted-foreground">납부방법</p>
-                      <RadioGroup value={formData.paymentMethod} onValueChange={(value) => handlePaymentMethodChange(value as '계좌' | '카드')} className="flex gap-6">
+                      <RadioGroup value={formData.paymentMethod} onValueChange={(value) => handlePaymentMethodChange(value as '계좌' | '카드' | '지로')} className="flex gap-6">
+                        <div className="flex items-center space-x-2">
+                          <RadioGroupItem value="지로" id="payment-giro" />
+                          <Label htmlFor="payment-giro" className="font-normal cursor-pointer">
+                            지로
+                          </Label>
+                        </div>
                         <div className="flex items-center space-x-2">
                           <RadioGroupItem value="계좌" id="payment-account" />
                           <Label htmlFor="payment-account" className="font-normal cursor-pointer">
@@ -512,33 +495,37 @@ export default function LGYouthApplicationPage() {
                           </Label>
                         </div>
                       </RadioGroup>
-                      <div className={`grid gap-4 ${formData.paymentMethod === '카드' ? 'grid-cols-3' : 'grid-cols-2'}`}>
-                        <div className="space-y-2">
-                          <Label htmlFor="bankOrCard">
-                            {formData.paymentMethod === '계좌' ? '은행명' : '카드사'} <span className="text-destructive">*</span>
-                          </Label>
-                          <Input id="bankOrCard" name="bankOrCard" value={formData.bankOrCard} onChange={handleChange} placeholder={formData.paymentMethod === '계좌' ? '국민은행' : '삼성카드'} />
-                        </div>
-                        <div className="space-y-2">
-                          <Label htmlFor="accountOrCardNumber">
-                            {formData.paymentMethod === '계좌' ? '계좌번호' : '카드번호'} <span className="text-destructive">*</span>
-                          </Label>
-                          <Input id="accountOrCardNumber" name="accountOrCardNumber" value={formData.accountOrCardNumber} onChange={handleChange} placeholder={formData.paymentMethod === '계좌' ? '123-456-789012' : '1234-5678-9012-3456'} />
-                        </div>
-                        {formData.paymentMethod === '카드' && (
-                          <div className="space-y-2">
-                            <Label htmlFor="cardExpiry">
-                              유효기간 (YYMM) <span className="text-destructive">*</span>
-                            </Label>
-                            <Input id="cardExpiry" name="cardExpiry" value={formData.cardExpiry} onChange={handleChange} placeholder="2512" maxLength={4} />
+                      {formData.paymentMethod !== '지로' && (
+                        <>
+                          <div className={`grid gap-4 ${formData.paymentMethod === '카드' ? 'grid-cols-3' : 'grid-cols-2'}`}>
+                            <div className="space-y-2">
+                              <Label htmlFor="bankOrCard">
+                                {formData.paymentMethod === '계좌' ? '은행명' : '카드사'} <span className="text-destructive">*</span>
+                              </Label>
+                              <Input id="bankOrCard" name="bankOrCard" value={formData.bankOrCard} onChange={handleChange} placeholder={formData.paymentMethod === '계좌' ? '국민은행' : '삼성카드'} />
+                            </div>
+                            <div className="space-y-2">
+                              <Label htmlFor="accountOrCardNumber">
+                                {formData.paymentMethod === '계좌' ? '계좌번호' : '카드번호'} <span className="text-destructive">*</span>
+                              </Label>
+                              <Input id="accountOrCardNumber" name="accountOrCardNumber" value={formData.accountOrCardNumber} onChange={handleChange} placeholder={formData.paymentMethod === '계좌' ? '123-456-789012' : '1234-5678-9012-3456'} />
+                            </div>
+                            {formData.paymentMethod === '카드' && (
+                              <div className="space-y-2">
+                                <Label htmlFor="cardExpiry">
+                                  유효기간 (YYMM) <span className="text-destructive">*</span>
+                                </Label>
+                                <Input id="cardExpiry" name="cardExpiry" value={formData.cardExpiry} onChange={handleChange} placeholder="2512" maxLength={4} />
+                              </div>
+                            )}
                           </div>
-                        )}
-                      </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="accountHolderBirthDate">예금주 생년월일 (6자리)</Label>
-                        <DateInput id="accountHolderBirthDate" format="6" value={accountHolderBirthDateValue} onChange={(value) => setFormData((prev) => ({ ...prev, accountHolderBirthDate: value }))} />
-                        <p className="text-xs text-muted-foreground">미입력 시 가입자 생년월일과 동일하게 표시됩니다</p>
-                      </div>
+                          <div className="space-y-2">
+                            <Label htmlFor="accountHolderBirthDate">예금주 생년월일 (6자리)</Label>
+                            <DateInput id="accountHolderBirthDate" format="6" value={accountHolderBirthDateValue} onChange={(value) => setFormData((prev) => ({ ...prev, accountHolderBirthDate: value }))} />
+                            <p className="text-xs text-muted-foreground">미입력 시 가입자 생년월일과 동일하게 표시됩니다</p>
+                          </div>
+                        </>
+                      )}
                     </div>
 
                     <Separator />
